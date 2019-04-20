@@ -61,10 +61,11 @@ class Taxon(models.Model):
 
     def __str__(self):
         if self.rank == self.SPECIES_RANK:
-            return "<Taxon: {} {} {}>".format(self.genus.epithet, self.epithet, self.authorship)
+            return "/{} {}/ {}".format(self.genus.epithet, self.epithet, self.authorship).strip()
         if self.rank > self.SPECIES_RANK:
-            return "<Taxon: {} {} {} {}>".format(self.genus.epithet, self.species.epithet, self.epithet, self.authorship)
-        return "<Taxon: {} {}>".format(self.epithet, self.authorship)
+            rank_name = dict(self.TAXON_RANKS)
+            return "/{} {}/ {} /{}/ {}".format(self.genus.epithet, self.species.epithet, rank_name[self.rank], self.epithet, self.authorship).strip()
+        return "/{}/ {}".format(self.epithet, self.authorship).strip()
 
     def __repr__(self):
         return self.__str__()

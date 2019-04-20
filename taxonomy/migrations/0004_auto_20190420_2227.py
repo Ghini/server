@@ -2,6 +2,10 @@
 
 from django.db import migrations
 
+def depopulate(apps, schema_editor):
+    Taxon = apps.get_model('taxonomy', 'Taxon')
+    Taxon.objects.all().delete()
+
 def import_defaults(apps, schema_editor):
     # We can't import the model directly as it may be a newer version than
     # this migration expects. We use the historical version.
@@ -30,5 +34,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(import_defaults),
+        migrations.RunPython(import_defaults, depopulate),
     ]
