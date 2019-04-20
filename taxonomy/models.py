@@ -33,8 +33,9 @@ class Taxon(models.Model):
     )
 
     rank = models.IntegerField(choices=TAXON_RANKS)
-    epithet = models.CharField(max_length=40)
-    authorship = models.CharField(max_length=120)
+    epithet = models.CharField(max_length=40)  # published epithet
+    authorship = models.CharField(max_length=120)  # publication authorship
+    year = models.IntegerField(null=True)  # publication year
     parent = models.ForeignKey('self', null=True, related_name='subtaxa', on_delete=models.CASCADE)
     accepted = models.ForeignKey('self', null=True, related_name='synonyms', on_delete=models.SET_NULL)
 

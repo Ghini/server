@@ -1,4 +1,4 @@
-id,rank_id,epithet,parent_id,accepted_id,author,year
+id,rank,epithet,parent_id,accepted_id,authorship,year
 1,1,Plantae,1,,"Copeland",
 2,3,Marchantiophyta,1,,"Stotler & Stotl.-Crand.",1977
 3,5,Haplomitriopsida,2,,"",
