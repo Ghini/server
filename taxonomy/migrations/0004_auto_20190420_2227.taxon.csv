@@ -1,16 +1,90 @@
 id,rank,epithet,parent_id,accepted_id,authorship,year
-1,1,Plantae,,,"Copeland",
+1,1,Plantae,,,"Cavalier-Smith",1981
 2,3,Marchantiophyta,1,,"Stotler & Stotl.-Crand.",1977
+21,3,Bryophyta,1,,"Schimp.",
+30,3,Anthocerotophyta,1,,"Stotler & Stotl.-Crand.",1977
+38,3,Lycopodiophyta,1,,"D.H.Scott",1909
+39,3,Pteridophyta,1,,"",
+40,3,Pinophyta,1,,"",
+41,3,Cycadophyta,1,,"Bessey",1907
+42,3,Ginkgophyta,1,,"Bessey",1907
+43,3,Gnetophyta,1,,"",
+0,3,Tracheophyta,1,,Sinnott,1935
+44,3,Magnoliopsida,0,,Dahlgren et al.,1985
+485,7,Acorales,44,,"Link",1835
+486,7,Alismatales,44,,"R.Br. ex Bercht. & J.Presl",1820,
+487,7,Amborellales,44,,"Melikyan, A.V.Bobrov, & Zaytzeva",1999
+488,7,Apiales,44,,"Nakai, Hisi-Shokubutsu",1930
+489,7,Aquifoliales,44,,"Senft",1857
+490,7,Arecales,44,,"Bromhead",1840
+45,7,Asparagales,44,,"Link",1829
+492,7,Asterales,44,,"Lindley",
+493,7,Austrobaileyales,44,,"Takht. ex Reveal",1992
+494,7,Berberidopsidales,44,,"Doweld",2001
+495,7,Boraginales,44,,"Juss. ex Bercht. & J. Presl",1820
+496,7,Brassicales,44,,"Bromhead",1838
+497,7,Bruniales,44,,"Dumort",1829
+498,7,Buxales,44,,"Takht. ex Reveal",
+499,7,Canellales,44,,"Cronquist",1957
+500,7,Caryophyllales,44,,"Juss. ex Bercht. & J. Presl",1820
+501,7,Celastrales,44,,"Link",1829
+502,7,Ceratophyllales,44,,"Link",1829
+503,7,Chloranthales,44,,"R.Br.",1835
+504,7,Commelinales,44,,"Mirb. ex Bercht. & J.Presl",1820
+505,7,Cornales,44,,"Link",1829
+506,7,Crossosomatales,44,,"Takht. ex Reveal",1993
+507,7,Cucurbitales,44,,"Juss. ex Bercht. & J. Presl",1820
+508,7,Dilleniales,44,,"DC. ex Bercht. & J. Presl",1820
+509,7,Dioscoreales,44,,Mart,1835
+510,7,Dipsacales,44,,"Juss. ex Bercht. & J. Presl",1820
+511,7,Ericales,44,,Dumortier,
+512,7,Escalloniales,44,,"Link",1829
+204,7,Fabales,44,,"Bromhead",1838
+514,7,Fagales,44,,Engler,1892
+515,7,Garryales,44,,Mart,1835
+516,7,Gentianales,44,,"Juss. ex Bercht. & J. Presl",1820
+517,7,Geraniales,44,,"Juss. ex Bercht. & J. Presl",1820
+518,7,Gunnerales,44,,Takht,1992
+519,7,Huerteales,44,,Doweld,
+520,7,Icacinales,44,,Tiegh,1993
+521,7,Lamiales,44,,Bromhead,
+522,7,Laurales,44,,"Juss. ex Bercht. & J. Presl",1820
+523,7,Liliales,44,,Perleb,1826
+524,7,Magnoliales,44,,"Juss. ex Bercht. & J. Presl",1820
+525,7,Malpighiales,44,,"Juss. ex Bercht. & J. Presl",1820
+526,7,Malvales,44,,Juss.,1820
+527,7,Metteniusales,44,,Takht.,1997
+528,7,Myrtales,44,,"Juss. ex Bercht. & J. Presl",1820
+529,7,Nymphaeales,44,,"Salisb. ex Bercht. & J.Presl",1820
+530,7,Oxalidales,44,,"Bercht. & J. Presl",
+531,7,Pandanales,44,,"R.Br. ex Bercht. & J.Presl",1820
+532,7,Paracryphiales,44,,"Takht. ex Reveal",1992
+533,7,Petrosaviales,44,,"Takht.",1997
+534,7,Picramniales,44,,"Doweld",2001
+535,7,Piperales,44,,"Bercht. & J. Presl",1820
+343,7,Poales,44,,"Small",1903
+536,7,Proteales,44,,"Juss. ex Bercht. & J.Presl",1820
+537,7,Ranunculales,44,,"Juss. ex Bercht. & J. Presl",1820
+538,7,Rosales,44,,"Berchtold & J. Presl",1820
+539,7,Santalales,44,,"R.Br.. ex Berchtold & J. Presl",1820
+540,7,Sapindales,44,,"Juss. ex Bercht. & J. Presl",1820
+541,7,Saxifragales,44,,"Berchtold & J. Presl",1820
+542,7,Solanales,44,,"Juss. ex Bercht. & J. Presl",1820
+543,7,Trochodendrales,44,,"Takht. ex Cronquist",1981
+544,7,Vahliales,44,,Doweld,2001
+545,7,Vitales,44,,"Juss. ex Bercht. & J. Presl",1820
+491,7,Zingiberales,44,,"Griseb.",1854
+513,7,Zygophyllales,44,,Link,1829
 3,5,Haplomitriopsida,2,,"",
+6,5,Marchantiopsida,2,,"Stotler et Crand.-Stotl.", 1977
+12,5,Jungermanniopsida,2,,"",
 4,7,Haplomitriales,3,,"",
 5,7,Treubiales,3,,"",
-6,5,Marchantiopsida,2,,"",
 7,7,Blasiales,6,,"",
 8,7,Neohodgsoniales,6,,"",
 9,7,Sphaerocarpales,6,,"",
 10,7,Lunulariales,6,,"",
 11,7,Marchantiales,6,,"",
-12,5,Jungermanniopsida,2,,"",
 13,7,Pelliales,12,,"",
 14,7,Pallaviciniales,12,,"",
 15,7,Fossombroniales,12,,"",
@@ -19,7 +93,6 @@ id,rank,epithet,parent_id,accepted_id,authorship,year
 18,7,Porellales,12,,"",
 19,7,Ptilidiales,12,,"",
 20,7,Jungermanniales,12,,"",
-21,3,Bryophyta,1,,"Schimp.",
 22,5,Takakiopsida,21,,"",
 23,5,Sphagnopsida,21,,"",
 24,5,Andreaeopsida,21,,"",
@@ -28,7 +101,6 @@ id,rank,epithet,parent_id,accepted_id,authorship,year
 27,5,Polytrichopsida,21,,"",
 28,5,Tetraphidopsida,21,,"",
 29,5,Bryopsida,21,,"",
-30,3,Anthocerotophyta,1,,"Stotler & Stotl.-Crand.",1977
 31,5,Leiosporocerotopsida,30,,"",
 32,7,Leiosporocerotales,31,,"",
 33,5,Anthocerotopsida,30,,"",
@@ -36,14 +108,6 @@ id,rank,epithet,parent_id,accepted_id,authorship,year
 35,7,Dendrocerotales,33,,"",
 36,7,Notothyladales,33,,"",
 37,7,Phymatocerotales,33,,"",
-38,3,Lycopodiophyta,1,,"",
-39,3,Pteridophyta,1,,"",
-40,3,Pinophyta,1,,"",
-41,3,Cycadophyta,1,,"",
-42,3,Ginkgophyta,1,,"",
-43,3,Gnetophyta,1,,"",
-44,3,Magnoliophyta,1,,"",
-45,7,Asparagales,44,,"Link",
 46,9,Orchidaceae,45,,"Juss.",
 47,9,Boryaceae,45,,"M.W.Chase, Rudall & Conran",
 48,9,Blandfordiaceae,45,,"R.Dahlgren & Clifford",
@@ -202,7 +266,6 @@ id,rank,epithet,parent_id,accepted_id,authorship,year
 201,13,Scilla,76,,"L.",
 202,13,Spetaea,76,,"Wetschnig & Pfosser",
 203,13,Veltheimia,76,,"Gled.",
-204,7,Fabales,44,,"Lindley",
 205,9,Fabaceae,204,,,
 206,10,Faboideae,205,,"Rudd",
 207,10,Papilionoideae,205,206,"Juss.",
@@ -341,7 +404,6 @@ id,rank,epithet,parent_id,accepted_id,authorship,year
 340,13,Vavilovia,223,,Fed.,
 341,13,Vicia,223,,L.,
 342,9,Leguminosae,204,205,"Juss.",
-343,7,Poales,44,,,
 344,9,Bromeliaceae,343,,,
 345,9,Rapateaceae,343,,,
 346,9,Eriocaulaceae,343,,,

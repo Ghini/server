@@ -1,6 +1,6 @@
 from django.db import models
 
-_ = id
+_ = lambda x: x
 
 from taxonomy.models import Taxon
 
@@ -50,10 +50,10 @@ class Accession(models.Model):
     taxon = models.ForeignKey(Taxon, related_name='accessions', on_delete=models.PROTECT)
     qualifier = models.CharField(blank=True, null=True, max_length=8, choices=QUALIFIERS)
 
-    date_accessioned = models.DateField(blank=True)
-    date_received = models.DateField(blank=True)
-    quantity_received = models.IntegerField(blank=False, default=1)
-    recvd_type = models.CharField(blank=True, null=True, max_length=4, choices=recvd_type_values)
+    accessioned_date = models.DateField(blank=True, null=True)
+    received_date = models.DateField(blank=True, null=True)
+    received_quantity = models.IntegerField(blank=False, default=1)
+    received_type = models.CharField(blank=True, null=True, max_length=4, choices=recvd_type_values)
     intended_locations = models.ManyToManyField('garden.Location', through='garden.LocationPlanner', related_name='planned_accessions')
 
     pass

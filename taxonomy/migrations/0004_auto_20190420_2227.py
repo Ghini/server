@@ -21,7 +21,7 @@ def import_defaults(apps, schema_editor):
          for row in spamreader:
              item = dict(zip(header, row))
              for key in header:
-                 if not item[key]:
+                 if item[key] == '':
                      del item[key]
              obj = Taxon.objects.create(**item)
              obj.save()

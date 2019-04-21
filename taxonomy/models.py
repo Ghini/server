@@ -1,73 +1,56 @@
 from django.db import models
 
-GENUS_RANK = 13
-SPECIES_RANK = 19
-TAXON_RANKS = (
-    (1, 'regnum'),
-    (2, 'subregnum'),
-    (3, 'divisio'),
-    (4, 'subdivisio'),
-    (5, 'classis'),
-    (6, 'subclassis'),
-    (7, 'ordo'),
-    (8, 'subordo'),
-    (9, 'familia'),
-    (10, 'subfamilia'),
-    (11, 'tribus'),
-    (12, 'subtribus'),
-    (13, 'genus'),
-    (14, 'subgenus'),
-    (15, 'sectio'),
-    (16, 'subsectio'),
-    (17, 'series'),
-    (18, 'subseries'),
-    (19, 'species'),
-    (20, 'subspecies'),
-    (21, 'varietas'),
-    (22, 'subvarietas'),
-    (23, 'forma'),
-    (24, 'subforma'),
-)
-
 # Create your models here.
+
+class Rank(models.Model):
+    #id,name,short,show_as
+    #0,"regnum","",".epithet sp.",False
+    name = models.CharField(max_length=16)
+    short = models.CharField(max_length=8)
+    show_as = models.CharField(max_length=32, default='.epithet sp.')
+
 
 class Taxon(models.Model):
     class Meta:
         verbose_name_plural = "taxa"
 
-    rank = models.IntegerField(choices=TAXON_RANKS)
+    rank = models.ForeignKey(Rank, on_delete=models.PROTECT)
     epithet = models.CharField(max_length=40)  # published epithet
     authorship = models.CharField(max_length=120)  # publication authorship
     year = models.IntegerField(null=True)  # publication year
     parent = models.ForeignKey('self', null=True, related_name='subtaxa', on_delete=models.CASCADE)
     accepted = models.ForeignKey('self', null=True, related_name='synonyms', on_delete=models.SET_NULL)
 
+    def show(self, authorship=False):
+        def convert(match):
+            item = match.group(0)
+            field = item[1:]
+            if field == 'epithet':
+                return getattr(self, field)
+            else:
+                return getattr(self.parent, field)
+        import re
+        return re.sub(r'\.\w+', convert, self.rank.show_as)
+
     @property
     def genus(self):
-        genus = self
-        while genus and genus.rank > GENUS_RANK:
-            genus = genus.parent
-        if genus and genus.rank == GENUS_RANK:
-            return genus
-        else:
-            return None
+        step = self
+        while step and step.rank.name != 'genus':
+            step = step.parent
+        return step and step.epithet
 
     @property
-    def species(self):
-        species = self
-        while species and species.rank > SPECIES_RANK:
-            species = species.parent
-        if species and species.rank == SPECIES_RANK:
-            return species
-        else:
-            return None
+    def binomial(self):
+        step = self
+        while step and step.rank.name != 'species':
+            step = step.parent
+        return step and '{} {}'.format(step.genus, step.epithet)
+
+    @property
+    def identify(self):
+        return self.show()
 
     def __str__(self):
-        if self.rank == SPECIES_RANK:
-            return "/{} {}/ {}".format(self.genus.epithet, self.epithet, self.authorship).strip()
-        if self.rank > SPECIES_RANK:
-            rank_name = dict(TAXON_RANKS)
-            return "/{} {}/ {} /{}/ {}".format(self.genus.epithet, self.species.epithet, rank_name[self.rank], self.epithet, self.authorship).strip()
         return "/{}/ {}".format(self.epithet, self.authorship).strip()
 
     def __repr__(self):
