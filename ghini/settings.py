@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'taxonomy.apps.TaxonomyConfig',
+    'collection.apps.CollectionConfig',
+    'garden.apps.GardenConfig',
 ]
 
 MIDDLEWARE = [
