@@ -9,6 +9,9 @@ class Rank(models.Model):
     short = models.CharField(max_length=8)
     show_as = models.CharField(max_length=32, default='.epithet sp.')
 
+    def __str__(self):
+        return self.name
+
 
 class Taxon(models.Model):
     class Meta:
@@ -51,7 +54,7 @@ class Taxon(models.Model):
         return self.show()
 
     def __str__(self):
-        return "/{}/ {}".format(self.epithet, self.authorship).strip()
+        return "{} /{}/ {}".format(self.rank.short, self.epithet, self.authorship).strip()
 
     def __repr__(self):
         return self.__str__()
