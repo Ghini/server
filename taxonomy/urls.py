@@ -1,8 +1,14 @@
+from rest_framework.routers import DefaultRouter
 from django.urls import path
-from . import views
+from .views import RankViewSet, TaxonViewSet, index
+
+router = DefaultRouter()
+router.register('ranks', RankViewSet, base_name='ranks')
+router.register('taxa', TaxonViewSet, base_name='taxa')
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    #path("taxa/", TaxaList.as_view(), name="taxa_list"),
+    path('', index, name='index'),
     #path("taxa/<int:pk>/subtaxa/", SubTaxa.as_view(), name="subtaxa"),
 ]
+
+urlpatterns += router.urls
