@@ -46,24 +46,59 @@ recvd_type_values = (
 
 # Create your models here.
 
-class Accession(models.Model):
-    taxa = models.ManyToManyField(Taxon, related_name='accessions', through='Verification')
-    qualifier = models.CharField(blank=True, null=True, max_length=8, choices=QUALIFIERS)
-
-    accessioned_date = models.DateField(blank=True, null=True)
-    received_date = models.DateField(blank=True, null=True)
-    received_quantity = models.IntegerField(blank=False, default=1)
-    received_type = models.CharField(blank=True, null=True, max_length=4, choices=recvd_type_values)
-    intended_locations = models.ManyToManyField('garden.Location', through='garden.LocationPlanner', related_name='planned_accessions')
-
-    pass
-
 
 class Contact(models.Model):
     name = models.CharField(max_length=64, default='')
 
     def __str__(self):
         return self.name
+
+
+class Accession(models.Model):
+    taxa = models.ManyToManyField(Taxon, through='Verification', related_name='accessions')
+
+    code = models.CharField(max_length=12, unique=True)
+
+    accessioned_date = models.DateField(blank=True, null=True)
+    received_date = models.DateField(blank=True, null=True)
+    received_quantity = models.IntegerField(blank=False, default=1)
+    received_type = models.CharField(blank=True, null=True, max_length=4, choices=recvd_type_values)
+    intended_locations = models.ManyToManyField('garden.Location', through='garden.LocationPlanner',
+                                                related_name='planned_accessions')
+
+    source = models.ForeignKey(Contact, blank=True, null=True, on_delete=models.SET_NULL)
+
+    @property
+    def taxon(self):
+        if len(self.verifications.all()) == 1:
+            return self.taxa[0]
+        elif len(self.verifications.all()) == 0:
+            None
+        else:
+            return []
+
+    @property
+    def qualifier(self):
+        if len(self.verifications.all()) == 1:
+            return self.verifications[0].qualifier
+        elif len(self.verifications.all()) == 0:
+            None
+        else:
+            return []
+
+    @property
+    def best_verification(self):
+        if self.verifications.all():
+            return self.verifications.order_by('-level').all()[0]
+        else:
+            return None
+
+    def __str__(self):
+        if self.verifications.all():
+            best_verification = self.verifications.order_by('-level').all()[0]
+            return "{} ({})".format(self.code, best_verification.taxon.show())
+        else:
+            return self.code
 
 
 VERIFICATION_LEVELS = (
@@ -78,6 +113,7 @@ VERIFICATION_LEVELS = (
 class Verification(models.Model):
     accession = models.ForeignKey(Accession, blank=False, related_name='verifications', on_delete=models.CASCADE)
     taxon = models.ForeignKey(Taxon, blank=False, related_name='verifications', on_delete=models.PROTECT)
+    qualifier = models.CharField(blank=True, null=True, max_length=8, choices=QUALIFIERS)
     level = models.CharField(blank=False, null=False, max_length=1, choices=VERIFICATION_LEVELS, default='0')
     contact = models.ForeignKey(Contact, blank=False, related_name='verifications', on_delete=models.PROTECT)
     date = models.DateField(blank=False, null=False)

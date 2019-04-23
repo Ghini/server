@@ -15,13 +15,20 @@ class Location(models.Model):
             return '{} ({})'.format(self.code, self.name)
         return self.code
 
+
 class Plant(models.Model):
-    code = models.CharField(max_length=8, default='1')
     accession = models.ForeignKey(Accession, related_name="plants", blank=False, on_delete=models.PROTECT)
+    code = models.CharField(max_length=8, default='1')
+    location = models.ForeignKey(Location, related_name="plants", blank=False, on_delete=models.PROTECT)
+    quantity = models.IntegerField(blank=False, default=1)
 
     class Meta:
         unique_together = (('accession', 'code'),
         )
+
+    def __str__(self):
+        return '{}.{}'.format(self.accession.code, self.code)
+
 
 class LocationPlanner(models.Model):
     accession = models.ForeignKey(Accession, on_delete=models.CASCADE)

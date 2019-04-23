@@ -8,7 +8,12 @@ from .serializers import PlantSerializer
 
 class Plants(generics.ListCreateAPIView):
     def get_queryset(self):
-        queryset = Plant.objects.filter(accession__id=self.kwargs['accession_pk'])
+        print(self.kwargs)
+        accession = Accession.objects.filter(code=self.kwargs['accession_code']).first()
+        if accession:
+            queryset = Plant.objects.filter(accession__code=self.kwargs['accession_code'])
+        else:
+            queryset = Plant.objects.filter(accession__code=self.kwargs['accession_code'])
         return queryset
 
     serializer_class = PlantSerializer
