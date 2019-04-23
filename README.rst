@@ -1,7 +1,7 @@
 ghini - reloaded
 ============================
 
-ghini - reloaded is a botanical data server, and a set of web clients to the same data.
+**ghini - reloaded** is the new Ghini family picture.
 
 the central ghini.server is there for all other Ghini family members.  it
 serves data from one garden, or for several.
