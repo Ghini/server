@@ -18,6 +18,6 @@ serves data from one garden, or for several.
 * in combination with ``ghini.tour``, it lets visitors find their way in the
   garden.
 * ``ghini.server`` can cooperate with other instances of itself, contributing
-  selected data to a ``ghini.servers` instance running as a garden aggregator.
+  selected data to a ``ghini.servers`` instance running as a garden aggregator.
   A ``ghini.visitor`` web client accessing a garden aggregator server will now
   show data from several gardens at the same time.
