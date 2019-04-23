@@ -3,6 +3,8 @@ ghini - reloaded
 
 **ghini - reloaded** is the new Ghini family picture.
 
+.. image:: ghini-family.png
+
 the central `ghini.server` is there for all other Ghini family members.  it
 serves data from one garden, or for several.
 
