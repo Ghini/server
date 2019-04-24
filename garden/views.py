@@ -12,8 +12,10 @@ class PlantDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'code'
     def get_queryset(self):
         from collection.models import Accession
-        print(self.kwargs)
         accession = Accession.objects.filter(code=self.kwargs['accession_code']).first()
+        if accession is None:
+            return Response({'code': self.kwargs['accession_code'],
+                             "detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
         queryset = Plant.objects.filter(accession=accession, code=self.kwargs['code'])
         return queryset
 
@@ -23,6 +25,9 @@ class PlantList(generics.ListCreateAPIView):
     def post(self, request, accession_code):
         from collection.models import Accession
         accession = Accession.objects.filter(code=accession_code).first()
+        if accession is None:
+            return Response({'code': self.kwargs['accession_code'],
+                             "detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
         data = request.data.copy()
         data['accession'] = accession.pk
         serializer = PlantSerializer(data=data)
@@ -34,8 +39,10 @@ class PlantList(generics.ListCreateAPIView):
     
     def get_queryset(self):
         from collection.models import Accession
-        print(self.kwargs)
         accession = Accession.objects.filter(code=self.kwargs['accession_code']).first()
+        if accession is None:
+            return Response({'code': self.kwargs['accession_code'],
+                             "detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
         queryset = Plant.objects.filter(accession=accession)
         return queryset
 
