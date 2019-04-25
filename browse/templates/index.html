@@ -24,19 +24,53 @@
     <script src="{% static 'js/bootstrap.min.js' %}" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="{% static 'js/bootstrap-datepicker.min.js' %}" integrity="sha256-tW5LzEC7QjhG0CiAvxlseMTs2qJS7u3DRPauDjFJ3zo=" crossorigin="anonymous"></script>
     <!-- ./ JS libraries -->
+    <script>
+
+     function partial(func, ...argsBound) {
+         return function(...args) { // (*)
+             return func.call(this, ...argsBound, ...args);
+         }
+     }
+     
+     function lookup(e) {
+         $('.search-filter').attr("disabled", "disabled");
+         var tbody = $('#results-table-body');
+         tbody.empty();
+
+         api_url = '/collection/accessions/';
+         $.getJSON(api_url, function(data) {
+             var tr;
+             jQuery.each(data, function(index, item) {
+                 tr = $("<tr></tr>");
+                 tbody.append(tr);  // add it as last child
+                 tr.append($('<td>' + item.code + '</td>'));
+             });
+             $('.search-filter').removeAttr("disabled");
+         })
+     }
+     
+     $(function() {  // run at document ready
+         $('#search-filter').on('keypress', function (e) {
+             if(e.which === 13) {
+                 lookup(e);
+             }
+         });
+         $('#search-filter-button').click(lookup);
+     });
+    </script>
   </head>
   <body class="container-fluid">
-    <div class="input-group">
+    <div class="input-group search-filter">
       <button class="btn" disabled>lookup:</button>
-      <input type="text" class="form-control" id="taxon-filter">
-      <button class="btn btn-primary">
-        <span class="fa fa-search"></span>
+      <input type="text" class="form-control" id="search-filter">
+      <button class="btn btn-primary" id="search-filter-button">
+        <span class="fa fa-refresh"></span>
       </button>
       <button class="btn btn-primary">
-        <span class="fa fa-gear"></span>
+        <span class="fa fa-gears"></span>
       </button>
       <button class="btn btn-primary">
-        <span class="fa fa-lightbulb-o"></span>
+        <span class="fa fa-home"></span>
       </button>
     </div>
 
@@ -47,8 +81,8 @@
             <tr>
               <th>result list</th>
             </tr>
-          </thead id="results-table-body">
-          <tbody>
+          </thead>
+          <tbody id="results-table-body">
           </tbody>
         </table>
       </div>
@@ -58,8 +92,8 @@
             <tr>
               <th>infobox</th>
             </tr>
-          </thead id="infobox-table-body">
-          <tbody>
+          </thead>
+          <tbody id="infobox-table-body">
           </tbody>
         </table>
       </div>
