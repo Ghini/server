@@ -19,6 +19,10 @@ class Location(models.Model):
     def inline(self):
         return "%s" % self
 
+    @property
+    def infobox_url(self):
+        return "/garden/locations/%s" % (self.code)
+
 
 class Plant(models.Model):
     accession = models.ForeignKey(Accession, related_name="plants", blank=False, on_delete=models.PROTECT)
@@ -36,6 +40,10 @@ class Plant(models.Model):
     @property
     def inline(self):
         return "%s" % self
+
+    @property
+    def infobox_url(self):
+        return "/garden/accessions/%s/plants/%s" % (self.accession.code, self.code)
 
 
 class LocationPlanner(models.Model):

@@ -57,6 +57,10 @@ class Contact(models.Model):
     def inline(self):
         return "%s" % self
 
+    @property
+    def infobox_url(self):
+        return "/collection/contacts/%s" % self.pk
+
 
 class Accession(models.Model):
     taxa = models.ManyToManyField(Taxon, through='Verification', related_name='accessions')
@@ -107,6 +111,10 @@ class Accession(models.Model):
     @property
     def inline(self):
         return "%s" % self
+
+    @property
+    def infobox_url(self):
+        return "/collection/accessions/%s" % self.code
 
 
 VERIFICATION_LEVELS = (

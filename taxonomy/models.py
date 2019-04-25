@@ -16,6 +16,10 @@ class Rank(models.Model):
     def inline(self):
         return "%s" % self
 
+    @property
+    def infobox_url(self):
+        return "/taxonomy/ranks/%s" % self.pk
+
 
 class Taxon(models.Model):
     class Meta:
@@ -66,3 +70,7 @@ class Taxon(models.Model):
     @property
     def inline(self):
         return "%s" % self
+
+    @property
+    def infobox_url(self):
+        return "/taxonomy/taxa/%s" % self.pk
