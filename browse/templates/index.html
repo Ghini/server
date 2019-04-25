@@ -37,13 +37,16 @@
          var tbody = $('#results-table-body');
          tbody.empty();
 
-         api_url = '/collection/accessions/';
+         api_url = '/browse/filter/';
          $.getJSON(api_url, function(data) {
              var tr;
-             jQuery.each(data, function(index, item) {
-                 tr = $("<tr></tr>");
-                 tbody.append(tr);  // add it as last child
-                 tr.append($('<td>' + item.code + '</td>'));
+             jQuery.each(data, function(class_name, list_for_class) {
+                 console.log(class_name, list_for_class);
+                 jQuery.each(list_for_class, function(index, item) {
+                     tr = $("<tr></tr>");
+                     tbody.append(tr);  // add it as last child
+                     tr.append($('<td>' + item.inline + '</td>'));
+                 });
              });
              $('.search-filter').removeAttr("disabled");
          })
@@ -79,20 +82,31 @@
         <table class="table">
           <thead>
             <tr>
-              <th>result list</th>
+              <th>results list</th>
             </tr>
           </thead>
-          <tbody id="results-table-body">
-          </tbody>
         </table>
       </div>
       <div class="col-5">
         <table class="table">
           <thead>
             <tr>
-              <th>infobox</th>
+              <th>info box for selected row</th>
             </tr>
           </thead>
+        </table>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-7" style="height:520px;overflow-y:scroll">
+        <table class="table">
+          <tbody id="results-table-body">
+          </tbody>
+        </table>
+      </div>
+      <div class="col-5">
+        <table class="table">
           <tbody id="infobox-table-body">
           </tbody>
         </table>

@@ -53,6 +53,10 @@ class Contact(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def inline(self):
+        return "%s" % self
+
 
 class Accession(models.Model):
     taxa = models.ManyToManyField(Taxon, through='Verification', related_name='accessions')
@@ -100,6 +104,10 @@ class Accession(models.Model):
         else:
             return self.code
 
+    @property
+    def inline(self):
+        return "%s" % self
+
 
 VERIFICATION_LEVELS = (
     ('0', 'The name of the record has not been checked by any authority.'),
@@ -125,3 +133,7 @@ class Verification(models.Model):
     class Meta:
         unique_together = (('accession', 'code'),
         )
+
+    @property
+    def inline(self):
+        return "%s" % self

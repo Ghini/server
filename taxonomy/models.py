@@ -12,6 +12,10 @@ class Rank(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def inline(self):
+        return "%s" % self
+
 
 class Taxon(models.Model):
     class Meta:
@@ -54,7 +58,11 @@ class Taxon(models.Model):
         return self.show()
 
     def __str__(self):
-        return "{} /{}/ {}".format(self.rank.short, self.epithet, self.authorship).strip()
+        return "{} <i>{}</i> {}".format(self.rank.short, self.epithet, self.authorship).strip()
 
     def __repr__(self):
         return self.__str__()
+
+    @property
+    def inline(self):
+        return "%s" % self

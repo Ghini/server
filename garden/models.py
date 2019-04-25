@@ -15,6 +15,10 @@ class Location(models.Model):
             return '{} ({})'.format(self.code, self.name)
         return self.code
 
+    @property
+    def inline(self):
+        return "%s" % self
+
 
 class Plant(models.Model):
     accession = models.ForeignKey(Accession, related_name="plants", blank=False, on_delete=models.PROTECT)
@@ -28,6 +32,10 @@ class Plant(models.Model):
 
     def __str__(self):
         return '{}.{}'.format(self.accession.code, self.code)
+
+    @property
+    def inline(self):
+        return "%s" % self
 
 
 class LocationPlanner(models.Model):
