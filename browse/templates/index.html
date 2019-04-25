@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ghini - Taxasoft BG</title>
+    <meta name="author" content="Mario Frasca" >
+    <meta name="copyright" content="Mario Frasca">
+    <meta name="License" content="AGPL3">
+    <meta name="description" content="">
+    <meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8">
+    <meta http-equiv="content-style-type" content="text/css">
+    <meta http-equiv="expires" content="0">
+
+    <!-- CSS libraries-->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.min.css' %}" integrity="sha256-JDBcnYeV19J14isGd3EtnsCQK05d8PczJ5+fvEvBJvI=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" crossorigin="anonymous">
+    <!-- ./ CSS libraries-->
+    <!-- JS libraries -->
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="{% static 'js/popper.min.js' %}" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="{% static 'js/bootstrap-datepicker.min.js' %}" integrity="sha256-tW5LzEC7QjhG0CiAvxlseMTs2qJS7u3DRPauDjFJ3zo=" crossorigin="anonymous"></script>
+    <!-- ./ JS libraries -->
+  </head>
+  <body class="container-fluid">
+    <div class="input-group">
+      <button class="btn" disabled>lookup:</button>
+      <input type="text" class="form-control" id="taxon-filter">
+      <button class="btn btn-primary">
+        <span class="fa fa-search"></span>
+      </button>
+      <button class="btn btn-primary">
+        <span class="fa fa-gear"></span>
+      </button>
+      <button class="btn btn-primary">
+        <span class="fa fa-lightbulb-o"></span>
+      </button>
+    </div>
+
+    <div class="row">
+      <div class="col-7">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>result list</th>
+            </tr>
+          </thead id="results-table-body">
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-5">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>infobox</th>
+            </tr>
+          </thead id="infobox-table-body">
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

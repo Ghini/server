@@ -24,5 +24,6 @@ urlpatterns = [
     path('taxonomy/', include('taxonomy.urls')),
     path('collection/', include('collection.urls')),
     path('garden/', include('garden.urls')),
+    path('browse/', include('browse.urls')),
     path("favicon.ico", favicon_view),
 ]

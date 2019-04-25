@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'taxonomy.apps.TaxonomyConfig',
     'collection.apps.CollectionConfig',
     'garden.apps.GardenConfig',
+
+    'browse.apps.BrowseConfig',
 ]
 
 MIDDLEWARE = [

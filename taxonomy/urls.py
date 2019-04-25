@@ -7,7 +7,6 @@ router.register('ranks', RankViewSet, base_name='ranks')
 router.register('taxa', TaxonViewSet, base_name='taxa')
 
 urlpatterns = [
-    path('', index, name='index'),
     #path("taxa/<int:pk>/subtaxa/", SubTaxa.as_view(), name="subtaxa"),
 ]
 
