@@ -33,37 +33,46 @@
      }
 
      function activate_infobox(url, e) {
+         $(e.target).attr("disabled", "disabled");
+         $('#infobox-object-text').empty();
+         $('#infobox-object-text').append($(e.target).clone());
          var tbody = $('#infobox-table-body');
          tbody.empty();
+         console.log(e.target.childNodes[0].data);
          $.getJSON(url, function(data) {
+             tbody.empty();
              var tr;
              jQuery.each(data, function(key, value) {
-                 if (value !== null) {
+                 if (value !== null && value !== '') {
                      tr = $("<tr></tr>");
                      tbody.append(tr);  // add it as last child
                      tr.append($('<td>' + key + '</td>'));
                      tr.append($('<td>' + value + '</td>'));
                  }
              });
+             $(e.target).removeAttr("disabled");
          });
          
      }
      
      function lookup(e) {
          $('.search-filter').attr("disabled", "disabled");
+         $('#infobox-object-text').empty();
+         $('#infobox-table-body').empty();
          var tbody = $('#results-table-body');
          tbody.empty();
 
          api_url = '/browse/filter/';
          $.getJSON(api_url, function(data) {
-             var tr;
+             var tr, td;
              jQuery.each(data, function(class_name, list_for_class) {
                  console.log(class_name, list_for_class);
                  jQuery.each(list_for_class, function(index, item) {
                      tr = $("<tr></tr>");
+                     td = $('<td>' + item.inline + '</td>');
                      tbody.append(tr);  // add it as last child
-                     tr.append($('<td>' + item.inline + '</td>'));
-                     tr.click(partial(activate_infobox, item.infobox_url))
+                     tr.append(td);
+                     td.click(partial(activate_infobox, item.infobox_url))
                  });
              });
              $('.search-filter').removeAttr("disabled");
@@ -124,11 +133,12 @@
         </table>
       </div>
       <div class="col-5">
+        <p class="btn" id="infobox-object-text" disabled/>
         <table class="table">
           <thead>
             <tr>
-              <th>key</th>
-              <th>value</th>
+              <th width="40%">key</th>
+              <th width="60%">value</th>
             </tr>
           </thead>
           <tbody id="infobox-table-body">
