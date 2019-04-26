@@ -15,7 +15,7 @@ def index(request):
 def filter_json(request):
     # TODO: how to represent filter criteria
     result = {}
-    for klass in [Accession, Taxon, Plant]:
+    for klass in [Accession, Taxon, Plant, Location]:
         partial = [{key: getattr(item, key, None)
                     for key in ['inline', 'infobox_url', 'depending']}
                    for item in klass.objects.all()]
