@@ -15,16 +15,36 @@ class AccessionList(generics.ListCreateAPIView):
 
 class AccessionDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'code'
-    queryset = Accession.objects.all()
     serializer_class = AccessionSerializer
 
-class ContactDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Contact.objects.all()
-    serializer_class = ContactSerializer
+    def get_queryset(self):
+        queryset = Accession.objects.filter(code=self.kwargs['code'])
+        return queryset
+
+
+class AccessionInfobox(AccessionDetail):
+    def get(self, request, *args, **kwargs):
+        qs = self.get_queryset()
+        obj = qs.first()
+        if obj:
+            serializer = AccessionSerializer(instance=obj)
+            result = serializer.data
+            del result['id']
+            result['taxa'] = ", ".join(["%s" % i for i in obj.taxa.all()])
+            return Response(result, status=status.HTTP_200_OK)
+        else:
+            return Response([], status=status.HTTP_204_NO_CONTENT)
 
 class ContactList(generics.ListCreateAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
+        
+class ContactDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Contact.objects.all()
+    serializer_class = ContactSerializer
+        
+class ContactInfobox(ContactDetail):
+    pass
 
 class VerificationDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'code'

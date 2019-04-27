@@ -21,7 +21,7 @@ class Location(models.Model):
 
     @property
     def infobox_url(self):
-        return "/garden/locations/%s" % (self.code)
+        return "/garden/locations/%s/infobox/" % (self.code)
 
 
 class Plant(models.Model):
@@ -43,7 +43,7 @@ class Plant(models.Model):
 
     @property
     def infobox_url(self):
-        return "/garden/accessions/%s/plants/%s" % (self.accession.code, self.code)
+        return "/garden/accessions/%s/plants/%s/infobox/" % (self.accession.code, self.code)
 
 
 class LocationPlanner(models.Model):

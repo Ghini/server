@@ -59,7 +59,7 @@ class Contact(models.Model):
 
     @property
     def infobox_url(self):
-        return "/collection/contacts/%s" % self.pk
+        return "/collection/contacts/%s/infobox/" % self.pk
 
 
 class Accession(models.Model):
@@ -79,7 +79,7 @@ class Accession(models.Model):
     @property
     def taxon(self):
         if len(self.verifications.all()) == 1:
-            return self.taxa[0]
+            return self.taxa.all()[0]
         elif len(self.verifications.all()) == 0:
             None
         else:
@@ -114,7 +114,7 @@ class Accession(models.Model):
 
     @property
     def infobox_url(self):
-        return "/collection/accessions/%s" % self.code
+        return "/collection/accessions/%s/infobox/" % self.code
 
 
 VERIFICATION_LEVELS = (

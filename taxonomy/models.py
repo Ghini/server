@@ -18,7 +18,7 @@ class Rank(models.Model):
 
     @property
     def infobox_url(self):
-        return "/taxonomy/ranks/%s" % self.pk
+        return "/taxonomy/ranks/%s/infobox/" % self.pk
 
 
 class Taxon(models.Model):
@@ -73,4 +73,4 @@ class Taxon(models.Model):
 
     @property
     def infobox_url(self):
-        return "/taxonomy/taxa/%s" % self.pk
+        return "/taxonomy/taxa/%s/infobox/" % self.pk
