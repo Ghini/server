@@ -2,9 +2,9 @@ from django.db import models
 from django.shortcuts import render
 from django.http import JsonResponse
 
-from taxonomy.models import Taxon, Rank
-from collection.models import Accession, Contact
-from garden.models import Location, Plant
+from taxonomy.views import TaxonList, RankList
+from collection.views import AccessionList, ContactList
+from garden.views import LocationList, PlantList
 
 
 # Create your views here.
@@ -13,11 +13,11 @@ def index(request):
     return render(request, 'index.html', {})
 
 def filter_json(request):
-    # TODO: how to represent filter criteria
-    result = {}
-    for klass in [Accession, Taxon, Plant, Location]:
+    import collections
+    result = collections.OrderedDict()
+    for klass in [TaxonList, AccessionList, PlantList, LocationList]:
         partial = [{key: getattr(item, key, None)
                     for key in ['inline', 'infobox_url', 'depending']}
-                   for item in klass.objects.all()]
+                   for item in klass().run_query(request.GET.get('q'))]
         result[klass.__name__] = partial
     return JsonResponse(result)

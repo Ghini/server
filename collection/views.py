@@ -13,6 +13,9 @@ class AccessionList(generics.ListCreateAPIView):
     queryset = Accession.objects.all()
     serializer_class = AccessionSerializer
 
+    def run_query(self, q):
+        return self.get_queryset().filter(code__contains=q).all()
+
 class AccessionDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'code'
     serializer_class = AccessionSerializer
@@ -38,6 +41,9 @@ class AccessionInfobox(AccessionDetail):
 class ContactList(generics.ListCreateAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
+
+    def run_query(self, q):
+        return self.get_queryset().filter(name__contains=q).all()
         
 class ContactDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Contact.objects.all()

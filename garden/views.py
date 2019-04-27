@@ -33,7 +33,11 @@ class PlantList(generics.ListCreateAPIView):
         queryset = Plant.objects.filter(accession=accession)
         return queryset
 
+    def run_query(self, q):
+        return Plant.objects.filter(accession__code__contains=q).all()
+
     serializer_class = PlantSerializer
+
 
 class PlantDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'code'
@@ -47,6 +51,7 @@ class PlantDetail(generics.RetrieveUpdateDestroyAPIView):
         return queryset
 
     serializer_class = PlantSerializer
+
 
 class PlantInfobox(PlantDetail):
     def get(self, request, *args, **kwargs):
@@ -62,8 +67,14 @@ class PlantInfobox(PlantDetail):
         else:
             return Response([], status=status.HTTP_204_NO_CONTENT)
 
+
 class LocationList(generics.ListCreateAPIView):
     serializer_class = LocationSerializer
+    queryset = Location.objects.all()
+
+    def run_query(self, q):
+        return self.get_queryset().filter(name__contains=q).all()
+
 
 class LocationDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'code'
@@ -71,5 +82,7 @@ class LocationDetail(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         queryset = Location.objects.filter(code=self.kwargs['code'])
         return queryset
+
+
 class LocationInfobox(LocationDetail):
     pass
