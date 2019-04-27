@@ -25,6 +25,7 @@
     <script src="{% static 'js/bootstrap-datepicker.min.js' %}" integrity="sha256-tW5LzEC7QjhG0CiAvxlseMTs2qJS7u3DRPauDjFJ3zo=" crossorigin="anonymous"></script>
     <!-- ./ JS libraries -->
     <script>
+     var search_history, forward_history;
 
      function partial(func, ...argsBound) {
          return function(...args) { // (*)
@@ -67,8 +68,14 @@
 
      }
 
-     function lookup(e) {
+     function lookup(e, term) {
          $('.search-filter').attr("disabled", "disabled");
+         if(term === undefined) {
+             term = $('#search-filter').val();
+             search_history.push(term);
+         } else {
+             $('#search-filter').val(term);
+         }
          $('#infobox-object-text').empty();
          $('#infobox-table-body').empty();
          var tbody = $('#results-table-body');
@@ -96,6 +103,14 @@
          })
      }
 
+     function follow_history(to_pop, to_push, e) {
+         if(to_pop.length !== 0) {
+             var term = to_pop.pop();
+             to_push.push(term);
+             lookup(e, term);
+         }
+     }
+
      $(function() {  // run at document ready
          $('#search-filter').on('keypress', function (e) {
              if(e.which === 13) {
@@ -103,15 +118,23 @@
              }
          });
          $('#search-filter-button').click(lookup);
+         search_history = [];
+         forward_history = [];
+         $('#pop-from-history').click(partial(follow_history, search_history, forward_history));
+         $('#forward-in-history').click(partial(follow_history, forward_history, search_history));
+
+         $("body").bind('contextmenu', function (e) {
+             e.preventDefault(); // prevents default menu
+         });
      });
     </script>
   </head>
   <body class="container-fluid">
     <div class="input-group search-filter">
-      <button class="btn btn-light">
+      <button class="btn btn-light" id="pop-from-history">
         <span class="fa fa-arrow-left"></span>
       </button>
-      <button class="btn btn-light">
+      <button class="btn btn-light" id="forward-in-history">
         <span class="fa fa-arrow-right"></span>
       </button>
       <button class="btn" disabled>lookup:</button>
