@@ -65,14 +65,29 @@
              });
              $(e.target).removeAttr("disabled");
          });
+     }
+     
+     if (!Array.prototype.last){
+         Array.prototype.last = function(){
+             return this[this.length - 1];
+         };
+     };
 
+     function clean_history(e) {
+         search_history.length = 0;
+         forward_history.length = 0;
+         $('#search-filter').val('');
+         $('#infobox-object-text').empty();
+         $('#infobox-table-body').empty();
+         $('#results-table-body').empty();
      }
 
      function lookup(e, term) {
          $('.search-filter').attr("disabled", "disabled");
          if(term === undefined) {
              term = $('#search-filter').val();
-             search_history.push(term);
+             if(search_history.last() !== term && forward_history.last() !== term)
+                 search_history.push(term);
          } else {
              $('#search-filter').val(term);
          }
@@ -107,6 +122,11 @@
          if(to_pop.length !== 0) {
              var term = to_pop.pop();
              to_push.push(term);
+             if ($('#search-filter').val() === term && to_pop.length !== 0) {
+                 term = to_pop.pop();
+                 to_push.push(term);
+             }
+
              lookup(e, term);
          }
      }
@@ -122,6 +142,7 @@
          forward_history = [];
          $('#pop-from-history').click(partial(follow_history, search_history, forward_history));
          $('#forward-in-history').click(partial(follow_history, forward_history, search_history));
+         $('#clean-history').click(clean_history);
 
          $("body").bind('contextmenu', function (e) {
              e.preventDefault(); // prevents default menu
@@ -136,6 +157,9 @@
       </button>
       <button class="btn btn-light" id="forward-in-history">
         <span class="fa fa-arrow-right"></span>
+      </button>
+      <button class="btn btn-light" id="clean-history">
+        <span class="fa fa-paint-brush"></span>
       </button>
       <button class="btn" disabled>lookup:</button>
       <input type="text" class="form-control" id="search-filter">
