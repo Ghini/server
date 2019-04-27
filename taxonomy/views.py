@@ -22,7 +22,7 @@ class TaxonList(generics.ListCreateAPIView):
         ordering = ['rank', 'epithet']
 
     def run_query(self, q):
-        return self.get_queryset().filter(epithet__contains=q)
+        return self.get_queryset().filter(epithet__contains=q).order_by('rank', 'epithet')
 
 
 class TaxonDetail(generics.RetrieveUpdateDestroyAPIView):

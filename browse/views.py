@@ -18,6 +18,6 @@ def filter_json(request):
     for klass in [TaxonList, AccessionList, PlantList, LocationList]:
         partial = [{key: getattr(item, key, None)
                     for key in ['inline', 'infobox_url', 'depending']}
-                   for item in klass().run_query(request.GET.get('q'))]
+                   for item in klass().run_query(request.GET.get('q')).all()]
         result[klass.__name__] = partial
     return JsonResponse(result)

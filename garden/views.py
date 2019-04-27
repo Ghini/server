@@ -34,7 +34,7 @@ class PlantList(generics.ListCreateAPIView):
         return queryset
 
     def run_query(self, q):
-        return Plant.objects.filter(accession__code__contains=q).all()
+        return Plant.objects.filter(accession__code__contains=q).order_by('accession__code', 'code')
 
     serializer_class = PlantSerializer
 
@@ -73,7 +73,7 @@ class LocationList(generics.ListCreateAPIView):
     queryset = Location.objects.all()
 
     def run_query(self, q):
-        return self.get_queryset().filter(name__contains=q).all()
+        return self.get_queryset().filter(name__contains=q).order_by('code')
 
 
 class LocationDetail(generics.RetrieveUpdateDestroyAPIView):
