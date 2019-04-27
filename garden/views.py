@@ -61,8 +61,8 @@ class PlantInfobox(PlantDetail):
             serializer = PlantSerializer(instance=obj)
             result = serializer.data
             del result['id']
-            result['accession'] = "%s" % obj.accession
-            result['location'] = "%s" % obj.location
+            result['accession'] = ('link', "%s" % obj.accession, obj.accession.code)
+            result['location'] = ('link', "%s" % obj.location, 'location=%s' % obj.location.code)
             return Response(result, status=status.HTTP_200_OK)
         else:
             return Response([], status=status.HTTP_204_NO_CONTENT)

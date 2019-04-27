@@ -32,6 +32,11 @@
          }
      }
 
+     function replace_search_filter(value, e) {
+         $('#search-filter').val(value);
+         $('#search-filter-button').trigger('click');
+     }
+
      function activate_infobox(url, e) {
          $(e.target).attr("disabled", "disabled");
          $('#infobox-object-text').empty();
@@ -41,20 +46,27 @@
          console.log(e.target.childNodes[0].data);
          $.getJSON(url, function(data) {
              tbody.empty();
-             var tr;
+             var tr, td;
              jQuery.each(data, function(key, value) {
                  if (value !== null && value !== '') {
                      tr = $("<tr></tr>");
                      tbody.append(tr);  // add it as last child
                      tr.append($('<td>' + key + '</td>'));
-                     tr.append($('<td>' + value + '</td>'));
+                     if(value[0] === 'link') {
+                         td = $('<td>' + value[1] + '</td>');
+                         td.click(partial(replace_search_filter, value[2]));
+                         td.addClass('list-group-item-action');
+                         tr.append(td);
+                     } else {
+                         tr.append($('<td>' + value + '</td>'));
+                     }
                  }
              });
              $(e.target).removeAttr("disabled");
          });
-         
+
      }
-     
+
      function lookup(e) {
          $('.search-filter').attr("disabled", "disabled");
          $('#infobox-object-text').empty();
@@ -65,9 +77,11 @@
          api_url = '/browse/filter/?q=' + $('#search-filter').val();
          $.getJSON(api_url, function(data) {
              var tr, td;
+             var added_count = 0;
              jQuery.each(data, function(class_name, list_for_class) {
                  console.log(class_name, list_for_class);
                  jQuery.each(list_for_class, function(index, item) {
+                     added_count += 1;
                      tr = $("<tr></tr>");
                      td = $('<td>' + item.inline + '</td>');
                      tbody.append(tr);  // add it as last child
@@ -75,10 +89,13 @@
                      td.click(partial(activate_infobox, item.infobox_url))
                  });
              });
+             if (added_count === 1) {
+                 td.trigger('click');
+             }
              $('.search-filter').removeAttr("disabled");
          })
      }
-     
+
      $(function() {  // run at document ready
          $('#search-filter').on('keypress', function (e) {
              if(e.which === 13) {

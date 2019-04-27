@@ -33,7 +33,9 @@ class AccessionInfobox(AccessionDetail):
             serializer = AccessionSerializer(instance=obj)
             result = serializer.data
             del result['id']
-            result['taxa'] = ", ".join(["%s" % i for i in obj.taxa.all()])
+            result['taxa'] = ('link',
+                              ", ".join(["%s" % i for i in obj.taxa.all()]),
+                              ", ".join([i.epithet for i in obj.taxa.all()]), )
             return Response(result, status=status.HTTP_200_OK)
         else:
             return Response([], status=status.HTTP_204_NO_CONTENT)

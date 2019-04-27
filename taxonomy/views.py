@@ -41,9 +41,10 @@ class TaxonInfobox(TaxonDetail):
             serializer = TaxonSerializer(instance=obj)
             result = serializer.data
             del result['id']
-            result['parent'] = "%s" % obj.parent
+            if obj.parent:
+                result['parent'] = ('link', "%s" % obj.parent, obj.parent.epithet)
             if obj.accepted:
-                result['accepted'] = "%s" % obj.accepted
+                result['accepted'] = ('link', "%s" % obj.accepted, obj.parent.epithet)
             if obj.synonyms:
                 result['synonyms'] = ", ".join("%s" % i for i in obj.synonyms.all())
             result['rank'] = "%s" % obj.rank
