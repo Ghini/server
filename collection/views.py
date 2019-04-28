@@ -31,11 +31,15 @@ class AccessionInfobox(AccessionDetail):
         obj = qs.first()
         if obj:
             serializer = AccessionSerializer(instance=obj)
-            result = serializer.data
+            import collections
+            result = collections.OrderedDict()
+            result.update(serializer.data)
             del result['id']
             result['taxa'] = ('link',
                               ", ".join(["%s" % i for i in obj.taxa.all()]),
                               ", ".join([i.epithet for i in obj.taxa.all()]), )
+            result['plant groups'] = sum(p.quantity for p in obj.plants.all())
+            result['living plants'] = sum(p.quantity for p in obj.plants.all())
             return Response(result, status=status.HTTP_200_OK)
         else:
             return Response([], status=status.HTTP_204_NO_CONTENT)
@@ -46,11 +50,11 @@ class ContactList(generics.ListCreateAPIView):
 
     def run_query(self, q):
         return self.get_queryset().filter(name__contains=q).order_by('name')
-        
+
 class ContactDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
-        
+
 class ContactInfobox(ContactDetail):
     pass
 
@@ -89,7 +93,7 @@ class VerificationList(generics.ListCreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response({'ser': serializer.errors, 'dat': data}, status=status.HTTP_400_BAD_REQUEST)
-    
+
     def get_queryset(self):
         from collection.models import Accession
         accession = Accession.objects.filter(code=self.kwargs['accession_code']).first()

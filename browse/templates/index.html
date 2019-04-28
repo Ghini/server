@@ -52,7 +52,7 @@
                  if (value !== null && value !== '') {
                      tr = $("<tr></tr>");
                      tbody.append(tr);  // add it as last child
-                     tr.append($('<td>' + key + '</td>'));
+                     tr.append($('<td width="40%">' + key + '</td>'));
                      if(value[0] === 'link') {
                          td = $('<td>' + value[1] + '</td>');
                          td.click(partial(replace_search_filter, value[2]));
@@ -203,14 +203,8 @@
         </table>
       </div>
       <div class="col-5">
-        <p class="btn" id="infobox-object-text" disabled/>
+        <h5 id="infobox-object-text"></h5>
         <table class="table">
-          <thead>
-            <tr>
-              <th width="40%">key</th>
-              <th width="60%">value</th>
-            </tr>
-          </thead>
           <tbody id="infobox-table-body">
           </tbody>
         </table>
