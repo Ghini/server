@@ -15,9 +15,20 @@ def index(request):
 def filter_json(request):
     import collections
     result = collections.OrderedDict()
-    for klass in [TaxonList, AccessionList, PlantList, LocationList]:
-        partial = [{key: getattr(item, key, None)
-                    for key in ['inline', 'infobox_url', 'depending']}
-                   for item in klass().run_query(request.GET.get('q')).all()]
-        result[klass.__name__] = partial
+    query_string = request.GET.get('q')
+    if query_string:
+        # attempt domain strategy
+        try:
+            domain, query = query_string.split('=', 1)
+        except:
+            # default strategy:
+            domain = None
+            query = query_string
+        for klass in [TaxonList, AccessionList, PlantList, LocationList]:
+            if domain is not None and not klass.__name__.lower().startswith(domain):
+                continue
+            partial = [{key: getattr(item, key, None)
+                        for key in ['inline', 'infobox_url', 'depending']}
+                       for item in klass().run_query(query).all()]
+            result[klass.__name__] = partial
     return JsonResponse(result)

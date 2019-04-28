@@ -61,7 +61,7 @@ class PlantInfobox(PlantDetail):
             serializer = PlantSerializer(instance=obj)
             result = serializer.data
             del result['id']
-            result['accession'] = ('link', "%s" % obj.accession, obj.accession.code)
+            result['accession'] = ('link', "%s" % obj.accession, 'accession=%s' % obj.accession.code)
             result['location'] = ('link', "%s" % obj.location, 'location=%s' % obj.location.code)
             return Response(result, status=status.HTTP_200_OK)
         else:
@@ -73,7 +73,8 @@ class LocationList(generics.ListCreateAPIView):
     queryset = Location.objects.all()
 
     def run_query(self, q):
-        return self.get_queryset().filter(name__contains=q).order_by('code')
+        from django.db.models import Q
+        return self.get_queryset().filter(Q(name__contains=q) | Q(code=q)).order_by('code')
 
 
 class LocationDetail(generics.RetrieveUpdateDestroyAPIView):
