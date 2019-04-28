@@ -100,11 +100,11 @@
              var tr, td;
              var added_count = 0;
              jQuery.each(data, function(class_name, list_for_class) {
-                 console.log(class_name, list_for_class);
                  jQuery.each(list_for_class, function(index, item) {
                      added_count += 1;
                      tr = $('<tr class="' + class_name + '-row"></tr>');
                      td = $('<td>' + item.inline + '</td>');
+                     $(td).attr('data-infobox-url', item.infobox_url);
                      tbody.append(tr);  // add it as last child
                      tr.append(td);
                      tr.click(partial(activate_infobox, item.infobox_url))
@@ -128,7 +128,7 @@
 
              $('body').on("click", function() {
                  $('.dropdown-menu').hide();
-                 $('table > tbody > tr > td').removeClass('table-success');
+                 $('td').removeClass('table-success');
              });
          })
      }
@@ -144,6 +144,12 @@
 
              lookup(e, term);
          }
+     }
+
+     function perform_on_selected(operation, e) {
+         var infobox_url = $('td.table-success').attr('data-infobox-url');
+         var form_url = infobox_url.replace('infobox/', operation + '-form.html');
+         console.log(form_url);
      }
 
      $(function() {  // run at document ready
@@ -162,36 +168,41 @@
          $("body").bind('contextmenu', function (e) {
              e.preventDefault(); // prevents default menu
          });
+         jQuery.each(['edit', 'add-plant', 'split-plant', 'delete', 'add-sub-taxon'],
+                     function(index, item) {
+                         $('a.btn-' + item).click(partial(perform_on_selected, item));
+                     });
      });
     </script>
   </head>
   <body class="container-fluid">
 
     <div id="ContextMenu-AccessionList" class="dropdown-menu">
-      <a class="dropdown-item" href="#">Edit</a>
-      <a class="dropdown-item" href="#">Add Plant</a>
-      <a class="dropdown-item" href="#">Delete</a>
+      <a class="dropdown-item btn-edit" href="#">Edit</a>
+      <a class="dropdown-item btn-add-plant" href="#">Add Plant</a>
+      <a class="dropdown-item btn-delete" href="#">Delete</a>
     </div>
 
     <div id="ContextMenu-PlantList" class="dropdown-menu">
-      <a class="dropdown-item" href="#">Edit</a>
-      <a class="dropdown-item" href="#">Split Plant</a>
-      <a class="dropdown-item" href="#">Delete</a>
+      <a class="dropdown-item btn-edit" href="#">Edit</a>
+      <a class="dropdown-item btn-split-plant" href="#">Split Plant</a>
+      <a class="dropdown-item btn-delete" href="#">Delete</a>
     </div>
 
     <div id="ContextMenu-LocationList" class="dropdown-menu">
-      <a class="dropdown-item" href="#">Edit</a>
-      <a class="dropdown-item" href="#">Delete</a>
+      <a class="dropdown-item btn-edit" href="#">Edit</a>
+      <a class="dropdown-item btn-delete" href="#">Delete</a>
     </div>
 
     <div id="ContextMenu-ContactList" class="dropdown-menu">
-      <a class="dropdown-item" href="#">Edit</a>
-      <a class="dropdown-item" href="#">Delete</a>
+      <a class="dropdown-item btn-edit" href="#">Edit</a>
+      <a class="dropdown-item btn-delete" href="#">Delete</a>
     </div>
 
     <div id="ContextMenu-TaxonList" class="dropdown-menu">
-      <a class="dropdown-item" href="#">Edit</a>
-      <a class="dropdown-item" href="#">Delete</a>
+      <a class="dropdown-item btn-edit" href="#">Edit</a>
+      <a class="dropdown-item btn-add-sub-taxon" href="#">Add sub taxon</a>
+      <a class="dropdown-item btn-delete" href="#">Delete</a>
     </div>
     
     <div class="input-group search-filter">
