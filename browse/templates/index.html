@@ -44,7 +44,6 @@
          $('#infobox-object-text').append($(e.target).clone());
          var tbody = $('#infobox-table-body');
          tbody.empty();
-         console.log(e.target.childNodes[0].data);
          $.getJSON(url, function(data) {
              tbody.empty();
              var tr, td;
@@ -104,17 +103,33 @@
                  console.log(class_name, list_for_class);
                  jQuery.each(list_for_class, function(index, item) {
                      added_count += 1;
-                     tr = $("<tr></tr>");
+                     tr = $('<tr class="' + class_name + '-row"></tr>');
                      td = $('<td>' + item.inline + '</td>');
                      tbody.append(tr);  // add it as last child
                      tr.append(td);
-                     td.click(partial(activate_infobox, item.infobox_url))
+                     tr.click(partial(activate_infobox, item.infobox_url))
                  });
+                 $("body").on("contextmenu", "tbody tr." + class_name + '-row',
+                              partial(function(class_name, e) {
+                                  $(e.target).trigger('click');
+                                  $(e.target).addClass('table-success');
+                                  $('#ContextMenu-' + class_name).css({
+                                      display: "block",
+                                      left: e.pageX - 4,
+                                      top: e.pageY - 6
+                                  });
+                                  return false;
+                              }, class_name));
              });
              if (added_count === 1) {
-                 td.trigger('click');
+                 tr.trigger('click');
              }
              $('.search-filter').removeAttr("disabled");
+
+             $('body').on("click", function() {
+                 $('.dropdown-menu').hide();
+                 $('table > tbody > tr > td').removeClass('table-success');
+             });
          })
      }
 
@@ -151,6 +166,34 @@
     </script>
   </head>
   <body class="container-fluid">
+
+    <div id="ContextMenu-AccessionList" class="dropdown-menu">
+      <a class="dropdown-item" href="#">Edit</a>
+      <a class="dropdown-item" href="#">Add Plant</a>
+      <a class="dropdown-item" href="#">Delete</a>
+    </div>
+
+    <div id="ContextMenu-PlantList" class="dropdown-menu">
+      <a class="dropdown-item" href="#">Edit</a>
+      <a class="dropdown-item" href="#">Split Plant</a>
+      <a class="dropdown-item" href="#">Delete</a>
+    </div>
+
+    <div id="ContextMenu-LocationList" class="dropdown-menu">
+      <a class="dropdown-item" href="#">Edit</a>
+      <a class="dropdown-item" href="#">Delete</a>
+    </div>
+
+    <div id="ContextMenu-ContactList" class="dropdown-menu">
+      <a class="dropdown-item" href="#">Edit</a>
+      <a class="dropdown-item" href="#">Delete</a>
+    </div>
+
+    <div id="ContextMenu-TaxonList" class="dropdown-menu">
+      <a class="dropdown-item" href="#">Edit</a>
+      <a class="dropdown-item" href="#">Delete</a>
+    </div>
+    
     <div class="input-group search-filter">
       <button class="btn btn-light" id="pop-from-history">
         <span class="fa fa-arrow-left"></span>
