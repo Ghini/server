@@ -24,6 +24,17 @@
     <script src="{% static 'js/bootstrap.min.js' %}" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="{% static 'js/bootstrap-datepicker.min.js' %}" integrity="sha256-tW5LzEC7QjhG0CiAvxlseMTs2qJS7u3DRPauDjFJ3zo=" crossorigin="anonymous"></script>
     <!-- ./ JS libraries -->
+    <style>
+     .btn-separator:after {
+         content: ' ';
+         display: block;
+         float: left;
+         background: #ADADAD;
+         margin: 0 3px;
+         height: 34px;
+         width: 0px;
+     }
+    </style>
     <script type="text/javascript">
      var search_history, forward_history;
      var csrf_token;
@@ -237,7 +248,7 @@
     </script>
   </head>
   <body class="container-fluid">
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <nav class="navbar navbar-expand-sm bg-info navbar-dark">
       <!-- Brand -->
       <a class="navbar-brand" href="#"><img src="{% static 'taxasoft-32.png' %}"/></a>
       <a class="navbar-brand" href="#"><img src="{% static 'ghini-32.png' %}"/></a>
@@ -263,24 +274,26 @@
           </div>
         </li>
       </ul>
-      <div class="navbar-nav col-sm-7">
+      <div class="navbar-nav col-sm-8">
         <div class="input-group">
           <button class="btn btn-light" id="pop-from-history">
             <span class="fa fa-arrow-left"></span>
           </button>
-          <button class="btn btn-light" id="forward-in-history">
-            <span class="fa fa-arrow-right"></span>
-          </button>
-          <button class="btn btn-light" id="clean-history">
-            <span class="fa fa-paint-brush"></span>
-          </button>
-          <input type="text" class="input-group-append form-control" id="search-filter" placeholder="your garden search">
+            <button class="btn btn-light" id="forward-in-history">
+              <span class="fa fa-arrow-right"></span>
+            </button>
+            <button class="btn btn-light" id="clean-history">
+              <span class="fa fa-paint-brush"></span>
+            </button>
+          <span class="btn-separator"></span>
+          <input type="text" class="form-control" id="search-filter" placeholder="your garden search">
           <div class="input-group-append">
             <button class="btn btn-success" id="search-filter-button">
               <span class="fa fa-refresh"></span>
             </button>
           </div>
         </div>
+      </div>
 
     </nav>
 
@@ -334,7 +347,7 @@
     </div>
 
     <div class="row">
-      <div class="col-7" style="height:520px;overflow-y:scroll">
+      <div class="col-7" style="height:500px;overflow-y:scroll">
         <table class="table table-hover">
           <tbody id="results-table-body">
           </tbody>
