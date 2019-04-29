@@ -51,9 +51,12 @@
      }
 
      function activate_infobox(url, e) {
+         $('td').removeClass('table-success');
+         console.log(e.target)
          $(e.target).attr("disabled", "disabled");
          $('#infobox-object-text').empty();
          $('#infobox-object-text').append($(e.target).clone());
+         $(e.target).addClass('table-success');
          var tbody = $('#infobox-table-body');
          tbody.empty();
          $.getJSON(url, function(data) {
@@ -110,21 +113,20 @@
          api_url = '/browse/filter/?q=' + $('#search-filter').val();
          $.getJSON(api_url, function(data) {
              var tr, td;
-             var added_count = 0;
+             var first_td;
              jQuery.each(data, function(class_name, list_for_class) {
                  jQuery.each(list_for_class, function(index, item) {
-                     added_count += 1;
                      tr = $('<tr class="' + class_name + '-row"></tr>');
                      td = $('<td>' + item.inline + '</td>');
                      $(td).attr('data-infobox-url', item.infobox_url);
                      tbody.append(tr);  // add it as last child
                      tr.append(td);
-                     tr.click(partial(activate_infobox, item.infobox_url))
+                     tr.click(partial(activate_infobox, item.infobox_url));
+                     first_td = first_td || td;
                  });
                  $("body").on("contextmenu", "tbody tr." + class_name + '-row',
                               partial(function(class_name, e) {
                                   $(e.target).trigger('click');
-                                  $(e.target).addClass('table-success');
                                   $('#ContextMenu-' + class_name).css({
                                       display: "block",
                                       left: e.pageX - 4,
@@ -133,14 +135,13 @@
                                   return false;
                               }, class_name));
              });
-             if (added_count === 1) {
-                 tr.trigger('click');
+             if (first_td) {
+                 $(first_td).trigger('click');
              }
              $('.search-filter').removeAttr("disabled");
 
              $('body').on("click", function() {
                  $('.context-menu').hide();
-                 $('td').removeClass('table-success');
              });
          })
      }
