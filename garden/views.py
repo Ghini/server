@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.urls import reverse
 from rest_framework import generics, viewsets, views
 from rest_framework import status
 from rest_framework.response import Response
@@ -60,6 +61,9 @@ class PlantInfobox(PlantDetail):
         if obj:
             serializer = PlantSerializer(instance=obj)
             result = serializer.data
+            result['__class_name__'] = 'Plant'
+            result['__detail_url__'] = reverse('plant', kwargs={'accession_code': obj.accession.code, 'code': obj.code})
+            result['__shows_as__'] = "%s" % obj
             del result['id']
             result['accession'] = ('link', "%s" % obj.accession, 'accession=%s' % obj.accession.code)
             result['location'] = ('link', "%s" % obj.location, 'location=%s' % obj.location.code)

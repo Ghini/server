@@ -1,6 +1,7 @@
 from django.db import models
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.views.decorators.csrf import requires_csrf_token
 
 from taxonomy.views import TaxonList, RankList
 from collection.views import AccessionList, ContactList
@@ -9,6 +10,7 @@ from garden.views import LocationList, PlantList
 
 # Create your views here.
 
+@requires_csrf_token
 def index(request):
     return render(request, 'index.html', {})
 

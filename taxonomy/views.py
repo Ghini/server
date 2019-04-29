@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.urls import reverse
 from rest_framework import generics, viewsets, status
 from rest_framework.response import Response
 from django.http import HttpResponse
@@ -40,6 +41,9 @@ class TaxonInfobox(TaxonDetail):
         if obj:
             serializer = TaxonSerializer(instance=obj)
             result = serializer.data
+            result['__class_name__'] = 'Taxon'
+            result['__detail_url__'] = reverse('taxon', kwargs={'pk': obj.pk})
+            result['__shows_as__'] = "%s" % obj
             del result['id']
             if obj.parent:
                 result['parent'] = ('link', "%s" % obj.parent, obj.parent.epithet)

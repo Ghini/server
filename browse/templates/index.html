@@ -24,8 +24,9 @@
     <script src="{% static 'js/bootstrap.min.js' %}" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="{% static 'js/bootstrap-datepicker.min.js' %}" integrity="sha256-tW5LzEC7QjhG0CiAvxlseMTs2qJS7u3DRPauDjFJ3zo=" crossorigin="anonymous"></script>
     <!-- ./ JS libraries -->
-    <script>
+    <script type="text/javascript">
      var search_history, forward_history;
+     var csrf_token;
 
      function partial(func, ...argsBound) {
          return function(...args) { // (*)
@@ -48,7 +49,7 @@
              tbody.empty();
              var tr, td;
              jQuery.each(data, function(key, value) {
-                 if (value !== null && value !== '') {
+                 if (!key.startsWith('__') && value !== null && value !== '') {
                      tr = $("<tr></tr>");
                      tbody.append(tr);  // add it as last child
                      tr.append($('<td width="40%">' + key + '</td>'));
@@ -146,10 +147,68 @@
          }
      }
 
+     function populate_edit_form() {}
+     function populate_plant_form() {}
+
+     function populate_delete_form(data) {
+         var tbody = $('#modal-delete-tbody');
+         tbody.empty();
+         tbody.append($('<p>' + data.__class_name__ + '</p>'));
+         tbody.append($('<p>' + data.__shows_as__ + '</p>'));
+     }
+
      function perform_on_selected(operation, e) {
-         var infobox_url = $('td.table-success').attr('data-infobox-url');
-         var form_url = infobox_url.replace('infobox/', operation + '-form.html');
-         console.log(form_url);
+         // url to get the data
+         var api_url = $('td.table-success').attr('data-infobox-url');
+         // function that populates the form
+         var populate_form = {'edit': populate_edit_form,
+                              'delete': populate_delete_form,
+                              'add-plant': populate_plant_form,
+                              'split-plant': populate_plant_form,
+                              'add-sub-taxon': populate_edit_form }[operation];
+         // get the data
+         $.getJSON(api_url, function(data) {
+             // set the 'proceed' callback
+             $('button.action-confirm').unbind('click');
+             $('button.action-confirm').click(partial(function(detail_url, e){
+                 $.ajax({
+                     url: detail_url,
+                     method: 'DELETE',
+                     contentType: 'application/json',
+                     beforeSend: function (request) {
+                         request.setRequestHeader('X-CSRFToken', csrf_token);
+                     },
+                     success: function(result) {
+                         console.log(result);
+                         // handle success
+                     },
+                     error: function(request, msg, error) {
+                         console.log(request, msg, error);
+                         // handle failure
+                     }
+                 });
+             }, data.__detail_url__));
+             // populate the form
+             populate_form(data);
+             // show the form
+             $("#modal-" + operation).modal();
+         })
+     }
+
+     function getCookie(name) {
+         var cookieValue = null;
+         if (document.cookie && document.cookie !== '') {
+             var cookies = document.cookie.split(';');
+             for (var i = 0; i < cookies.length; i++) {
+                 var cookie = cookies[i].trim();
+                 // Does this cookie string begin with the name we want?
+                 if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                     break;
+                 }
+             }
+         }
+         return cookieValue;
      }
 
      $(function() {  // run at document ready
@@ -158,6 +217,8 @@
                  lookup(e);
              }
          });
+         csrf_token = getCookie('csrftoken');
+
          $('#search-filter-button').click(lookup);
          search_history = [];
          forward_history = [];
@@ -204,7 +265,7 @@
       <a class="dropdown-item btn-add-sub-taxon" href="#">Add sub taxon</a>
       <a class="dropdown-item btn-delete" href="#">Delete</a>
     </div>
-    
+
     <div class="input-group search-filter">
       <button class="btn btn-light" id="pop-from-history">
         <span class="fa fa-arrow-left"></span>
@@ -264,5 +325,31 @@
         </table>
       </div>
     </div>
+
+    <div class="modal" id="modal-delete">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Confirm Deletion</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body" id="modal-delete-tbody">
+
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger action-confirm" data-dismiss="modal">Delete</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
   </body>
 </html>

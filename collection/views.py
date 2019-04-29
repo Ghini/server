@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.urls import reverse
 from rest_framework import generics, viewsets, views
 from rest_framework import status
 from rest_framework.response import Response
@@ -33,6 +34,9 @@ class AccessionInfobox(AccessionDetail):
             serializer = AccessionSerializer(instance=obj)
             import collections
             result = collections.OrderedDict()
+            result['__class_name__'] = 'Accession'
+            result['__detail_url__'] = reverse('accession', kwargs={'code': obj.code})
+            result['__shows_as__'] = "%s" % obj
             result.update(serializer.data)
             del result['id']
             result['taxa'] = ('link',
