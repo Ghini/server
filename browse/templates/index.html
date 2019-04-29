@@ -255,22 +255,34 @@
 
       <!-- Links -->
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link 1</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Insert</a>
+          <div class="dropdown-menu" id="insert-menu">
+            <a class="dropdown-item" href="#">Taxon</a>
+            <a class="dropdown-item" href="#">Contact</a>
+            <a class="dropdown-item" href="#">Accession</a>
+            <a class="dropdown-item" href="#">Plant</a>
+            <a class="dropdown-item" href="#">Location</a>
+          </div>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link 2</a>
+        <li class="nav-item dropdown" >
+          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Tools</a>
+          <div class="dropdown-menu" id="tools-menu">
+            <a class="dropdown-item" href="#">Institution</a>
+            <a class="dropdown-item" href="#">Backup</a>
+            <a class="dropdown-item" href="#">Import</a>
+            <a class="dropdown-item" href="#">Export</a>
+            <a class="dropdown-item" href="#">Report</a>
+          </div>
         </li>
 
         <!-- Dropdown -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-            Dropdown link
+            Tags
           </a>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="#">Link 1</a>
-            <a class="dropdown-item" href="#">Link 2</a>
-            <a class="dropdown-item" href="#">Link 3</a>
+          <div class="dropdown-menu" id="tags-menu">
+            <a class="dropdown-item" href="#">Apply Tag</a>
           </div>
         </li>
       </ul>
@@ -279,17 +291,22 @@
           <button class="btn btn-light" id="pop-from-history">
             <span class="fa fa-arrow-left"></span>
           </button>
-            <button class="btn btn-light" id="forward-in-history">
-              <span class="fa fa-arrow-right"></span>
-            </button>
-            <button class="btn btn-light" id="clean-history">
-              <span class="fa fa-paint-brush"></span>
-            </button>
+          <button class="btn btn-light" id="forward-in-history">
+            <span class="fa fa-arrow-right"></span>
+          </button>
+          <button class="btn btn-light" id="clean-history">
+            <span class="fa fa-paint-brush"></span>
+          </button>
           <span class="btn-separator"></span>
           <input type="text" class="form-control" id="search-filter" placeholder="your garden search">
           <div class="input-group-append">
             <button class="btn btn-success" id="search-filter-button">
               <span class="fa fa-refresh"></span>
+            </button>
+          </div>
+          <div class="input-group-append">
+            <button class="btn btn-success" id="query-builder-button">
+              <span class="fa fa-gears"></span>
             </button>
           </div>
         </div>
