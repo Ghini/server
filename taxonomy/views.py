@@ -5,8 +5,6 @@ from rest_framework.response import Response
 from django.http import HttpResponse
 from django.http import JsonResponse
 
-import dal_select2.views
-
 from .models import Rank, Taxon
 from .serializers import RankSerializer
 from .serializers import TaxonSerializer
@@ -57,20 +55,6 @@ class TaxonInfobox(TaxonDetail):
             return Response(result, status=status.HTTP_200_OK)
         else:
             return Response([], status=status.HTTP_204_NO_CONTENT)
-
-
-class TaxonAutocomplete(dal_select2.views.Select2QuerySetView):
-    def get_queryset(self):
-        # Don't forget to filter out results depending on the visitor !
-        if not self.request.user.is_authenticated:
-            return Taxon.objects.none()
-
-        qs = Taxon.objects.all()
-
-        if self.q:
-            qs = qs.filter(epithet__istartswith=self.q)
-
-        return qs
 
 
 class RankList(generics.ListCreateAPIView):

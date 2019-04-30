@@ -1,5 +1,11 @@
 from django.forms import ModelForm
 
+from django_select2.forms import (
+    HeavySelect2MultipleWidget, HeavySelect2Widget, ModelSelect2MultipleWidget,
+    ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
+    Select2Widget
+)
+
 from taxonomy.models import Taxon
 from collection.models import Accession, Contact, Verification
 from garden.models import Location, Plant
