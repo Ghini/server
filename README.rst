@@ -8,7 +8,7 @@ ghini - reloaded
 the central ``ghini.server`` is there for all other Ghini family members.  it
 serves data from one garden, or for several.
 
-* in combination with the ``ghini.boss`` web client, it lets garden
+* in combination with the ``ghini.master`` web client, it lets garden
   conservators plan their work, produce logs, and review their garden
   history.
 * in combination with the ``ghini.guest`` web client, it provides a read-only

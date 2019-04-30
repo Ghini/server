@@ -161,6 +161,7 @@
 
      function populate_edit_form() {}
      function populate_plant_form() {}
+     function populate_verification_form() {}
 
      function populate_delete_form(data) {
          var tbody = $('#modal-delete-tbody');
@@ -175,6 +176,7 @@
          // function that populates the form
          var populate_form = {'edit': populate_edit_form,
                               'delete': populate_delete_form,
+                              'add-verification': populate_verification_form,
                               'add-plant': populate_plant_form,
                               'split-plant': populate_plant_form,
                               'add-sub-taxon': populate_edit_form }[operation];
@@ -203,7 +205,7 @@
              // populate the form
              populate_form(data);
              // show the form
-             $("#modal-" + operation).modal();
+             $('#modal-' + operation).modal();
          })
      }
 
@@ -241,7 +243,7 @@
          $("body").bind('contextmenu', function (e) {
              e.preventDefault(); // prevents default menu
          });
-         jQuery.each(['edit', 'add-plant', 'split-plant', 'delete', 'add-sub-taxon'],
+         jQuery.each(['edit', 'add-plant', 'add-verification', 'split-plant', 'delete', 'add-sub-taxon'],
                      function(index, item) {
                          $('a.btn-' + item).click(partial(perform_on_selected, item));
                      });
@@ -249,7 +251,7 @@
     </script>
   </head>
   <body class="container-fluid">
-    <nav class="navbar navbar-expand-sm bg-info navbar-dark">
+    <nav class="navbar navbar-expand-sm bg-light navbar-light">
       <!-- Brand -->
       <a class="navbar-brand" href="#"><img src="{% static 'taxasoft-32.png' %}"/></a>
       <a class="navbar-brand" href="#"><img src="{% static 'ghini-32.png' %}"/></a>
@@ -394,6 +396,31 @@
 
           <!-- Modal body -->
           <div class="modal-body" id="modal-delete-tbody">
+
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger action-confirm" data-dismiss="modal">Delete</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="modal-verification">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Confirm Deletion</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body" id="modal-verification-tbody">
 
           </div>
 
