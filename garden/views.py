@@ -90,4 +90,19 @@ class LocationDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class LocationInfobox(LocationDetail):
-    pass
+    def get(self, request, *args, **kwargs):
+        qs = self.get_queryset()
+        obj = qs.first()
+        if obj:
+            serializer = LocationSerializer(instance=obj)
+            result = serializer.data
+            result['__class_name__'] = 'Location'
+            result['__detail_url__'] = reverse('location', kwargs={'code': obj.code})
+            result['__shows_as__'] = "%s" % obj
+            del result['id']
+            result['plant groups'] = obj.plants.count()
+            result['living plants'] = sum(i.quantity for i in obj.plants.all())
+            return Response(result, status=status.HTTP_200_OK)
+        else:
+            return Response([], status=status.HTTP_204_NO_CONTENT)
+

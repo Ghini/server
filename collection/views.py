@@ -42,7 +42,7 @@ class AccessionInfobox(AccessionDetail):
             result['taxa'] = ('link',
                               ", ".join(["%s" % i for i in obj.taxa.all()]),
                               ", ".join([i.epithet for i in obj.taxa.all()]), )
-            result['plant groups'] = sum(p.quantity for p in obj.plants.all())
+            result['plant groups'] = obj.plants.count()
             result['living plants'] = sum(p.quantity for p in obj.plants.all())
             return Response(result, status=status.HTTP_200_OK)
         else:
