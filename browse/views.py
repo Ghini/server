@@ -7,12 +7,25 @@ from taxonomy.views import TaxonList, RankList
 from collection.views import AccessionList, ContactList
 from garden.views import LocationList, PlantList
 
+from .forms import TaxonForm, VerificationForm, AccessionForm, PlantForm, LocationForm, ContactForm
 
 # Create your views here.
 
 @requires_csrf_token
 def index(request):
-    return render(request, 'index.html', {})
+    verification_form = VerificationForm()
+    taxon_form = TaxonForm()
+    contact_form = ContactForm()
+    plant_form = PlantForm()
+    accession_form = AccessionForm()
+    location_form = LocationForm()
+
+    return render(request, 'index.html', {'taxon_form': taxon_form,
+                                          'contact_form': contact_form,
+                                          'plant_form': plant_form,
+                                          'accession_form': accession_form,
+                                          'location_form': location_form,
+                                          'verification_form': verification_form, })
 
 def filter_json(request):
     import collections

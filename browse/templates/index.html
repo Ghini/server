@@ -170,7 +170,7 @@
          tbody.append($('<p>' + data.__shows_as__ + '</p>'));
      }
 
-     function perform_on_selected(operation, e) {
+     function perform_on_selected(operation, verb, e) {
          // url to get the data
          var api_url = $('td.table-success').attr('data-infobox-url');
          // function that populates the form
@@ -181,13 +181,13 @@
                               'split-plant': populate_plant_form,
                               'add-sub-taxon': populate_edit_form }[operation];
          // get the data
-         $.getJSON(api_url, function(data) {
+         $.getJSON(api_url, partial(function(verb, data) {
              // set the 'proceed' callback
              $('button.action-confirm').unbind('click');
              $('button.action-confirm').click(partial(function(detail_url, e){
                  $.ajax({
                      url: detail_url,
-                     method: 'DELETE',
+                     method: verb,
                      contentType: 'application/json',
                      beforeSend: function (request) {
                          request.setRequestHeader('X-CSRFToken', csrf_token);
@@ -206,7 +206,7 @@
              populate_form(data);
              // show the form
              $('#modal-' + operation).modal();
-         })
+         }, verb))
      }
 
      function getCookie(name) {
@@ -243,9 +243,14 @@
          $("body").bind('contextmenu', function (e) {
              e.preventDefault(); // prevents default menu
          });
-         jQuery.each(['edit', 'add-plant', 'add-verification', 'split-plant', 'delete', 'add-sub-taxon'],
+         jQuery.each([['edit', 'PUT'],
+                      ['add-plant', 'POST'],
+                      ['add-verification', 'POST'],
+                      ['split-plant', 'POST'],
+                      ['delete', 'DELETE'],
+                      ['add-sub-taxon', 'POST']],
                      function(index, item) {
-                         $('a.btn-' + item).click(partial(perform_on_selected, item));
+                         $('a.btn-' + item[0]).click(partial(perform_on_selected, item[0], item[1]));
                      });
      });
     </script>
@@ -409,30 +414,53 @@
       </div>
     </div>
 
-    <div class="modal" id="modal-verification">
-      <div class="modal-dialog modal-sm">
+    <div class="modal" id="modal-add-verification">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
           <!-- Modal Header -->
           <div class="modal-header">
-            <h4 class="modal-title">Confirm Deletion</h4>
+            <h4 class="modal-title">Add Verification</h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
           </div>
 
           <!-- Modal body -->
-          <div class="modal-body" id="modal-verification-tbody">
-
+          <div class="modal-body" id="modal-add-verification-tbody">
+            <table>
+              {{ verification_form }}
+            </table>
           </div>
 
           <!-- Modal footer -->
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-danger action-confirm" data-dismiss="modal">Delete</button>
+            <button type="button" class="btn btn-primary action-confirm" data-dismiss="modal">Save Verification</button>
           </div>
 
         </div>
       </div>
     </div>
 
+    <table id="contact-table">
+      {{ contact_form }}
+    </table>
+
+    <table id="plant-table">
+      {{ plant_form }}
+    </table>
+
+    <table id="taxon-table">
+      {{ taxon_form }}
+    </table>
+
+    <table id="accession-table">
+      {{ accession_form }}
+    </table>
+
+    <table id="location-table">
+      {{ location_form }}
+    </table>
+    
+    
   </body>
 </html>
