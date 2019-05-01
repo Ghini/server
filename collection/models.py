@@ -130,17 +130,12 @@ class Verification(models.Model):
     accession = models.ForeignKey(Accession, blank=False, related_name='verifications', on_delete=models.CASCADE)
     taxon = models.ForeignKey(Taxon, blank=False, related_name='verifications', on_delete=models.PROTECT)
     qualifier = models.CharField(blank=True, null=True, max_length=8, choices=QUALIFIERS)
-    code = models.IntegerField()
     level = models.CharField(blank=False, null=False, max_length=1, choices=VERIFICATION_LEVELS, default='0')
     contact = models.ForeignKey(Contact, blank=False, related_name='verifications', on_delete=models.PROTECT)
     date = models.DateField(blank=False, null=False)
 
     def __str__(self):
-        return "{} says {} is a {} - level {}".format(self.contact.name, self.accession.code, self.taxon.show(), self.level)
-        
-    class Meta:
-        unique_together = (('accession', 'code'),
-        )
+        return "{0.contact.name} says {0.accession.code} is a {1} - level {0.level}".format(self, self.taxon.show())
 
     @property
     def inline(self):
