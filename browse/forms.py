@@ -1,4 +1,5 @@
 from django.forms import ModelForm
+from django import forms
 
 from django_select2.forms import (
     HeavySelect2MultipleWidget, HeavySelect2Widget, ModelSelect2MultipleWidget,
@@ -18,6 +19,30 @@ class TaxonForm(ModelForm):
 
 
 class VerificationForm(ModelForm):
+    accession = forms.ModelChoiceField(
+        queryset=Accession.objects,
+        widget=ModelSelect2Widget(
+            data_url='/admin/collection/accession/autocomplete/',
+            model=Accession,
+            search_fields=['code'],
+        )
+    )
+    contact = forms.ModelChoiceField(
+        queryset=Contact.objects,
+        widget=ModelSelect2Widget(
+            data_url='/admin/collection/contact/autocomplete/',
+            model=Contact,
+            search_fields=['name'],
+        )
+    )
+    taxon = forms.ModelChoiceField(
+        queryset=Taxon.objects,
+        widget=ModelSelect2Widget(
+            data_url='/admin/taxonomy/taxon/autocomplete/',
+            model=Taxon,
+            search_fields=['epithet'],
+        )
+    )
     class Meta:
         model = Verification
         fields = '__all__'

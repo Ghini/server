@@ -19,6 +19,9 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.min.css' %}" integrity="sha256-JDBcnYeV19J14isGd3EtnsCQK05d8PczJ5+fvEvBJvI=" crossorigin="anonymous" />
     <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/select2.min.css' %}" />
+
+    <link href="/static/admin/css/vendor/select2/select2.css" type="text/css" media="screen" rel="stylesheet">
+    <link href="/static/admin/css/autocomplete.css" type="text/css" media="screen" rel="stylesheet">    
     {{ form.media.css }}
     <!-- ./ CSS libraries-->
 
@@ -212,6 +215,9 @@
              populate_form(data);
              // show the form
              $('#modal-' + operation).modal();
+             // stretch width of elements to new size of modal
+             $('.modal td select').css({width: '100%'})
+             $('.modal td span').css({width: '100%'})
          }, verb))
      }
 
@@ -258,6 +264,12 @@
                      function(index, item) {
                          $('a.btn-' + item[0]).click(partial(perform_on_selected, item[0], item[1]));
                      });
+         $('.django-select2').select2();
+         $('.modal').each(function(i, modal) {
+             $(modal).find('.django-select2').select2({
+                 dropdownParent: $(modal)
+             });
+         })
      });
     </script>
   </head>
