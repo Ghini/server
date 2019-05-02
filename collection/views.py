@@ -63,7 +63,7 @@ class ContactInfobox(ContactDetail):
     pass
 
 class VerificationDetail(generics.RetrieveUpdateDestroyAPIView):
-    lookup_field = 'code'
+    lookup_field = 'seq'
 
     def get_queryset(self):
         from collection.models import Accession
@@ -85,12 +85,12 @@ class VerificationList(generics.ListCreateAPIView):
                              "detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
         data = request.data.copy()
         data['accession'] = accession.pk
-        if 'code' not in data:
+        if 'seq' not in data:
             from django.db import models
-            max_code = (Verification.objects
-                        .filter(accession=accession)
-                        .aggregate(max_code=models.Max('code')))['max_code']
-            data['code'] = (max_code or 0) + 1
+            max_seq = (Verification.objects
+                       .filter(accession=accession)
+                       .aggregate(max_seq=models.Max('seq')))['max_seq']
+            data['seq'] = (max_seq or 0) + 1
         serializer = VerificationSerializer(data=data)
         if serializer.is_valid():
             verification = serializer.save()

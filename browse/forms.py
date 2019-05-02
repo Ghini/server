@@ -45,7 +45,7 @@ class VerificationForm(ModelForm):
     )
     class Meta:
         model = Verification
-        fields = '__all__'
+        fields = ['level', 'accession', 'taxon', 'qualifier', 'contact', 'date']
 
 class LocationForm(ModelForm):
     class Meta:
