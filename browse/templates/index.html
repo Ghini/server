@@ -179,21 +179,29 @@
          tbody.append($('<p>' + data.__shows_as__ + '</p>'));
      }
 
-     function perform_on_selected(operation, verb, e) {
-         // url to get the data
-         var api_url = $('td.table-success').attr('data-infobox-url');
-         // function that populates the form
-         var populate_form = {'edit': populate_edit_form,
-                              'delete': populate_delete_form,
-                              'add-verification': populate_verification_form,
-                              'add-plant': populate_plant_form,
-                              'split-plant': populate_plant_form,
-                              'add-sub-taxon': populate_edit_form }[operation];
-         // get the data
-         $.getJSON(api_url, partial(function(verb, data) {
+     function perform_on_selected(parent_class, action_name, this_class, http_verb, optional, e) {
+         var api_url;
+         if (parent_class === 'new') {
+             // there is no parent class, so let's use this_class own entry point
+             api_url = {accession: "{% url 'accession-list' %}",
+                        taxon: "{% url 'taxon-list' %}",
+                        location: "{% url 'location-list' %}",
+                        contact: "{% url 'contact-list' %}" }[this_class];
+         } else {
+             // the active td holds the infobox url
+             var infobox_url = $('#results-table-body td.table-success').attr('data-infobox-url');
+             api_url = infobox_url.replace('infobox/', '');
+         }
+         // get the data, populate the form, activate it
+         $.getJSON(api_url, partial(function(action_name, this_class, verb, data) {
+             console.log(action_name, this_class, verb, data);
+             var modal_form = $('#modal-form-' + action_name);
+             var modal_form_body = $(modal_form).find('.modal-body');
+             $(modal_form_body).empty();
+             $(modal_form_body).append($(this_class + '-table').clone());
              // set the 'proceed' callback
-             $('#modal-' + operation).find('button.action-confirm').unbind('click');
-             $('#modal-' + operation).find('button.action-confirm').click(
+             $(modal_form).find('button.action-confirm').unbind('click');
+             $(modal_form).find('button.action-confirm').click(
                  partial(function(detail_url, e){
                      $.ajax({
                          url: detail_url,
@@ -213,13 +221,13 @@
                      });
                  }, data.__detail_url__));
              // populate the form
-             populate_form(data);
+             // populate_form(data);
              // show the form
-             $('#modal-' + operation).modal();
+             $(modal_form).modal();
              // stretch width of elements to new size of modal
              $('.modal td select').css({width: '100%'})
              $('.modal td span').css({width: '100%'})
-         }, verb))
+         }, action_name, this_class, http_verb))
      }
 
      function getCookie(name) {
@@ -256,15 +264,11 @@
          $("body").bind('contextmenu', function (e) {
              e.preventDefault(); // prevents default menu
          });
-         jQuery.each([['edit', 'PUT'],
-                      ['add-plant', 'POST'],
-                      ['add-verification', 'POST'],
-                      ['split-plant', 'POST'],
-                      ['delete', 'DELETE'],
-                      ['add-sub-taxon', 'POST']],
-                     function(index, item) {
-                         $('a.btn-' + item[0]).click(partial(perform_on_selected, item[0], item[1]));
-                     });
+         // register action on modal activation
+         $('#drop-insert,.context-menu.dropdown-menu').find('.dropdown-item').each(function(i, o) {
+             [parent_class, action_name, this_class, http_verb, rest] = o.id.split('-')
+             $(o).click(partial(perform_on_selected, parent_class, action_name, this_class, http_verb, rest));
+         });
          $('.django-select2').select2();
          $('.modal').each(function(i, modal) {
              $(modal).find('.django-select2').select2({
@@ -418,7 +422,7 @@
     </div>
 
     <!-- we only have two modal forms: delete and edit. -->
-    <div class="modal" id="modal-delete">
+    <div class="modal" id="modal-form-delete">
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
 
@@ -443,9 +447,10 @@
       </div>
     </div>
 
-    <div class="modal" id="modal-edit-form">
+    <div class="modal" id="modal-form-edit">
       <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+        <form class="modal-content">
+          {% csrf_token %}
 
           <!-- Modal Header --><!-- we change the title -->
           <div class="modal-header">
@@ -464,7 +469,7 @@
             <button type="button" class="btn btn-primary action-confirm" data-dismiss="modal">Save Verification</button>
           </div>
 
-        </div>
+        </form>
       </div>
     </div>
 
