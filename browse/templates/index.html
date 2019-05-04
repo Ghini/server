@@ -282,18 +282,17 @@
 
       <!-- Links -->
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Insert</a>
+        <li class="nav-item dropdown" id="drop-insert" >
+          <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Insert</a>
           <div class="dropdown-menu" id="insert-menu">
-            <a class="dropdown-item" id="new-taxon" href="#">Taxon</a>
-            <a class="dropdown-item" id="new-contact" href="#">Contact</a>
-            <a class="dropdown-item" id="new-accession" href="#">Accession</a>
-            <a class="dropdown-item" id="new-plant" href="#">Plant</a>
-            <a class="dropdown-item" id="new-location" href="#">Location</a>
+            <a class="dropdown-item" id="new-edit-taxon-POST" href="#">Taxon</a>
+            <a class="dropdown-item" id="new-edit-contact-POST" href="#">Contact</a>
+            <a class="dropdown-item" id="new-edit-accession-POST" href="#">Accession</a>
+            <a class="dropdown-item" id="new-edit-location-POST" href="#">Location</a>
           </div>
         </li>
-        <li class="nav-item dropdown" >
-          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Tools</a>
+        <li class="nav-item dropdown" id="drop-tools" >
+          <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Tools</a>
           <div class="dropdown-menu" id="tools-menu">
             <a class="dropdown-item" href="#">Institution</a>
             <a class="dropdown-item" href="#">Backup</a>
@@ -305,9 +304,7 @@
 
         <!-- Dropdown -->
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-            Tags
-          </a>
+          <a class="nav-link dropdown-toggle" href="#" id="drop-tags" data-toggle="dropdown">Tags</a>
           <div class="dropdown-menu" id="tags-menu">
             <a class="dropdown-item" href="#">Apply Tag</a>
           </div>
@@ -341,34 +338,46 @@
 
     </nav>
 
+    <!-- here each object has an id which indicates what it does.  made up of four parts, it's:
+         (1) the class name of the root object, the one to which the edit is related.
+         compare with the above drop down menu, where this part is 'new';
+         (2) a verb, identifying the form that has to be activated, it's either edit or delete;
+         (3) the class name of the object we will edit, it helps us locate the table that we need copy into the form;
+         (4) the http verb to be executed if the form is confirmed.
+         (5) this one is optional, I'm not sure we need it.
+
+         $('.context-menu.dropdown-menu').find('.dropdown-item').map((i, e) => [e.id.split('-')])
+         $('#drop-insert').find('.dropdown-item').map((i, e) => [e.id.split('-')])
+    -->
     <div id="ContextMenu-AccessionList" class="context-menu dropdown-menu">
-      <a class="dropdown-item btn-edit" href="#">Edit</a>
-      <a class="dropdown-item btn-add-verification" href="#">Add verification</a>
-      <a class="dropdown-item btn-add-plant" href="#">Add Plant</a>
-      <a class="dropdown-item btn-delete" href="#">Delete</a>
+      <a class="dropdown-item" id="accession-edit-accession-PUT" href="#">Edit</a>
+      <a class="dropdown-item" id="accession-edit-verification-POST" href="#">Add verification</a>
+      <a class="dropdown-item" id="accession-edit-plant-POST" href="#">Add Plant</a>
+      <a class="dropdown-item" id="accession-delete-accession-DELETE" href="#">Delete</a>
     </div>
 
     <div id="ContextMenu-PlantList" class="context-menu dropdown-menu">
-      <a class="dropdown-item btn-edit" href="#">Edit</a>
-      <a class="dropdown-item btn-split-plant" href="#">Split Plant</a>
-      <a class="dropdown-item btn-delete" href="#">Delete</a>
+      <a class="dropdown-item" id="plant-edit-plant-PUT" href="#">Edit</a>
+      <a class="dropdown-item" id="plant-edit-plant-POST-split" href="#">Split Plant</a>
+      <a class="dropdown-item" id="plant-delete-plant-DELETE" href="#">Delete</a>
     </div>
 
     <div id="ContextMenu-LocationList" class="context-menu dropdown-menu">
-      <a class="dropdown-item btn-edit" href="#">Edit</a>
-      <a class="dropdown-item btn-delete" href="#">Delete</a>
+      <a class="dropdown-item" id="location-edit-location-PUT" href="#">Edit</a>
+      <a class="dropdown-item" id="location-delete-location-DELETE" href="#">Delete</a>
     </div>
 
     <div id="ContextMenu-ContactList" class="context-menu dropdown-menu">
-      <a class="dropdown-item btn-edit" href="#">Edit</a>
-      <a class="dropdown-item btn-delete" href="#">Delete</a>
+      <a class="dropdown-item" id="contact-edit-contact-PUT" href="#">Edit</a>
+      <a class="dropdown-item" id="contact-edit-verification-POST" href="#">Add verification</a>
+      <a class="dropdown-item" id="contact-delete-contact-DELETE" href="#">Delete</a>
     </div>
 
     <div id="ContextMenu-TaxonList" class="context-menu dropdown-menu">
-      <a class="dropdown-item btn-edit" href="#">Edit</a>
-      <a class="dropdown-item btn-add-sub-taxon" href="#">Add sub taxon</a>
-      <a class="dropdown-item btn-add-verification" href="#">Add verification</a>
-      <a class="dropdown-item btn-delete" href="#">Delete</a>
+      <a class="dropdown-item" id="taxon-edit-taxon-PUT" href="#">Edit</a>
+      <a class="dropdown-item" id="taxon-edit-taxon-POST-subtaxon" href="#">Add sub taxon</a>
+      <a class="dropdown-item" id="taxon-edit-verification-POST" href="#">Add verification</a>
+      <a class="dropdown-item" id="taxon-delete-taxon-DELETE" href="#">Delete</a>
     </div>
 
     <div class="row">
@@ -408,6 +417,7 @@
       </div>
     </div>
 
+    <!-- we only have two modal forms: delete and edit. -->
     <div class="modal" id="modal-delete">
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -433,26 +443,22 @@
       </div>
     </div>
 
-    <div class="modal" id="modal-add-verification"
-         data-ghini-verb="POST"
-         data-ghini-url="/collection/accessions/(accession.code)/verifications/">
+    <div class="modal" id="modal-edit-form">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
-          <!-- Modal Header -->
+          <!-- Modal Header --><!-- we change the title -->
           <div class="modal-header">
             <h4 class="modal-title">Add Verification</h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
           </div>
 
-          <!-- Modal body -->
-          <div class="modal-body" id="modal-add-verification-tbody">
-            <table>
-              {{ verification_form }}
-            </table>
+          <!-- Modal body --><!-- we clone the generated form into this element -->
+          <div class="modal-body">
+
           </div>
 
-          <!-- Modal footer -->
+          <!-- Modal footer --><!-- we change the primary action -->
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             <button type="button" class="btn btn-primary action-confirm" data-dismiss="modal">Save Verification</button>
@@ -461,6 +467,10 @@
         </div>
       </div>
     </div>
+
+    <table id="verification-table">
+      {{ verification_form }}
+    </table>
 
     <table id="contact-table">
       {{ contact_form }}
@@ -481,8 +491,6 @@
     <table id="location-table">
       {{ location_form }}
     </table>
-
-    {{ form.media.js }}
 
     <script type="text/javascript" src="{% static 'js/select2.min.js' %}"></script>
     <script type="text/javascript" src="/static/django_select2/django_select2.js"></script>
