@@ -192,31 +192,30 @@
          // get the data
          $.getJSON(api_url, partial(function(verb, data) {
              // set the 'proceed' callback
-             $('button.action-confirm').unbind('click');
-             $('button.action-confirm').click(partial(function(detail_url, e){
-                 $.ajax({
-                     url: detail_url,
-                     method: verb,
-                     contentType: 'application/json',
-                     beforeSend: function (request) {
-                         request.setRequestHeader('X-CSRFToken', csrf_token);
-                     },
-                     success: function(result) {
-                         console.log(result);
-                         // handle success
-                     },
-                     error: function(request, msg, error) {
-                         console.log(request, msg, error);
-                         // handle failure
-                     }
-                 });
-             }, data.__detail_url__));
+             $('#modal-' + operation).find('button.action-confirm').unbind('click');
+             $('#modal-' + operation).find('button.action-confirm').click(
+                 partial(function(detail_url, e){
+                     $.ajax({
+                         url: detail_url,
+                         method: verb,
+                         contentType: 'application/json',
+                         beforeSend: function (request) {
+                             request.setRequestHeader('X-CSRFToken', csrf_token);
+                         },
+                         success: function(result) {
+                             console.log(result);
+                             // handle success
+                         },
+                         error: function(request, msg, error) {
+                             console.log(request, msg, error);
+                             // handle failure
+                         }
+                     });
+                 }, data.__detail_url__));
              // populate the form
              populate_form(data);
              // show the form
              $('#modal-' + operation).modal();
-             // reset minimum input length
-             $('.django-select2-heavy').attr('data-minimum-input-length', '2');
              // stretch width of elements to new size of modal
              $('.modal td select').css({width: '100%'})
              $('.modal td span').css({width: '100%'})
