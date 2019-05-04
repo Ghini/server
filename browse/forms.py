@@ -1,11 +1,9 @@
 from django.forms import ModelForm
 from django import forms
+from django_select2 import forms as s2forms
+# HeavySelect2MultipleWidget, HeavySelect2Widget, ModelSelect2MultipleWidget,
+# ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget, Select2Widget
 
-from django_select2.forms import (
-    HeavySelect2MultipleWidget, HeavySelect2Widget, ModelSelect2MultipleWidget,
-    ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
-    Select2Widget
-)
 
 from taxonomy.models import Taxon
 from collection.models import Accession, Contact, Verification
@@ -19,33 +17,24 @@ class TaxonForm(ModelForm):
 
 
 class VerificationForm(ModelForm):
-    accession = forms.ModelChoiceField(
-        queryset=Accession.objects,
-        widget=ModelSelect2Widget(
-            data_url='/admin/collection/accession/autocomplete/',
-            model=Accession,
-            search_fields=['code'],
-        )
-    )
-    contact = forms.ModelChoiceField(
-        queryset=Contact.objects,
-        widget=ModelSelect2Widget(
-            data_url='/admin/collection/contact/autocomplete/',
-            model=Contact,
-            search_fields=['name'],
-        )
-    )
-    taxon = forms.ModelChoiceField(
-        queryset=Taxon.objects,
-        widget=ModelSelect2Widget(
-            data_url='/admin/taxonomy/taxon/autocomplete/',
-            model=Taxon,
-            search_fields=['epithet'],
-        )
-    )
     class Meta:
         model = Verification
         fields = ['level', 'accession', 'taxon', 'qualifier', 'contact', 'date']
+        widgets = {
+            'accession': s2forms.ModelSelect2Widget(model=Accession,
+                                                    search_fields=['code__icontains'],
+                                                    max_results=120,
+            ),
+            'taxon': s2forms.ModelSelect2Widget(model=Taxon,
+                                                search_fields=['epithet__icontains'],
+                                                minimum_input_length=3,
+                                                max_results=120,
+            ),
+            'contact': s2forms.ModelSelect2Widget(model=Contact,
+                                                  search_fields=['name__icontains'],
+            ),
+            'qualifier': s2forms.Select2Widget,
+        }
 
 class LocationForm(ModelForm):
     class Meta:
