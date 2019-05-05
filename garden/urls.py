@@ -2,14 +2,20 @@ from rest_framework.routers import DefaultRouter
 from django.urls import path
 from .views import (PlantList, PlantDetail, PlantInfobox,
                     LocationList, LocationDetail, LocationInfobox, )
+from .forms import PlantForm, LocationForm
+
 
 urlpatterns = [
     # plant
-    path("accessions/<str:accession_code>/plants/", PlantList.as_view(), name="plant-list"),
-    path("accessions/<str:accession_code>/plants/<str:code>/", PlantDetail.as_view(), name="plant"),
-    path("accessions/<str:accession_code>/plants/<str:code>/infobox/", PlantInfobox.as_view(), name="plant-infobox"),
+    path("accession/<str:accession_code>/plant/", PlantList.as_view(), name="plant-list"),
+    path("accession/<str:accession_code>/plant/<str:code>/", PlantDetail.as_view(), name="plant"),
+    path("accession/<str:accession_code>/plant/<str:code>/infobox/", PlantInfobox.as_view(), name="plant-infobox"),
+    path("accession/<str:accession_code>/plant/form/", PlantForm.as_view(), name="plant-post-form"),
+    path("accession/<str:accession_code>/plant/<str:code>/form/", PlantForm.as_view(), name="plant-put-form"),
     # location
-    path("locations/", LocationList.as_view(), name="location-list"),
-    path("locations/<str:code>/", LocationDetail.as_view(), name="location"),
-    path("locations/<str:code>/infobox/", LocationInfobox.as_view(), name="location-infobox"),
+    path("location/", LocationList.as_view(), name="location-list"),
+    path("location/<str:code>/", LocationDetail.as_view(), name="location"),
+    path("location/<str:code>/infobox/", LocationInfobox.as_view(), name="location-infobox"),
+    path("location/form/", LocationForm.as_view(), name="location-post-form"),
+    path("location/<str:code>/form/", LocationForm.as_view(), name="location-put-form"),
 ]

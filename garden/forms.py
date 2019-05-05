@@ -1,0 +1,38 @@
+from django import forms
+from django.http import JsonResponse
+
+from django_select2 import forms as s2forms
+
+from .models import Location, Plant
+
+
+class LocationForm(forms.ModelForm):
+    class Meta:
+        model = Location
+        fields = '__all__'
+
+    @classmethod
+    def as_view(cls):
+        def view(request, code=None):
+            if code is not None:
+                obj = Location.objects.get(code=code)
+                return JsonResponse({'form': "%s" % LocationForm(instance=obj)})
+            return JsonResponse({'form': "%s" % LocationForm()})
+        return view
+
+
+class PlantForm(forms.ModelForm):
+    class Meta:
+        model = Plant
+        fields = '__all__'
+
+    @classmethod
+    def as_view(cls):
+        def view(request, accession_code, code=None):
+            if code is not None:
+                obj = Plant.objects.get(accession__code=accession_code, code=code)
+                return JsonResponse({'form': "%s" % PlantForm(instance=obj)})
+            acc = Accession.objects.get(code=accession_code)
+            obj = Plant(accession=acc)
+            return JsonResponse({'form': "%s" % PlantForm()})
+        return view

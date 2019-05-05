@@ -2,14 +2,18 @@ from django.urls import path
 from .views import (RankList, RankDetail,
                     TaxonList, TaxonDetail, TaxonInfobox,
                     index)
-
+from .forms import TaxonForm
 
 urlpatterns = [
-    path("taxa/", TaxonList.as_view(), name="taxon-list"),
-    path("taxa/<int:pk>/", TaxonDetail.as_view(), name="taxon-detail"),
-    path("taxa/<int:pk>/infobox/", TaxonInfobox.as_view(), name="taxon-infobox"),
-    path("ranks/", RankList.as_view(), name="rank-list"),
-    path("ranks/<int:pk>/", RankDetail.as_view(), name="rank"),
-    #path("ranks/<int:pk>/infobox/", RankInfobox.as_view(), name="rank-infobox"),
-    #path("taxa/<int:pk>/subtaxa/", SubTaxa.as_view(), name="subtaxa"),
+    path("taxon/", TaxonList.as_view(), name="taxon-list"),
+    path("taxon/<int:pk>/", TaxonDetail.as_view(), name="taxon-detail"),
+    path("taxon/<int:pk>/infobox/", TaxonInfobox.as_view(), name="taxon-infobox"),
+    path("rank/", RankList.as_view(), name="rank-list"),
+    path("rank/<int:pk>/", RankDetail.as_view(), name="rank"),
+    #path("rank/<int:pk>/infobox/", RankInfobox.as_view(), name="rank-infobox"),
+    #path("taxon/<int:pk>/subtaxon/", SubTaxa.as_view(), name="subtaxon-list"),
+
+    path("taxon/form/", TaxonForm.as_view(), name="taxon-post-form"),
+    path("taxon/<int:pk>/form/", TaxonForm.as_view(), name="taxon-put-form"),
+
 ]

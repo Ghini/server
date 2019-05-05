@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 from taxonomy.models import Taxon
 from collection.models import Accession
@@ -21,7 +22,7 @@ class Location(models.Model):
 
     @property
     def infobox_url(self):
-        return "/garden/locations/%s/infobox/" % (self.code)
+        return reverse('location-infobox', args=[self.code])
 
 
 class Plant(models.Model):
@@ -43,7 +44,7 @@ class Plant(models.Model):
 
     @property
     def infobox_url(self):
-        return "/garden/accessions/%s/plants/%s/infobox/" % (self.accession.code, self.code)
+        return reverse('plant-infobox', args=[self.accession.code, self.code])
 
 
 class LocationPlanner(models.Model):

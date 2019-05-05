@@ -1,3 +1,4 @@
+from django.urls import reverse
 from django.db import models
 
 # Create your models here.
@@ -18,7 +19,7 @@ class Rank(models.Model):
 
     @property
     def infobox_url(self):
-        return "/taxonomy/ranks/%s/infobox/" % self.pk
+        return reverse('rank-infobox', args=[self.pk])
 
 
 class Taxon(models.Model):
@@ -73,4 +74,4 @@ class Taxon(models.Model):
 
     @property
     def infobox_url(self):
-        return "/taxonomy/taxa/%s/infobox/" % self.pk
+        return reverse('taxon-infobox', args=[self.pk])

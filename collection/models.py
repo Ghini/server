@@ -1,4 +1,6 @@
 from django.db import models
+from django.urls import reverse
+
 
 _ = lambda x: x
 
@@ -59,7 +61,7 @@ class Contact(models.Model):
 
     @property
     def infobox_url(self):
-        return "/collection/contacts/%s/infobox/" % self.pk
+        return reverse('contact-infobox', args=[self.pk])
 
 
 class Accession(models.Model):
@@ -114,7 +116,7 @@ class Accession(models.Model):
 
     @property
     def infobox_url(self):
-        return "/collection/accessions/%s/infobox/" % self.code
+        return reverse('accession-infobox', args=[self.code])
 
 
 VERIFICATION_LEVELS = (

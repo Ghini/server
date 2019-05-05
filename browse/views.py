@@ -7,7 +7,9 @@ from taxonomy.views import TaxonList, RankList
 from collection.views import AccessionList, ContactList
 from garden.views import LocationList, PlantList
 
-from .forms import TaxonForm, VerificationForm, AccessionForm, PlantForm, LocationForm, ContactForm
+from taxonomy.forms import TaxonForm
+from collection.forms import VerificationForm, AccessionForm, ContactForm
+from garden.forms import PlantForm, LocationForm
 
 # Create your views here.
 
