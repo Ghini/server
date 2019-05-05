@@ -62,7 +62,7 @@ class PlantInfobox(PlantDetail):
             serializer = PlantSerializer(instance=obj)
             result = serializer.data
             result['__class_name__'] = 'Plant'
-            result['__detail_url__'] = reverse('plant', kwargs={'accession_code': obj.accession.code, 'code': obj.code})
+            result['__detail_url__'] = reverse('plant-detail', args=[obj.accession.code, obj.code])
             result['__shows_as__'] = "%s" % obj
             del result['id']
             result['accession'] = ('link', "%s" % obj.accession, 'accession=%s' % obj.accession.code)
@@ -97,7 +97,7 @@ class LocationInfobox(LocationDetail):
             serializer = LocationSerializer(instance=obj)
             result = serializer.data
             result['__class_name__'] = 'Location'
-            result['__detail_url__'] = reverse('location', kwargs={'code': obj.code})
+            result['__detail_url__'] = reverse('location-detail', args=[obj.code])
             result['__shows_as__'] = "%s" % obj
             del result['id']
             result['plant groups'] = obj.plants.count()

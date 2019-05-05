@@ -11,7 +11,7 @@ urlpatterns = [
     path("taxon/<int:pk>/", TaxonDetail.as_view(), name="taxon-detail"),
     path("taxon/<int:pk>/infobox/", TaxonInfobox.as_view(), name="taxon-infobox"),
     path("rank/", RankList.as_view(), name="rank-list"),
-    path("rank/<int:pk>/", RankDetail.as_view(), name="rank"),
+    path("rank/<int:pk>/", RankDetail.as_view(), name="rank-detail"),
     #path("rank/<int:pk>/infobox/", RankInfobox.as_view(), name="rank-infobox"),
     #path("taxon/<int:pk>/subtaxon/", SubTaxa.as_view(), name="subtaxon-list"),
 

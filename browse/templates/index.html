@@ -55,11 +55,12 @@
      }
 
      function activate_infobox(url, e) {
+         $(e.target).attr("disabled", "disabled");
+         console.log(e);
          if (current_url === url)
              return;
          current_url = url;
          $('td').removeClass('table-success');
-         $(e.target).attr("disabled", "disabled");
          $('#infobox-object-text').empty();
          $('#infobox-object-text').append($(e.target).clone());
          $(e.target).addClass('table-success');
@@ -194,8 +195,9 @@
          console.log(parent_class, action_name, this_class, http_verb, rest, form_url, infobox_url);
          var modal_form = $('#modal-form-' + action_name);
          var modal_form_body = $(modal_form).find('.modal-body');
+         $(modal_form).find('.modal-title').empty();
+         $(modal_form).find('.modal-title').append(this_class);
          $(modal_form_body).empty();
-         console.log(e.target)
          $.getJSON(form_url, function(data) {
              $(modal_form_body).append($(data.form));
          });
@@ -448,7 +450,7 @@
 
           <!-- Modal Header --><!-- we change the title -->
           <div class="modal-header">
-            <h4 class="modal-title">Add Verification</h4>
+            <h4 class="modal-title"></h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
           </div>
 

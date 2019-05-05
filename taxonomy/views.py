@@ -42,7 +42,7 @@ class TaxonInfobox(TaxonDetail):
             serializer = TaxonSerializer(instance=obj)
             result = serializer.data
             result['__class_name__'] = 'Taxon'
-            result['__detail_url__'] = reverse('taxon', kwargs={'pk': obj.pk})
+            result['__detail_url__'] = reverse('taxon-detail', args=[obj.pk])
             result['__shows_as__'] = "%s" % obj
             del result['id']
             if obj.parent:

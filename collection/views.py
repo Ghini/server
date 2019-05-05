@@ -35,7 +35,7 @@ class AccessionInfobox(AccessionDetail):
             import collections
             result = collections.OrderedDict()
             result['__class_name__'] = 'Accession'
-            result['__detail_url__'] = reverse('accession', kwargs={'code': obj.code})
+            result['__detail_url__'] = reverse('accession-detail', args=[obj.code])
             result['__shows_as__'] = "%s" % obj
             result.update(serializer.data)
             del result['id']
