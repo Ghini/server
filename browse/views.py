@@ -36,12 +36,12 @@ def filter_json(request):
     if query_string:
         # attempt domain strategy
         try:
-            domain, query = query_string.split('=', 1)
+            domain, query = [i.strip() for i in query_string.split('=', 1)]
         except:
             # default strategy:
             domain = None
             query = query_string
-        for klass in [TaxonList, AccessionList, PlantList, LocationList]:
+        for klass in [TaxonList, AccessionList, PlantList, LocationList, ContactList]:
             if domain is not None and not klass.__name__.lower().startswith(domain):
                 continue
             partial = [{key: getattr(item, key, None)

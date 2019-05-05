@@ -182,17 +182,16 @@
 
      function perform_on_selected(e) {
          [parent_class, action_name, this_class, http_verb, rest] = e.target.id.split('-');
-         var infobox_url, form_url, api_url
+         var infobox_url, form_url;
          if(parent_class === 'new') {
-             infobox_url = $(e.target).attr('data-infobox-url');
              form_url = $(e.target).attr('data-form-url');
          } else {
              var active_row = $('td.table-success');
              infobox_url = $(active_row).attr('data-infobox-url');
              form_url = $(active_row).attr('data-form-url');
-             api_url = infobox_url.replace('infobox/', '');
          }
-         console.log(parent_class, action_name, this_class, http_verb, rest, form_url, infobox_url);
+         var api_url = form_url.replace('form/', '').replace('//', '/');
+         console.log(parent_class, action_name, this_class, http_verb, rest, form_url, infobox_url, api_url);
          var modal_form = $('#modal-form-' + action_name);
          var modal_form_body = $(modal_form).find('.modal-body');
          $(modal_form).find('.modal-title').empty();
@@ -204,11 +203,13 @@
          // set the 'proceed' callback
          $(modal_form).find('button.action-confirm').unbind('click');
          $(modal_form).find('button.action-confirm').click(
-             partial(function(verb, api_url, e){
+             partial(function(form, verb, api_url, e){
+                 console.log(form.id, verb, api_url);
+                 console.log($(form).serialize());
                  $.ajax({
                      url: api_url,
                      method: verb,
-                     contentType: 'application/json',
+                     data:$(form).serialize(),
                      beforeSend: function (request) {
                          request.setRequestHeader('X-CSRFToken', csrf_token);
                      },
@@ -221,7 +222,7 @@
                          // handle failure
                      }
                  });
-             }, http_verb, api_url));
+             }, $(modal_form).find('form'), http_verb, api_url));
          // show the form
          $(modal_form).modal();
          // stretch width of elements to new size of modal
@@ -270,7 +271,7 @@
              $(modal).find('.django-select2').select2({
                  dropdownParent: $(modal)
              });
-         })
+     })
      });
     </script>
   </head>

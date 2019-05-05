@@ -76,6 +76,14 @@ class LocationList(generics.ListCreateAPIView):
     serializer_class = LocationSerializer
     queryset = Location.objects.all()
 
+    def get(self, request, *args, **kwargs):
+        print(request.data, args, kwargs)
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        print(request.data, args, kwargs)
+        return super().post(request, *args, **kwargs)
+    
     def run_query(self, q):
         from django.db.models import Q
         return self.get_queryset().filter(Q(name__contains=q) | Q(code=q)).order_by('code')
