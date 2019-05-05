@@ -57,6 +57,11 @@ class TaxonInfobox(TaxonDetail):
             return Response([], status=status.HTTP_204_NO_CONTENT)
 
 
+def taxon_form(request, pk=None):
+    print(pk)
+    return JsonResponse({})
+        
+
 class RankList(generics.ListCreateAPIView):
     serializer_class = RankSerializer
     queryset = Rank.objects.all()

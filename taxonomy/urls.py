@@ -6,7 +6,7 @@ from .views import (RankList, RankDetail,
 
 urlpatterns = [
     path("taxa/", TaxonList.as_view(), name="taxon-list"),
-    path("taxa/<int:pk>/", TaxonDetail.as_view(), name="taxon"),
+    path("taxa/<int:pk>/", TaxonDetail.as_view(), name="taxon-detail"),
     path("taxa/<int:pk>/infobox/", TaxonInfobox.as_view(), name="taxon-infobox"),
     path("ranks/", RankList.as_view(), name="rank-list"),
     path("ranks/<int:pk>/", RankDetail.as_view(), name="rank"),

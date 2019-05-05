@@ -180,20 +180,7 @@
      }
 
      function perform_on_selected(parent_class, action_name, this_class, http_verb, optional, e) {
-         var api_url;
-         if (parent_class === 'new') {
-             // there is no parent class, so let's use this_class own entry point
-             api_url = {accession: "{% url 'accession-list' %}",
-                        taxon: "{% url 'taxon-list' %}",
-                        location: "{% url 'location-list' %}",
-                        contact: "{% url 'contact-list' %}" }[this_class];
-         } else {
-             // the active td holds the infobox url
-             var infobox_url = $('#results-table-body td.table-success').attr('data-infobox-url');
-             api_url = infobox_url.replace('infobox/', '');
-         }
-         // get the data, populate the form, activate it
-         $.getJSON(api_url, partial(function(action_name, this_class, verb, data) {
+         var f = partial(function(action_name, this_class, verb, data) {
              console.log(action_name, this_class, verb, data);
              var modal_form = $('#modal-form-' + action_name);
              var modal_form_body = $(modal_form).find('.modal-body');
@@ -227,7 +214,22 @@
              // stretch width of elements to new size of modal
              $('.modal td select').css({width: '100%'})
              $('.modal td span').css({width: '100%'})
-         }, action_name, this_class, http_verb))
+         }, action_name, this_class, http_verb);
+         var api_url;
+         if (parent_class === 'new') {
+             // there is no parent class, so let's use this_class own entry point
+             api_url = {accession: "{% url 'accession-list' %}",
+                        taxon: "{% url 'taxon-list' %}",
+                        location: "{% url 'location-list' %}",
+                        contact: "{% url 'contact-list' %}" }[this_class];
+             f({})
+         } else {
+             // the active td holds the infobox url
+             var infobox_url = $('#results-table-body td.table-success').attr('data-infobox-url');
+             api_url = infobox_url.replace('infobox/', '');
+             // get the data, populate the form, activate it
+             $.getJSON(api_url, f)
+         }
      }
 
      function getCookie(name) {
@@ -473,30 +475,31 @@
       </div>
     </div>
 
-    <table id="verification-table">
-      {{ verification_form }}
-    </table>
+    <div id="storage" style="display:none">
+      <table id="verification-table">
+        {{ verification_form }}
+      </table>
 
-    <table id="contact-table">
-      {{ contact_form }}
-    </table>
+      <table id="contact-table">
+        {{ contact_form }}
+      </table>
 
-    <table id="plant-table">
-      {{ plant_form }}
-    </table>
+      <table id="plant-table">
+        {{ plant_form }}
+      </table>
 
-    <table id="taxon-table">
-      {{ taxon_form }}
-    </table>
+      <table id="taxon-table">
+        {{ taxon_form }}
+      </table>
 
-    <table id="accession-table">
-      {{ accession_form }}
-    </table>
+      <table id="accession-table">
+        {{ accession_form }}
+      </table>
 
-    <table id="location-table">
-      {{ location_form }}
-    </table>
-
+      <table id="location-table">
+        {{ location_form }}
+      </table>
+    </div>
     <script type="text/javascript" src="{% static 'js/select2.min.js' %}"></script>
     <script type="text/javascript" src="/static/django_select2/django_select2.js"></script>
   </body>
