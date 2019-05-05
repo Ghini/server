@@ -59,7 +59,6 @@
              return;
          current_url = url;
          $('td').removeClass('table-success');
-         console.log(e.target)
          $(e.target).attr("disabled", "disabled");
          $('#infobox-object-text').empty();
          $('#infobox-object-text').append($(e.target).clone());
@@ -128,6 +127,7 @@
                      tr = $('<tr class="' + class_name + '-row"></tr>');
                      td = $('<td>' + item.inline + '</td>');
                      $(td).attr('data-infobox-url', item.infobox_url);
+                     $(td).attr('data-form-url', item.infobox_url.replace('infobox/', 'form/'));
                      tbody.append(tr);  // add it as last child
                      tr.append(td);
                      tr.click(partial(activate_infobox, item.infobox_url));
@@ -179,57 +179,52 @@
          tbody.append($('<p>' + data.__shows_as__ + '</p>'));
      }
 
-     function perform_on_selected(parent_class, action_name, this_class, http_verb, optional, e) {
-         var f = partial(function(action_name, this_class, verb, data) {
-             console.log(action_name, this_class, verb, data);
-             var modal_form = $('#modal-form-' + action_name);
-             var modal_form_body = $(modal_form).find('.modal-body');
-             $(modal_form_body).empty();
-             $(modal_form_body).append($(this_class + '-table').clone());
-             // set the 'proceed' callback
-             $(modal_form).find('button.action-confirm').unbind('click');
-             $(modal_form).find('button.action-confirm').click(
-                 partial(function(detail_url, e){
-                     $.ajax({
-                         url: detail_url,
-                         method: verb,
-                         contentType: 'application/json',
-                         beforeSend: function (request) {
-                             request.setRequestHeader('X-CSRFToken', csrf_token);
-                         },
-                         success: function(result) {
-                             console.log(result);
-                             // handle success
-                         },
-                         error: function(request, msg, error) {
-                             console.log(request, msg, error);
-                             // handle failure
-                         }
-                     });
-                 }, data.__detail_url__));
-             // populate the form
-             // populate_form(data);
-             // show the form
-             $(modal_form).modal();
-             // stretch width of elements to new size of modal
-             $('.modal td select').css({width: '100%'})
-             $('.modal td span').css({width: '100%'})
-         }, action_name, this_class, http_verb);
-         var api_url;
-         if (parent_class === 'new') {
-             // there is no parent class, so let's use this_class own entry point
-             api_url = {accession: "{% url 'accession-list' %}",
-                        taxon: "{% url 'taxon-list' %}",
-                        location: "{% url 'location-list' %}",
-                        contact: "{% url 'contact-list' %}" }[this_class];
-             f({})
+     function perform_on_selected(e) {
+         [parent_class, action_name, this_class, http_verb, rest] = e.target.id.split('-');
+         var infobox_url, form_url, api_url
+         if(parent_class === 'new') {
+             infobox_url = $(e.target).attr('data-infobox-url');
+             form_url = $(e.target).attr('data-form-url');
          } else {
-             // the active td holds the infobox url
-             var infobox_url = $('#results-table-body td.table-success').attr('data-infobox-url');
+             var active_row = $('td.table-success');
+             infobox_url = $(active_row).attr('data-infobox-url');
+             form_url = $(active_row).attr('data-form-url');
              api_url = infobox_url.replace('infobox/', '');
-             // get the data, populate the form, activate it
-             $.getJSON(api_url, f)
          }
+         console.log(parent_class, action_name, this_class, http_verb, rest, form_url, infobox_url);
+         var modal_form = $('#modal-form-' + action_name);
+         var modal_form_body = $(modal_form).find('.modal-body');
+         $(modal_form_body).empty();
+         console.log(e.target)
+         $.getJSON(form_url, function(data) {
+             $(modal_form_body).append($(data.form));
+         });
+         // set the 'proceed' callback
+         $(modal_form).find('button.action-confirm').unbind('click');
+         $(modal_form).find('button.action-confirm').click(
+             partial(function(verb, api_url, e){
+                 $.ajax({
+                     url: api_url,
+                     method: verb,
+                     contentType: 'application/json',
+                     beforeSend: function (request) {
+                         request.setRequestHeader('X-CSRFToken', csrf_token);
+                     },
+                     success: function(result) {
+                         console.log(result);
+                         // handle success
+                     },
+                     error: function(request, msg, error) {
+                         console.log(request, msg, error);
+                         // handle failure
+                     }
+                 });
+             }, http_verb, api_url));
+         // show the form
+         $(modal_form).modal();
+         // stretch width of elements to new size of modal
+         $('.modal td select').css({width: '100%'})
+         $('.modal td span').css({width: '100%'})
      }
 
      function getCookie(name) {
@@ -267,10 +262,7 @@
              e.preventDefault(); // prevents default menu
          });
          // register action on modal activation
-         $('#drop-insert,.context-menu.dropdown-menu').find('.dropdown-item').each(function(i, o) {
-             [parent_class, action_name, this_class, http_verb, rest] = o.id.split('-')
-             $(o).click(partial(perform_on_selected, parent_class, action_name, this_class, http_verb, rest));
-         });
+         $('#drop-insert,.context-menu.dropdown-menu').find('.dropdown-item').click(perform_on_selected);
          $('.django-select2').select2();
          $('.modal').each(function(i, modal) {
              $(modal).find('.django-select2').select2({
@@ -291,10 +283,10 @@
         <li class="nav-item dropdown" id="drop-insert" >
           <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Insert</a>
           <div class="dropdown-menu" id="insert-menu">
-            <a class="dropdown-item" id="new-edit-taxon-POST" href="#">Taxon</a>
-            <a class="dropdown-item" id="new-edit-contact-POST" href="#">Contact</a>
-            <a class="dropdown-item" id="new-edit-accession-POST" href="#">Accession</a>
-            <a class="dropdown-item" id="new-edit-location-POST" href="#">Location</a>
+            <a class="dropdown-item" id="new-edit-taxon-POST" href="#" data-form-url="{% url 'taxon-post-form' %}">Taxon</a>
+            <a class="dropdown-item" id="new-edit-contact-POST" href="#" data-form-url="{% url 'contact-post-form' %}">Contact</a>
+            <a class="dropdown-item" id="new-edit-accession-POST" href="#" data-form-url="{% url 'accession-post-form' %}">Accession</a>
+            <a class="dropdown-item" id="new-edit-location-POST" href="#" data-form-url="{% url 'location-post-form' %}">Location</a>
           </div>
         </li>
         <li class="nav-item dropdown" id="drop-tools" >
