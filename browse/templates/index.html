@@ -198,6 +198,16 @@
          $(modal_form_body).empty();
          $.getJSON(form_url, function(data) {
              $(modal_form_body).append($(data.form));
+             jQuery.each($(modal_form), function(i, modal) {
+                 $(modal).find('.django-select2').djangoSelect2({
+                     dropdownParent: $(modal)
+                 });
+             });
+             // show the form
+             $(modal_form).modal();
+             // stretch width of elements to new size of modal
+             $('.modal td select').css({width: '100%'})
+             $('.modal td span').css({width: '100%'})
          });
          // set the 'proceed' callback
          $(modal_form).find('button.action-confirm').unbind('click');
@@ -222,11 +232,6 @@
                      }
                  });
              }, $(modal_form).find('form'), http_verb, api_url));
-         // show the form
-         $(modal_form).modal();
-         // stretch width of elements to new size of modal
-         $('.modal td select').css({width: '100%'})
-         $('.modal td span').css({width: '100%'})
      }
 
      function getCookie(name) {
@@ -265,12 +270,6 @@
          });
          // register action on modal activation
          $('#drop-insert,.context-menu.dropdown-menu').find('.dropdown-item').click(perform_on_selected);
-         $('.django-select2').select2();
-         $('.modal').each(function(i, modal) {
-             $(modal).find('.django-select2').select2({
-                 dropdownParent: $(modal)
-             });
-     })
      });
     </script>
   </head>
@@ -467,32 +466,6 @@
 
         </form>
       </div>
-    </div>
-
-    <div id="storage" style="display:none">
-      <table id="verification-table">
-        {{ verification_form }}
-      </table>
-
-      <table id="contact-table">
-        {{ contact_form }}
-      </table>
-
-      <table id="plant-table">
-        {{ plant_form }}
-      </table>
-
-      <table id="taxon-table">
-        {{ taxon_form }}
-      </table>
-
-      <table id="accession-table">
-        {{ accession_form }}
-      </table>
-
-      <table id="location-table">
-        {{ location_form }}
-      </table>
     </div>
     <script type="text/javascript" src="{% static 'js/select2.min.js' %}"></script>
     <script type="text/javascript" src="/static/django_select2/django_select2.js"></script>
