@@ -9,7 +9,14 @@ from .models import Taxon
 class TaxonForm(forms.ModelForm):
     class Meta:
         model = Taxon
-        fields = ['epithet', 'rank']
+        fields = ['epithet', 'rank', 'authorship', 'year', 'parent', 'accepted']
+        widgets = {
+            'parent': s2forms.ModelSelect2Widget(model=Taxon,
+                                                 search_fields=['epithet__icontains']),
+            'accepted': s2forms.ModelSelect2Widget(model=Taxon,
+                                                   search_fields=['epithet__icontains']),
+            'rank': s2forms.Select2Widget,
+        }
 
     @classmethod
     def as_view(cls):

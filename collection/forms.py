@@ -39,7 +39,12 @@ class VerificationForm(forms.ModelForm):
 class AccessionForm(forms.ModelForm):
     class Meta:
         model = Accession
-        fields = '__all__'
+        fields = ['code', 'received_quantity', 'received_type', 'source', 'accessioned_date', 'received_date', ]
+        widgets = {
+            'source': s2forms.ModelSelect2Widget(model=Contact,
+                                                 search_fields=['name__icontains']),
+            'received_type': s2forms.Select2Widget,
+        }
 
     @classmethod
     def as_view(cls):
