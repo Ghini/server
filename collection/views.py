@@ -26,6 +26,14 @@ class AccessionDetail(generics.RetrieveUpdateDestroyAPIView):
         return queryset
 
 
+class AccessionMarkup(AccessionDetail):
+    def get(self, request, *args, **kwargs):
+        qs = self.get_queryset()
+        o = qs.first()
+        result = {'inline': o.inline,}
+        return Response(result, status=status.HTTP_200_OK)
+
+
 class AccessionInfobox(AccessionDetail):
     def get(self, request, *args, **kwargs):
         qs = self.get_queryset()
@@ -108,3 +116,11 @@ class VerificationList(generics.ListCreateAPIView):
         return queryset
 
     serializer_class = VerificationSerializer
+
+
+class ContactMarkup(ContactDetail):
+    def get(self, request, *args, **kwargs):
+        qs = self.get_queryset()
+        o = qs.first()
+        result = {'inline': o.inline, }
+        return Response(result, status=status.HTTP_200_OK)

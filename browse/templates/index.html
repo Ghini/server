@@ -187,7 +187,7 @@
              if (this_class === 'verification' && parent_class === 'accession')
                  return form_url.replace('form/', 'verification/')
          }
-         return form_url.replace('/form/', '/')
+         return form_url.replace('/form/', '/').replace('//', '/')
      }
 
      function perform_on_selected(e) {
@@ -201,10 +201,9 @@
              form_url = $(active_row).attr('data-form-url');
          }
          var api_url = compute_api_url(form_url, parent_class, this_class, http_verb)
-         if (http_verb === 'POST' && parent_class !== 'new')
-             form_url = api_url + '/form'
-         else
-             form_url = api_url + 'form'
+         if(http_verb === 'POST' && parent_class !== 'new') {
+             form_url = api_url + '/form/'
+         }
          console.log(form_url, this_class, http_verb, api_url)
          var modal_form = $('#modal-form-' + action_name);
          var modal_form_body = $(modal_form).find('.modal-body');
@@ -218,6 +217,9 @@
                      dropdownParent: $(modal)
                  });
              });
+             $("select.django-select2-heavy").attr('data-minimumInputLength', 2)
+             $("select.django-select2-heavy").attr('data-minimum-input-length', 2)
+             $("select.django-select2-heavy").attr('data-response-length-threshold', '20')
              // show the form
              $(modal_form).modal();
              // stretch width of elements to new size of modal
@@ -236,8 +238,15 @@
                          request.setRequestHeader('X-CSRFToken', csrf_token);
                      },
                      success: function(result) {
-                         console.log(result);
-                         // handle success
+                         // update current row
+                         $.getJSON(api_url + 'markup/', function(data) {
+                             $(e.target).text(data.inline)
+                             // update infobox
+                             if(infobox_url !== undefined) {
+                                 current_url = undefined
+                                 $(e.target).trigger('click')
+                             }
+                         })
                      },
                      error: function(request, msg, error) {
                          console.log(request, msg, error);
@@ -474,7 +483,7 @@
           <!-- Modal footer --><!-- we change the primary action -->
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary action-confirm" data-dismiss="modal">Save Verification</button>
+            <button type="button" class="btn btn-primary action-confirm" data-dismiss="modal">Save</button>
           </div>
 
         </form>

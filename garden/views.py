@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse
+from django.http import JsonResponse
 from rest_framework import generics, viewsets, views
 from rest_framework import status
 from rest_framework.response import Response
@@ -72,6 +73,14 @@ class PlantInfobox(PlantDetail):
             return Response([], status=status.HTTP_204_NO_CONTENT)
 
 
+class PlantMarkup(PlantDetail):
+    def get(self, request, *args, **kwargs):
+        qs = self.get_queryset()
+        o = qs.first()
+        result = {'inline': o.inline,}
+        return Response(result, status=status.HTTP_200_OK)
+
+
 class LocationList(generics.ListCreateAPIView):
     serializer_class = LocationSerializer
     queryset = Location.objects.all()
@@ -114,3 +123,9 @@ class LocationInfobox(LocationDetail):
         else:
             return Response([], status=status.HTTP_204_NO_CONTENT)
 
+class LocationMarkup(LocationDetail):
+    def get(self, request, *args, **kwargs):
+        qs = self.get_queryset()
+        o = qs.first()
+        result = {'inline': o.inline,}
+        return Response(result, status=status.HTTP_200_OK)
