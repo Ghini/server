@@ -57,7 +57,6 @@
 
      function activate_infobox(url, e) {
          $(e.target).attr("disabled", "disabled");
-         console.log(e);
          if (current_url === url)
              return;
          current_url = url;
@@ -181,6 +180,16 @@
          tbody.append($('<p>' + data.__shows_as__ + '</p>'));
      }
 
+     function compute_api_url(form_url, parent_class, this_class, http_verb) {
+         if (http_verb === 'POST') {
+             if (this_class === 'plant' && parent_class === 'accession')
+                 return form_url.replace('collection/', 'garden/').replace('form/', 'plant/')
+             if (this_class === 'verification' && parent_class === 'accession')
+                 return form_url.replace('form/', 'verification/')
+         }
+         return form_url.replace('/form/', '/')
+     }
+
      function perform_on_selected(e) {
          [parent_class, action_name, this_class, http_verb, rest] = e.target.id.split('-');
          var infobox_url, form_url;
@@ -191,8 +200,12 @@
              infobox_url = $(active_row).attr('data-infobox-url');
              form_url = $(active_row).attr('data-form-url');
          }
-         var api_url = form_url.replace('form/', '').replace('//', '/');
-         console.log(parent_class, action_name, this_class, http_verb, rest, form_url, infobox_url, api_url);
+         var api_url = compute_api_url(form_url, parent_class, this_class, http_verb)
+         if (http_verb === 'POST' && parent_class !== 'new')
+             form_url = api_url + '/form'
+         else
+             form_url = api_url + 'form'
+         console.log(form_url, this_class, http_verb, api_url)
          var modal_form = $('#modal-form-' + action_name);
          var modal_form_body = $(modal_form).find('.modal-body');
          $(modal_form).find('.modal-title').empty();
@@ -215,8 +228,6 @@
          $(modal_form).find('button.action-confirm').unbind('click');
          $(modal_form).find('button.action-confirm').click(
              partial(function(form, verb, api_url, e){
-                 console.log(form.id, verb, api_url);
-                 console.log($(form).serialize());
                  $.ajax({
                      url: api_url,
                      method: verb,

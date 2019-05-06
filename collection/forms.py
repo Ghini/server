@@ -22,6 +22,7 @@ class VerificationForm(forms.ModelForm):
             'contact': s2forms.ModelSelect2Widget(model=Contact,
                                                   search_fields=['name__icontains']),
             'qualifier': s2forms.Select2Widget,
+            'level': s2forms.Select2Widget,
         }
 
     @classmethod

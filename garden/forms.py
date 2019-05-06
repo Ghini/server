@@ -3,6 +3,7 @@ from django.http import JsonResponse
 
 from django_select2 import forms as s2forms
 
+from collection.models import Accession
 from .models import Location, Plant
 
 
@@ -25,14 +26,20 @@ class PlantForm(forms.ModelForm):
     class Meta:
         model = Plant
         fields = '__all__'
+        widgets = {
+            'location': s2forms.ModelSelect2Widget(model=Location,
+                                                   search_fields=['name__icontains', 'code__icontains']),
+            'accession': s2forms.ModelSelect2Widget(model=Accession,
+                                                    search_fields=['code__icontains']),
+        }
 
     @classmethod
     def as_view(cls):
         def view(request, accession_code, code=None):
             if code is not None:
                 obj = Plant.objects.get(accession__code=accession_code, code=code)
-                return JsonResponse({'form': "%s" % PlantForm(instance=obj)})
-            acc = Accession.objects.get(code=accession_code)
-            obj = Plant(accession=acc)
-            return JsonResponse({'form': "%s" % PlantForm()})
+            else:
+                acc = Accession.objects.get(code=accession_code)
+                obj = Plant(accession=acc)
+            return JsonResponse({'form': "%s" % PlantForm(instance=obj)})
         return view
