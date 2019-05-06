@@ -14,16 +14,13 @@ class VerificationForm(forms.ModelForm):
         widgets = {
             'accession': s2forms.ModelSelect2Widget(model=Accession,
                                                     search_fields=['code__icontains'],
-                                                    max_results=120,
-            ),
+                                                    max_results=120),
             'taxon': s2forms.ModelSelect2Widget(model=Taxon,
                                                 search_fields=['epithet__icontains'],
                                                 minimum_input_length=3,
-                                                max_results=120,
-            ),
+                                                max_results=120),
             'contact': s2forms.ModelSelect2Widget(model=Contact,
-                                                  search_fields=['name__icontains'],
-            ),
+                                                  search_fields=['name__icontains']),
             'qualifier': s2forms.Select2Widget,
         }
 
