@@ -272,6 +272,13 @@
          return cookieValue;
      }
 
+     function reset_results_height() {
+         // collect the elements, get their height, sum the values, assign the rest to the results box
+         var stealing = $('.stealing-height-from-results').map(function (i, x) { return parseInt($(x).css('height'))})
+         var stolen = Object.values(stealing).slice(0, stealing.length).reduce((t, i) => t + i + 2)
+         $('#results-box').css('height', '' + (window.innerHeight - stolen) + 'px')
+     }
+
      $(function() {  // run at document ready
          $('#search-filter').on('keypress', function (e) {
              if(e.which === 13) {
@@ -292,16 +299,13 @@
          });
          // register action on modal activation
          $('#drop-insert,.context-menu.dropdown-menu').find('.dropdown-item').click(perform_on_selected);
-         window.addEventListener("resize", function(){
-             console.log(window.innerHeight-128)
-             $('#results-box').css('height', '' + (window.innerHeight-124) + 'px')
-         });
-         $('#results-box').css('height', '' + (window.innerHeight-124) + 'px')
+         window.addEventListener("resize", reset_results_height)
+         reset_results_height()
      });
     </script>
   </head>
   <body class="container-fluid">
-    <nav class="navbar navbar-expand-sm bg-light navbar-light">
+    <nav class="navbar navbar-expand-sm bg-light navbar-light stealing-height-from-results">
       <!-- Brand -->
       <a class="navbar-brand" href="#"><img src="{% static 'taxasoft-32.png' %}"/></a>
       <a class="navbar-brand" href="#"><img src="{% static 'ghini-32.png' %}"/></a>
@@ -407,7 +411,7 @@
     </div>
 
     <div class="row">
-      <div class="col-7">
+      <div class="col-7 stealing-height-from-results">
         <table class="table">
           <thead>
             <tr>
