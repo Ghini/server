@@ -4,6 +4,8 @@ from rest_framework import generics, viewsets, status
 from rest_framework.response import Response
 from django.http import HttpResponse
 from django.http import JsonResponse
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 from .models import Rank, Taxon
 from .serializers import RankSerializer
@@ -16,7 +18,23 @@ def index(request):
     return HttpResponse(response)
 
 
-class TaxonList(generics.ListCreateAPIView):
+class RequestLoginOnNonSafeMixin:
+
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+    @method_decorator(login_required)
+    def put(self, request, *args, **kwargs):
+        return super().put(request, *args, **kwargs)
+
+    @method_decorator(login_required)
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)
+    
+
+
+class TaxonList(generics.ListCreateAPIView, RequestLoginOnNonSafeMixin):
     serializer_class = TaxonSerializer
     queryset = Taxon.objects.all()
     class Meta:
@@ -26,7 +44,7 @@ class TaxonList(generics.ListCreateAPIView):
         return self.get_queryset().filter(epithet__contains=q).order_by('rank', 'epithet')
 
 
-class TaxonDetail(generics.RetrieveUpdateDestroyAPIView):
+class TaxonDetail(generics.RetrieveUpdateDestroyAPIView, RequestLoginOnNonSafeMixin):
     serializer_class = TaxonSerializer
 
     def get_queryset(self):
@@ -65,12 +83,12 @@ class TaxonMarkup(TaxonDetail):
         return Response(result, status=status.HTTP_200_OK)
 
 
-class RankList(generics.ListCreateAPIView):
+class RankList(generics.ListCreateAPIView, RequestLoginOnNonSafeMixin):
     serializer_class = RankSerializer
     queryset = Rank.objects.all()
 
 
-class RankDetail(generics.RetrieveUpdateDestroyAPIView):
+class RankDetail(generics.RetrieveUpdateDestroyAPIView, RequestLoginOnNonSafeMixin):
     serializer_class = RankSerializer
     def get_queryset(self):
         queryset = Rank.objects.filter(code=self.kwargs['pk'])

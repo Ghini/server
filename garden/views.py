@@ -1,16 +1,21 @@
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import JsonResponse
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+
 from rest_framework import generics, viewsets, views
 from rest_framework import status
 from rest_framework.response import Response
 
 from .models import Plant, Location
 from .serializers import PlantSerializer, LocationSerializer
+from taxonomy.views import RequestLoginOnNonSafeMixin
 
 # Create your views here.
 
 class PlantList(generics.ListCreateAPIView):
+    @method_decorator(login_required)
     def post(self, request, accession_code):
         from collection.models import Accession
         accession = Accession.objects.filter(code=accession_code).first()
@@ -41,7 +46,7 @@ class PlantList(generics.ListCreateAPIView):
     serializer_class = PlantSerializer
 
 
-class PlantDetail(generics.RetrieveUpdateDestroyAPIView):
+class PlantDetail(generics.RetrieveUpdateDestroyAPIView, RequestLoginOnNonSafeMixin):
     lookup_field = 'code'
     def get_queryset(self):
         from collection.models import Accession
@@ -81,24 +86,16 @@ class PlantMarkup(PlantDetail):
         return Response(result, status=status.HTTP_200_OK)
 
 
-class LocationList(generics.ListCreateAPIView):
+class LocationList(generics.ListCreateAPIView, RequestLoginOnNonSafeMixin):
     serializer_class = LocationSerializer
     queryset = Location.objects.all()
-
-    def get(self, request, *args, **kwargs):
-        print(request.data, args, kwargs)
-        return super().get(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        print(request.data, args, kwargs)
-        return super().post(request, *args, **kwargs)
     
     def run_query(self, q):
         from django.db.models import Q
         return self.get_queryset().filter(Q(name__contains=q) | Q(code=q)).order_by('code')
 
 
-class LocationDetail(generics.RetrieveUpdateDestroyAPIView):
+class LocationDetail(generics.RetrieveUpdateDestroyAPIView, RequestLoginOnNonSafeMixin):
     lookup_field = 'code'
     serializer_class = LocationSerializer
     def get_queryset(self):
@@ -106,7 +103,7 @@ class LocationDetail(generics.RetrieveUpdateDestroyAPIView):
         return queryset
 
 
-class LocationInfobox(LocationDetail):
+class LocationInfobox(LocationDetail, RequestLoginOnNonSafeMixin):
     def get(self, request, *args, **kwargs):
         qs = self.get_queryset()
         obj = qs.first()

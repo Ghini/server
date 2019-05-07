@@ -1,15 +1,19 @@
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+
 from rest_framework import generics, viewsets, views
 from rest_framework import status
 from rest_framework.response import Response
 
 from .models import Accession, Contact, Verification
 from .serializers import AccessionSerializer, ContactSerializer, VerificationSerializer
+from taxonomy.views import RequestLoginOnNonSafeMixin
 
 # Create your views here.
 
-class AccessionList(generics.ListCreateAPIView):
+class AccessionList(generics.ListCreateAPIView, RequestLoginOnNonSafeMixin):
     lookup_field = 'code'
     queryset = Accession.objects.all()
     serializer_class = AccessionSerializer
@@ -17,7 +21,8 @@ class AccessionList(generics.ListCreateAPIView):
     def run_query(self, q):
         return self.get_queryset().filter(code__contains=q).order_by('code')
 
-class AccessionDetail(generics.RetrieveUpdateDestroyAPIView):
+
+class AccessionDetail(generics.RetrieveUpdateDestroyAPIView, RequestLoginOnNonSafeMixin):
     lookup_field = 'code'
     serializer_class = AccessionSerializer
 
@@ -65,35 +70,34 @@ class AccessionInfobox(AccessionDetail):
         else:
             return Response([], status=status.HTTP_204_NO_CONTENT)
 
-class ContactList(generics.ListCreateAPIView):
+
+class ContactList(generics.ListCreateAPIView, RequestLoginOnNonSafeMixin):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
 
     def run_query(self, q):
         return self.get_queryset().filter(name__contains=q).order_by('name')
 
-class ContactDetail(generics.RetrieveUpdateDestroyAPIView):
+
+class ContactDetail(generics.RetrieveUpdateDestroyAPIView, RequestLoginOnNonSafeMixin):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
+
 
 class ContactInfobox(ContactDetail):
     pass
 
-class VerificationDetail(generics.RetrieveUpdateDestroyAPIView):
-    lookup_field = 'seq'
 
-    def get_queryset(self):
-        from collection.models import Accession
-        accession = Accession.objects.filter(code=self.kwargs['accession_code']).first()
-        if accession is None:
-            return Response({'code': self.kwargs['accession_code'],
-                             "detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
-        queryset = Verification.objects.filter(accession=accession)
-        return queryset
+class ContactMarkup(ContactDetail):
+    def get(self, request, *args, **kwargs):
+        qs = self.get_queryset()
+        o = qs.first()
+        result = {'inline': o.inline, }
+        return Response(result, status=status.HTTP_200_OK)
 
-    serializer_class = VerificationSerializer
 
 class VerificationList(generics.ListCreateAPIView):
+    @method_decorator(login_required)
     def post(self, request, accession_code):
         from collection.models import Accession
         accession = Accession.objects.filter(code=accession_code).first()
@@ -127,9 +131,16 @@ class VerificationList(generics.ListCreateAPIView):
     serializer_class = VerificationSerializer
 
 
-class ContactMarkup(ContactDetail):
-    def get(self, request, *args, **kwargs):
-        qs = self.get_queryset()
-        o = qs.first()
-        result = {'inline': o.inline, }
-        return Response(result, status=status.HTTP_200_OK)
+class VerificationDetail(generics.RetrieveUpdateDestroyAPIView, RequestLoginOnNonSafeMixin):
+    lookup_field = 'seq'
+
+    def get_queryset(self):
+        from collection.models import Accession
+        accession = Accession.objects.filter(code=self.kwargs['accession_code']).first()
+        if accession is None:
+            return Response({'code': self.kwargs['accession_code'],
+                             "detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        queryset = Verification.objects.filter(accession=accession)
+        return queryset
+
+    serializer_class = VerificationSerializer
