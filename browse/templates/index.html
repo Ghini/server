@@ -292,6 +292,11 @@
          });
          // register action on modal activation
          $('#drop-insert,.context-menu.dropdown-menu').find('.dropdown-item').click(perform_on_selected);
+         window.addEventListener("resize", function(){
+             console.log(window.innerHeight-128)
+             $('#results-box').css('height', '' + (window.innerHeight-124) + 'px')
+         });
+         $('#results-box').css('height', '' + (window.innerHeight-124) + 'px')
      });
     </script>
   </head>
@@ -422,8 +427,8 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-7" style="height:500px;overflow-y:scroll">
+    <div class="row" >
+      <div class="col-7" style="overflow-y:scroll" id="results-box">
         <table class="table table-hover">
           <tbody id="results-table-body">
           </tbody>
