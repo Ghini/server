@@ -45,13 +45,22 @@ class AccessionInfobox(AccessionDetail):
             result['__class_name__'] = 'Accession'
             result['__detail_url__'] = reverse('accession-detail', args=[obj.code])
             result['__shows_as__'] = "%s" % obj
-            result.update(serializer.data)
-            del result['id']
+            result['code'] = obj.code
             result['taxa'] = ('link',
                               ", ".join(["%s" % i for i in obj.taxa.all()]),
                               ", ".join([i.epithet for i in obj.taxa.all()]), )
+            result['received_quantity'] = obj.received_quantity
+            if obj.source is not None:
+                result['source'] = "%s" % obj.source
+            if obj.received_type:
+                result['received_type'] = obj.get_received_type_display()
             result['plant groups'] = obj.plants.count()
             result['living plants'] = sum(p.quantity for p in obj.plants.all())
+            for key, value in serializer.data.items():
+                if key == 'id':
+                    continue
+                result.setdefault(key, value)
+
             return Response(result, status=status.HTTP_200_OK)
         else:
             return Response([], status=status.HTTP_204_NO_CONTENT)

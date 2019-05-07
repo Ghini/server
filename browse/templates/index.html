@@ -240,7 +240,7 @@
                      success: function(result) {
                          // update current row
                          $.getJSON(api_url + 'markup/', function(data) {
-                             $(e.target).text(data.inline)
+                             $(e.target).append($('<span>' + data.inline + '</span>'))
                              // update infobox
                              if(infobox_url !== undefined) {
                                  current_url = undefined

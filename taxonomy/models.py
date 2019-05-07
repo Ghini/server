@@ -8,7 +8,7 @@ class Rank(models.Model):
     #0,"regnum","",".epithet sp.",False
     name = models.CharField(max_length=16)
     short = models.CharField(max_length=8)
-    show_as = models.CharField(max_length=32, default='.epithet sp.')
+    show_as = models.CharField(max_length=48, default='<i>.epithet</i> sp.')
 
     def __str__(self):
         return self.name
@@ -63,7 +63,7 @@ class Taxon(models.Model):
         return self.show()
 
     def __str__(self):
-        return "{} <i>{}</i> {}".format(self.rank.short, self.epithet, self.authorship).strip()
+        return "{} {}".format(self.epithet, self.authorship).strip()
 
     def __repr__(self):
         return self.__str__()
