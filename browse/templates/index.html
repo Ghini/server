@@ -55,15 +55,19 @@
          $('#search-filter-button').trigger('click');
      }
 
-     function activate_infobox(url, e) {
-         $(e.target).attr("disabled", "disabled");
-         if (current_url === url)
+     function update_infobox(url, e) {
+         if (typeof e !== 'undefined')
+             $(e.target).attr("disabled", "disabled");
+         if (url === current_url) {
              return;
+         }
          current_url = url;
          $('td').removeClass('table-success');
-         $('#infobox-object-text').empty();
-         $('#infobox-object-text').append($(e.target).clone());
-         $(e.target).addClass('table-success');
+         if (typeof e !== 'undefined') {
+             $('#infobox-object-text').empty();
+             $('#infobox-object-text').append($(e.target).clone());
+             $(e.target).addClass('table-success');
+         }
          var tbody = $('#infobox-table-body');
          tbody.empty();
          $.getJSON(url, function(data) {
@@ -84,7 +88,8 @@
                      }
                  }
              });
-             $(e.target).removeAttr("disabled");
+             if (typeof e !== 'undefined')
+                 $(e.target).removeAttr("disabled");
          });
      }
 
@@ -131,7 +136,7 @@
                      $(td).attr('data-form-url', item.infobox_url.replace('infobox/', 'form/'));
                      tbody.append(tr);  // add it as last child
                      tr.append(td);
-                     tr.click(partial(activate_infobox, item.infobox_url));
+                     tr.click(partial(update_infobox, item.infobox_url));
                      first_td = first_td || td;
                  });
                  $("body").on("contextmenu", "tbody tr." + class_name + '-row',
@@ -229,7 +234,7 @@
          // set the 'proceed' callback
          $(modal_form).find('button.action-confirm').unbind('click');
          $(modal_form).find('button.action-confirm').click(
-             partial(function(form, verb, api_url, e){
+             partial(function(form, verb, api_url, e2){
                  $.ajax({
                      url: api_url,
                      method: verb,
@@ -238,14 +243,11 @@
                          request.setRequestHeader('X-CSRFToken', csrf_token);
                      },
                      success: function(result) {
-                         // update current row
                          $.getJSON(api_url + 'markup/', function(data) {
-                             $(e.target).append($('<span>' + data.inline + '</span>'))
+                             // update current row
+                             $('td.table-success').empty().append($('<span>' + data.inline + '</span>'))
                              // update infobox
-                             if(infobox_url !== undefined) {
-                                 current_url = undefined
-                                 $(e.target).trigger('click')
-                             }
+                             update_infobox(api_url + 'infobox/')
                          })
                      },
                      error: function(request, msg, error) {
