@@ -10,7 +10,7 @@ Welcome to taxasoft-ghini's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
+   contents
 
 Indices and tables
 ==================
