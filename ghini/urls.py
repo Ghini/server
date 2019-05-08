@@ -4,6 +4,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import RedirectView
+from django.contrib.auth.views import LoginView, LogoutView
 
 favicon_view = RedirectView.as_view(url='/static/favicon.ico', permanent=True)
 root_view = RedirectView.as_view(url='/browse/', permanent=True)
@@ -11,6 +12,8 @@ root_view = RedirectView.as_view(url='/browse/', permanent=True)
 urlpatterns = [
     # admin
     path('admin/', admin.site.urls),
+    path('accounts/login/', LoginView.as_view(), name='login'),
+    path('accounts/logout/', LogoutView.as_view(next_page='/'), name='logout'),
     # include
     path('taxonomy/', include('taxonomy.urls')),
     path('collection/', include('collection.urls')),
