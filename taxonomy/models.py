@@ -45,6 +45,13 @@ class Taxon(models.Model):
         return re.sub(r'\.\w+', convert, self.rank.show_as)
 
     @property
+    def family(self):
+        step = self
+        while step and step.rank.name != 'familia':
+            step = step.parent
+        return step and step.epithet
+
+    @property
     def genus(self):
         step = self
         while step and step.rank.name != 'genus':
