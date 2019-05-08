@@ -13,7 +13,7 @@ accession 101 in year 2001)::
 
 Removing the object's trailing identificator from the URL gives the class
 URL (e.g.: the plants collection)::
-  
+
   /garden/accession/2001.0101/plant/
 
 The trailing dash is part of the URL, but the server will add it if it's
@@ -66,4 +66,82 @@ Individual objects also have other entry points, respectively for:
 - The populated html form (suffix ``-put-form``)
 - A json data dictionary for the infobox (suffix ``-infobox``)
 - A dictionary with several representations for the same object (suffix ``-markup``)
-  
+
+importing from ghini.desktop
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+please consider this work in progress, try out the instructions, and be
+prepared to ask for help or to open an issue if the present instructions do
+not work.
+
+first of all: taxasoft-ghini is not complete, not yet.  the current goal is
+to have it do something useful, and to be visible on-line, it does not (yet)
+substitute ghini.desktop.  not at all.  expect things to be exciting, but do
+not expect things to work out of the box.
+
+got this?  good, now let's see how to copy your ghini.desktop collection
+into taxasoft-ghini!
+
+from ghini.desktop
+.................................
+
+#. open ghini-1.0
+
+   #. export your (complete) data to csv.
+
+#. close ghini
+
+#. open ghini-1.0 again,
+
+   #. create a new sqlite3 connection,
+   #. let ghini create the database.
+   #. import the data, this will again initialize the database.
+
+#. close ghini
+
+   the result of the above steps is an expendable sqlite3 database: maybe
+   you used something else, and we do not want to touch your original data.
+
+#. remove all taxonomic information that is not used, straight on the database::
+
+     sqlite3 ghini.db
+     delete from genus where id not in (select genus_id from species);
+     delete from family where id not in (select family_id from genus);
+     delete from genus_synonym where genus_id not in (select id from genus);
+     delete from genus_synonym where synonym_id not in (select id from genus);
+
+#. open ghini.desktop-1.0
+
+   #. export your (reduced) data to csv.
+
+#. close ghini
+
+now to taxasoft-ghini
+.................................
+
+#. enter the directory;
+#. activate the virtual environment;
+#. edit ``desktop_reader`` so that it points to your csv export; look in
+   particular for a string looking like ``/tmp/1.0/{}.txt`` and edit it
+   to match your situation.
+#. create a new database and initialize it::
+
+     ./manage.py migrate
+
+#. run the command::
+
+     ./manage.py shell <<EOF
+     import desktop_reader
+     desktop_reader.do_import()
+     EOF
+
+#. create your superuser::
+
+     ./manage.py createsuperuser
+
+#. run your server::
+
+     ./manage.py runserver
+
+#. I'm sure there will be errors.  please open issues about them, and if you
+   have a solution, propose it.
