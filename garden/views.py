@@ -46,7 +46,7 @@ class PlantList(generics.ListCreateAPIView):
     serializer_class = PlantSerializer
 
 
-class PlantDetail(generics.RetrieveUpdateDestroyAPIView, RequestLoginOnNonSafeMixin):
+class PlantDetail(RequestLoginOnNonSafeMixin, generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'code'
     def get_queryset(self):
         from collection.models import Accession
@@ -86,7 +86,7 @@ class PlantMarkup(PlantDetail):
         return Response(result, status=status.HTTP_200_OK)
 
 
-class LocationList(generics.ListCreateAPIView, RequestLoginOnNonSafeMixin):
+class LocationList(RequestLoginOnNonSafeMixin, generics.ListCreateAPIView):
     serializer_class = LocationSerializer
     queryset = Location.objects.all()
     
@@ -95,7 +95,7 @@ class LocationList(generics.ListCreateAPIView, RequestLoginOnNonSafeMixin):
         return self.get_queryset().filter(Q(name__contains=q) | Q(code=q)).order_by('code')
 
 
-class LocationDetail(generics.RetrieveUpdateDestroyAPIView, RequestLoginOnNonSafeMixin):
+class LocationDetail(RequestLoginOnNonSafeMixin, generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'code'
     serializer_class = LocationSerializer
     def get_queryset(self):
@@ -103,7 +103,7 @@ class LocationDetail(generics.RetrieveUpdateDestroyAPIView, RequestLoginOnNonSaf
         return queryset
 
 
-class LocationInfobox(LocationDetail, RequestLoginOnNonSafeMixin):
+class LocationInfobox(LocationDetail):
     def get(self, request, *args, **kwargs):
         qs = self.get_queryset()
         obj = qs.first()

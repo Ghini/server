@@ -2,6 +2,7 @@ from django.db import models
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import requires_csrf_token
+from django.contrib.auth.decorators import login_required
 
 from taxonomy.views import TaxonList, RankList
 from collection.views import AccessionList, ContactList
@@ -13,6 +14,7 @@ from garden.forms import PlantForm, LocationForm
 
 # Create your views here.
 
+@login_required
 @requires_csrf_token
 def index(request):
     verification_form = VerificationForm()

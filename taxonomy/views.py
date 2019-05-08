@@ -34,7 +34,7 @@ class RequestLoginOnNonSafeMixin:
     
 
 
-class TaxonList(generics.ListCreateAPIView, RequestLoginOnNonSafeMixin):
+class TaxonList(RequestLoginOnNonSafeMixin, generics.ListCreateAPIView):
     serializer_class = TaxonSerializer
     queryset = Taxon.objects.all()
     class Meta:
@@ -44,7 +44,7 @@ class TaxonList(generics.ListCreateAPIView, RequestLoginOnNonSafeMixin):
         return self.get_queryset().filter(epithet__contains=q).order_by('rank', 'epithet')
 
 
-class TaxonDetail(generics.RetrieveUpdateDestroyAPIView, RequestLoginOnNonSafeMixin):
+class TaxonDetail(RequestLoginOnNonSafeMixin, generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TaxonSerializer
 
     def get_queryset(self):
@@ -83,12 +83,12 @@ class TaxonMarkup(TaxonDetail):
         return Response(result, status=status.HTTP_200_OK)
 
 
-class RankList(generics.ListCreateAPIView, RequestLoginOnNonSafeMixin):
+class RankList(RequestLoginOnNonSafeMixin, generics.ListCreateAPIView):
     serializer_class = RankSerializer
     queryset = Rank.objects.all()
 
 
-class RankDetail(generics.RetrieveUpdateDestroyAPIView, RequestLoginOnNonSafeMixin):
+class RankDetail(RequestLoginOnNonSafeMixin, generics.RetrieveUpdateDestroyAPIView):
     serializer_class = RankSerializer
     def get_queryset(self):
         queryset = Rank.objects.filter(code=self.kwargs['pk'])

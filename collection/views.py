@@ -13,7 +13,7 @@ from taxonomy.views import RequestLoginOnNonSafeMixin
 
 # Create your views here.
 
-class AccessionList(generics.ListCreateAPIView, RequestLoginOnNonSafeMixin):
+class AccessionList(RequestLoginOnNonSafeMixin, generics.ListCreateAPIView):
     lookup_field = 'code'
     queryset = Accession.objects.all()
     serializer_class = AccessionSerializer
@@ -22,7 +22,7 @@ class AccessionList(generics.ListCreateAPIView, RequestLoginOnNonSafeMixin):
         return self.get_queryset().filter(code__contains=q).order_by('code')
 
 
-class AccessionDetail(generics.RetrieveUpdateDestroyAPIView, RequestLoginOnNonSafeMixin):
+class AccessionDetail(RequestLoginOnNonSafeMixin, generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'code'
     serializer_class = AccessionSerializer
 
@@ -71,7 +71,7 @@ class AccessionInfobox(AccessionDetail):
             return Response([], status=status.HTTP_204_NO_CONTENT)
 
 
-class ContactList(generics.ListCreateAPIView, RequestLoginOnNonSafeMixin):
+class ContactList(RequestLoginOnNonSafeMixin, generics.ListCreateAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
 
@@ -79,7 +79,7 @@ class ContactList(generics.ListCreateAPIView, RequestLoginOnNonSafeMixin):
         return self.get_queryset().filter(name__contains=q).order_by('name')
 
 
-class ContactDetail(generics.RetrieveUpdateDestroyAPIView, RequestLoginOnNonSafeMixin):
+class ContactDetail(RequestLoginOnNonSafeMixin, generics.RetrieveUpdateDestroyAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
 
@@ -131,7 +131,7 @@ class VerificationList(generics.ListCreateAPIView):
     serializer_class = VerificationSerializer
 
 
-class VerificationDetail(generics.RetrieveUpdateDestroyAPIView, RequestLoginOnNonSafeMixin):
+class VerificationDetail(RequestLoginOnNonSafeMixin, generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'seq'
 
     def get_queryset(self):
