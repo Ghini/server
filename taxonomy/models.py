@@ -4,6 +4,7 @@ from django.db import models
 # Create your models here.
 
 class Rank(models.Model):
+    species_id = 17
     #id,name,short,show_as
     #0,"regnum","",".epithet sp.",False
     name = models.CharField(max_length=16)
@@ -37,10 +38,7 @@ class Taxon(models.Model):
         def convert(match):
             item = match.group(0)
             field = item[1:]
-            if field == 'epithet':
-                return getattr(self, field)
-            else:
-                return getattr(self.parent, field)
+            return getattr(self, field)
         import re
         return re.sub(r'\.\w+', convert, self.rank.show_as)
 
@@ -60,17 +58,23 @@ class Taxon(models.Model):
 
     @property
     def binomial(self):
+        if self.rank.id < Rank.species_id:
+            return self.epithet
+        if self.rank.id > Rank.species_id:
+            trailer = "{} {}".format(self.rank.short, self.epithet)
+        else:
+            trailer = ''
         step = self
         while step and step.rank.name != 'species':
             step = step.parent
-        return step and '{} {}'.format(step.genus, step.epithet)
+        return step and '{} {} {}'.format(step.genus, step.epithet, trailer).strip()
 
     @property
     def identify(self):
         return self.show()
 
     def __str__(self):
-        return "{} {}".format(self.epithet, self.authorship).strip()
+        return '{} {}'.format(self.binomial, self.authorship).strip()
 
     def __repr__(self):
         return self.__str__()
