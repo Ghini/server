@@ -32,6 +32,16 @@ def index(request):
                                           'verification_form': verification_form, })
 
 def filter_json(request):
+    '''this view computes the search query results
+
+    it looks for patterns in the query string and runs the corresponding
+    search strategy.
+
+    <DOMAIN> (IS|=|LIKE) <TERM>
+    <TERMS>
+    <DOMAIN> WHERE <COMPLEX-QUERY>
+
+    '''
     import collections
     result = collections.OrderedDict()
     query_string = request.GET.get('q')
