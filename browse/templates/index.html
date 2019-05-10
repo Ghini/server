@@ -87,7 +87,7 @@
      var tbody = $('#results-table-body');
      tbody.empty();
 
-     api_url = '/browse/filter/?q=' + $('#search-filter').val();
+     api_url = '{% url 'filter' %}?q=' + $('#search-filter').val();
      $.getJSON(api_url, function(data) {
          var tr, td;
          var first_td;
