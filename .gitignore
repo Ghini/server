@@ -1,4 +1,6 @@
+cookies.txt
+*.ipynb
 *~
 *pyc
-db.sqlite3
+*.sqlite3
 docs/_*
