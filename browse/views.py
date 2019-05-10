@@ -37,9 +37,11 @@ def filter_json(request):
     it looks for patterns in the query string and runs the corresponding
     search strategy.
 
-    <DOMAIN> (IS|=|LIKE) <TERM>
+    <DOMAIN>.pk = <INTEGER>
+    <DOMAIN>.pk = <INTEGER> | depending
+    <DOMAIN> (is|=|like) <TERM>
     <TERMS>
-    <DOMAIN> WHERE <COMPLEX-QUERY>
+    <DOMAIN> where <COMPLEX-QUERY>
 
     '''
     import collections
@@ -59,5 +61,5 @@ def filter_json(request):
             partial = [{key: getattr(item, key, None)
                         for key in ['inline', 'infobox_url', 'depending']}
                        for item in klass().run_query(query).all()]
-            result[klass.__name__] = partial
+            result[klass.__name__.replace('List', '')] = partial
     return JsonResponse(result)
