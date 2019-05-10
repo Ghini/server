@@ -10,6 +10,8 @@ Welcome to taxasoft-ghini's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   contents
+             
    searching
    technical
 
