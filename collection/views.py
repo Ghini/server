@@ -76,7 +76,7 @@ class ContactList(RequestLoginOnNonSafeMixin, generics.ListCreateAPIView):
     serializer_class = ContactSerializer
 
     def run_query(self, q):
-        return self.get_queryset().filter(name__contains=q).order_by('name')
+        return self.get_queryset().filter(name__icontains=q).order_by('name')
 
 
 class ContactDetail(RequestLoginOnNonSafeMixin, generics.RetrieveUpdateDestroyAPIView):
