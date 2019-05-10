@@ -37,11 +37,12 @@ def filter_json(request):
     it looks for patterns in the query string and runs the corresponding
     search strategy.
 
-    <DOMAIN>.pk = <INTEGER>
-    <DOMAIN>.pk = <INTEGER> | depending
-    <DOMAIN> (is|=|like) <TERM>
+    <DOMAIN>.<field> <op> <TERM>
+    <DOMAIN> <op> <TERM>
     <TERMS>
     <DOMAIN> where <COMPLEX-QUERY>
+
+    each can have a trailing '|depending'.
 
     '''
     import collections
