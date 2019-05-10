@@ -59,6 +59,8 @@ sequential number within their mother Plant.
    with a stub, and will prepend accession urls with a garden stub code.  As
    of now, we only deal with a single garden.
 
+**GET and her sisters**
+   
 Collection URLs implement the ``GET`` and ``POST`` verbs, respectively for getting
 the whole collection (or a selection thereof), and for adding an individual
 object to the collection.  These URLs get a ``-list`` suffix in their Django
@@ -67,6 +69,8 @@ name.
 Individual URLs implement the ``GET``, ``PUT`` and ``DELETE`` verbs, with
 their obvious meanings, applying to the specific individual only.  These
 URLs get a ``-detail`` suffix in their Django name.
+
+**more URLs**
 
 Collections also have an URL for the empty html form, to be populated by
 the user and posted to the server.  The corresponding Django names have
