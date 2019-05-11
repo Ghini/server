@@ -11,6 +11,8 @@ from .models import Rank, Taxon
 from .serializers import RankSerializer
 from .serializers import TaxonSerializer
 
+from browse.views import GetDependingObjects
+
 # Create your views here.
 
 def index(request):
@@ -31,7 +33,6 @@ class RequestLoginOnNonSafeMixin:
     @method_decorator(login_required)
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)
-    
 
 
 class TaxonList(RequestLoginOnNonSafeMixin, generics.ListCreateAPIView):
@@ -74,13 +75,17 @@ class TaxonInfobox(TaxonDetail):
         else:
             return Response([], status=status.HTTP_204_NO_CONTENT)
 
-        
+
 class TaxonMarkup(TaxonDetail):
     def get(self, request, *args, **kwargs):
         qs = self.get_queryset()
         o = qs.first()
         result = {'inline': o.inline,}
         return Response(result, status=status.HTTP_200_OK)
+
+
+class TaxonDepending(GetDependingObjects, TaxonDetail):
+    pass
 
 
 class RankList(RequestLoginOnNonSafeMixin, generics.ListCreateAPIView):

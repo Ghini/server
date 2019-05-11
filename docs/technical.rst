@@ -53,14 +53,14 @@ sequential number within the Accession they describe.  Propagations have a
 sequential number within their mother Plant.
 
 .. note::
-   
+
    If we generalize the database to model more than one garden, we will need
    to associate accessions to gardens, we will probably identify gardens
    with a stub, and will prepend accession urls with a garden stub code.  As
    of now, we only deal with a single garden.
 
 **GET and her sisters**
-   
+
 Collection URLs implement the ``GET`` and ``POST`` verbs, respectively for getting
 the whole collection (or a selection thereof), and for adding an individual
 object to the collection.  These URLs get a ``-list`` suffix in their Django
@@ -97,9 +97,13 @@ the queryset is returned as a dictionary, with the structure:
 
 :inline: The string shown in the result.  It may contain html tags.
 :infobox_url: The url to get the corresponding infobox.
-:depending: A list of ``filter`` URLs, that identify the object by its
-            primary key, and apply the ``depending`` function on it.
-            
+
+The ``inline`` entry is meant to be included in the results box.  The
+``infobox_url`` provides quick access to the URL where we will get the
+infobox data, but you can just replace the trailing *infobox/* part and
+replace with whatever other valid suffix.  at the moment of writing, the
+URLs implemented are *form/*, *markup/*, *depending/*.
+
 importing from ghini.desktop
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

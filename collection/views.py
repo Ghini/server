@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from .models import Accession, Contact, Verification
 from .serializers import AccessionSerializer, ContactSerializer, VerificationSerializer
 from taxonomy.views import RequestLoginOnNonSafeMixin
+from browse.views import GetDependingObjects
 
 # Create your views here.
 
@@ -37,6 +38,10 @@ class AccessionMarkup(AccessionDetail):
         o = qs.first()
         result = {'inline': o.inline,}
         return Response(result, status=status.HTTP_200_OK)
+
+
+class AccessionDepending(GetDependingObjects, AccessionDetail):
+    pass
 
 
 class AccessionInfobox(AccessionDetail):
@@ -85,6 +90,10 @@ class ContactDetail(RequestLoginOnNonSafeMixin, generics.RetrieveUpdateDestroyAP
 
 
 class ContactInfobox(ContactDetail):
+    pass
+
+
+class ContactDepending(GetDependingObjects, ContactDetail):
     pass
 
 

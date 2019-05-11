@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from .models import Plant, Location
 from .serializers import PlantSerializer, LocationSerializer
 from taxonomy.views import RequestLoginOnNonSafeMixin
+from browse.views import GetDependingObjects
 
 # Create your views here.
 
@@ -30,7 +31,7 @@ class PlantList(generics.ListCreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
     def get_queryset(self):
         from collection.models import Accession
         accession = Accession.objects.filter(code=self.kwargs['accession_code']).first()
@@ -86,10 +87,14 @@ class PlantMarkup(PlantDetail):
         return Response(result, status=status.HTTP_200_OK)
 
 
+class PlantDepending(GetDependingObjects, PlantDetail):
+    pass
+
+
 class LocationList(RequestLoginOnNonSafeMixin, generics.ListCreateAPIView):
     serializer_class = LocationSerializer
     queryset = Location.objects.all()
-    
+
     def run_query(self, q):
         from django.db.models import Q
         return self.get_queryset().filter(Q(name__contains=q) | Q(code=q)).order_by('code')
@@ -126,3 +131,7 @@ class LocationMarkup(LocationDetail):
         o = qs.first()
         result = {'inline': o.inline,}
         return Response(result, status=status.HTTP_200_OK)
+
+
+class LocationDepending(GetDependingObjects, LocationDetail):
+    pass

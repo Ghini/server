@@ -39,18 +39,6 @@ list_views = {Taxon: TaxonList,
 search_domain = None
 
 
-def p_query_as_serialized(p):
-    'serialized : query'
-    import collections
-    result = collections.OrderedDict()
-    for key, qs in p[1].items():
-        converted = [{key: getattr(item, key, None)
-                      for key in ['inline', 'infobox_url', 'depending']}
-                     for item in qs.all()]
-        result[key] = converted
-    p[0] = result
-
-
 def p_single_field_query(p):
     'query : domain DOT fieldname operator value'
     result, domain, dot, fieldname, operator, value = p
@@ -186,8 +174,8 @@ def p_operator_greater_equals(p):
 
 def p_terms_value(p):
     'terms : value'
-    print([i for i in p])
     p[0] = [p[1]]
+    print([i for i in p])
 
 def p_terms_terms_value(p):
     'terms : terms value'
