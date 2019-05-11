@@ -96,7 +96,7 @@ def p_expression_bterm(p):
 
 def p_expression_or_bterm(p):
     'expression : expression OR bterm'
-    p[0] = p[1]
+    p[0] = p[1].union(p[3])
 
 def p_bterm_bfactor(p):
     'bterm : bfactor'
@@ -104,11 +104,11 @@ def p_bterm_bfactor(p):
 
 def p_bterm_and_bfactor(p):
     'bterm : bterm AND bfactor'
-    p[0] = p[1]
+    p[0] = p[1].intersection(p[3])
 
-def p_bterm_not_factor(p):
-    'bterm : NOT bfactor'
-    p[0] = p[2]
+def p_bfactor_not_factor(p):
+    'bfactor : NOT bfactor'
+    p[0] = search_domain.objects.difference(p[2])
 
 def p_bfactor_expression(p):
     'bfactor : LPAREN expression RPAREN'
