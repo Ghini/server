@@ -68,6 +68,11 @@ def p_domain_query(p):
 
 def p_depending_query(p):
     'query : query PIPE DEPEND'
+    result = {}
+    for key, qs in p[1].items():
+        for item in qs.all():
+            result.update(item.depending_objects())
+    p[0] = result
     print([i for i in p])
 
 def p_terms_query(p):

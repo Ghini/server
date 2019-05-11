@@ -24,6 +24,9 @@ class Location(models.Model):
     def infobox_url(self):
         return reverse('location-infobox', args=[self.code])
 
+    def depending_objects(self):
+        return {'Plant': self.plants}
+
 
 class Plant(models.Model):
     accession = models.ForeignKey(Accession, related_name="plants", blank=False, on_delete=models.PROTECT)
@@ -45,6 +48,9 @@ class Plant(models.Model):
     @property
     def infobox_url(self):
         return reverse('plant-infobox', args=[self.accession.code, self.code])
+
+    def depending_objects(self):
+        return {}
 
 
 class LocationPlanner(models.Model):

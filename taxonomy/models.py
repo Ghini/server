@@ -86,3 +86,7 @@ class Taxon(models.Model):
     @property
     def infobox_url(self):
         return reverse('taxon-infobox', args=[self.pk])
+
+    def depending_objects(self):
+        return {'Accession': self.accessions,
+                'Taxon': self.subtaxa}

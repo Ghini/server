@@ -63,6 +63,9 @@ class Contact(models.Model):
     def infobox_url(self):
         return reverse('contact-infobox', args=[self.pk])
 
+    def depending_objects(self):
+        return {'Accession': self.verifications.accession}
+
 
 class Accession(models.Model):
     taxa = models.ManyToManyField(Taxon, through='Verification', related_name='accessions')
@@ -117,6 +120,9 @@ class Accession(models.Model):
     @property
     def infobox_url(self):
         return reverse('accession-infobox', args=[self.code])
+
+    def depending_objects(self):
+        return {'Plant': self.plants}
 
 
 VERIFICATION_LEVELS = (
