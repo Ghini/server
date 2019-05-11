@@ -1,9 +1,22 @@
+import ply.yacc as yacc
+
 from taxonomy.models import Taxon, Rank
 from collection.models import Accession, Contact, Verification
 from garden.models import Location, Plant
 from taxonomy.views import TaxonList, RankList
 from collection.views import AccessionList, ContactList, VerificationList
 from garden.views import LocationList, PlantList
+
+# Get the token map from the lexer.  This is required.
+from .searchlex import tokens
+
+# a reminder
+''' <DOMAIN>.<field> <op> <TERM>
+    <DOMAIN> <op> <TERM>
+    <TERMS>
+    <DOMAIN> where <COMPLEX-QUERY>
+'''
+
 
 classes = {'taxon': Taxon,
            'rank': Rank,
@@ -23,31 +36,7 @@ list_views = {Taxon: TaxonList,
               Plant: PlantList,
 }
 
-
-import ply.yacc as yacc
-
-# Get the token map from the lexer.  This is required.
-from .searchlex import tokens
-
-# a reminder
-''' <DOMAIN>.<field> <op> <TERM>
-    <DOMAIN> <op> <TERM>
-    <TERMS>
-    <DOMAIN> where <COMPLEX-QUERY>
-
-tokens = (
-    'INTEGER',
-    'WORD',
-    'QUOTED',
-    'DOT',
-    'EQUALS',
-    'LIKE',
-    'CONTAINS',
-    'WHERE',
-    'PIPE',
-    'DEPEND',
-)
-'''
+search_domain = None
 
 
 def p_query_as_serialized(p):
@@ -63,17 +52,17 @@ def p_query_as_serialized(p):
 
 
 def p_single_field_query(p):
-    'query : domain DOT fieldname operator string'
-    result, domain, dot, fieldname, operator, string = p
-    queryset = domain.objects.filter(**{'{}__i{}'.format(fieldname, operator): string})
+    'query : domain DOT fieldname operator value'
+    result, domain, dot, fieldname, operator, value = p
+    queryset = domain.objects.filter(**{'{}__{}'.format(fieldname, operator): value})
     p[0] = {domain.__class__.__name__: queryset}
     print('field', [i for i in p])
 
 
 def p_domain_query(p):
-    'query : domain operator string'
-    result, domain, operator, string = p
-    queryset = list_views[domain]().run_query(string).all()  # should use 'operator'
+    'query : domain operator value'
+    result, domain, operator, value = p
+    queryset = list_views[domain]().run_query(value).all()  # should use 'operator'
     p[0] = {domain.__name__: queryset}
     print('domain', [i for i in p])
 
@@ -93,33 +82,67 @@ def p_terms_query(p):
 
 def p_sqlike_query(p):
     'query : domain WHERE expression'
+    result, domain, _, query_set = p
+    p[0] = {domain.__name__: query_set}
     print('most specific', [i for i in p])
 
-def p_word_as_domain(p):
+def p_domain_word(p):
     'domain : WORD'
-    p[0] = classes.get(p[1].lower())
+    print('seen domain {0}'.format(p[1]))
+    global search_domain
+    search_domain = classes.get(p[1].lower())
+    p[0] = search_domain
 
-def p_word_as_fieldname(p):
+def p_fieldname_word(p):
     'fieldname : WORD'
     p[0] = p[1].lower()
 
-def p_term_as_expression(p):
-    'expression : term'
+def p_expression_bterm(p):
+    'expression : bterm'
+    p[0] = p[1]
 
-def p_expression_or_term(p):
-    'expression : expression OR term'
+def p_expression_or_bterm(p):
+    'expression : expression OR bterm'
+    p[0] = p[1]
 
-def p_factor_as_term(p):
-    'term : factor'
+def p_bterm_bfactor(p):
+    'bterm : bfactor'
+    p[0] = p[1]
 
-def p_term_and_factor(p):
-    'term : term AND factor'
+def p_bterm_and_bfactor(p):
+    'bterm : bterm AND bfactor'
+    p[0] = p[1]
 
-def p_expression_to_factor(p):
-    'factor : LPAREN expression RPAREN'
+def p_bterm_not_factor(p):
+    'bterm : NOT bfactor'
+    p[0] = p[2]
 
-def p_field_comparison(p):
-    'factor : WORD operator string'
+def p_bfactor_expression(p):
+    'bfactor : LPAREN expression RPAREN'
+    p[0] = p[2]
+
+def p_bfactor_comparison(p):
+    'bfactor : field operator value'
+    result, field, operator, value = p
+    p[0] = search_domain.objects.filter(**{'{}__{}'.format(field, operator): value})
+    print([i for i in p])
+
+def p_bfactor_between(p):
+    'bfactor : field BETWEEN value AND value'
+    result, field, _, min_value, _, max_value = p
+    p[0] = search_domain.objects.filter(**{'{}__lte'.format(field): max_value,
+                                           '{}__gte'.format(field): min_value})
+    print([i for i in p])
+
+def p_field_fieldname(p):
+    'field : fieldname'
+    p[0] = p[1]
+    print('fieldname {} is used as field starter'.format(p[1]))
+
+def p_field_dot_fieldname(p):
+    'field : field DOT fieldname'
+    p[0] = '{}__{}'.format(p[1], p[3])
+    print('composing field {}'.format(p[0]))
 
 def p_operator_like(p):
     'operator : LIKE'
@@ -156,35 +179,50 @@ def p_operator_greater_equals(p):
     p[0] = 'gte'
     print([i for i in p])
 
-def p_terms_single(p):
-    'terms : string'
+def p_terms_value(p):
+    'terms : value'
     print([i for i in p])
     p[0] = [p[1]]
 
-def p_terms_queue(p):
-    'terms : terms string'
+def p_terms_terms_value(p):
+    'terms : terms value'
     p[0] = p[1]
     p[0].append(p[2])
     print([i for i in p])
 
-def p_term_number(p):
-    'string : INTEGER'
+def p_value_number(p):
+    'value : INTEGER'
     p[0] = p[1]
     print([i for i in p])
 
-def p_term_word(p):
-    'string : WORD'
+def p_value_word(p):
+    'value : WORD'
     p[0] = p[1]
     print([i for i in p])
 
-def p_term_quoted(p):
-    'string : QUOTED'
+def p_value_quoted(p):
+    'value : QUOTED'
+    p[0] = p[1]
+    print([i for i in p])
+
+def p_value_reserved_and(p):
+    'value : AND'
+    p[0] = p[1]
+    print([i for i in p])
+
+def p_value_reserved_or(p):
+    'value : OR'
+    p[0] = p[1]
+    print([i for i in p])
+
+def p_value_reserved_not(p):
+    'value : NOT'
     p[0] = p[1]
     print([i for i in p])
 
 # Error rule for syntax errors
 def p_error(p):
-    print("Syntax error in input!")
+    print("Syntax error in input on token {0.type}, {0.value}".format(p))
 
 # Build the parser
 parser = yacc.yacc()

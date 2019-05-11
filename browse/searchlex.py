@@ -14,6 +14,7 @@ reserved = {
     'and': 'AND',
     'or': 'OR',
     'not': 'NOT',
+    'between': 'BETWEEN',
 }
 
 tokens = [
