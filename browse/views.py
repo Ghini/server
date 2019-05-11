@@ -45,22 +45,7 @@ def filter_json(request):
     each can have a trailing '|depending'.
 
     '''
-    import collections
-    result = collections.OrderedDict()
+    from .searchgrammar import parser
     query_string = request.GET.get('q')
-    if query_string:
-        # attempt domain strategy
-        try:
-            domain, query = [i.strip() for i in query_string.split('=', 1)]
-        except:
-            # default strategy:
-            domain = None
-            query = query_string
-        for klass in [TaxonList, AccessionList, PlantList, LocationList, ContactList]:
-            if domain is not None and not klass.__name__.lower().startswith(domain):
-                continue
-            partial = [{key: getattr(item, key, None)
-                        for key in ['inline', 'infobox_url', 'depending']}
-                       for item in klass().run_query(query).all()]
-            result[klass.__name__.replace('List', '')] = partial
+    result = parser.parse(query_string)
     return JsonResponse(result)

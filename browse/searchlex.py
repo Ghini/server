@@ -21,7 +21,7 @@ tokens = [
     'INTEGER', 'QUOTED', 'WORD',
     'DOT',
     'LPAREN', 'RPAREN',
-    'LE', 'LT', 'GE', 'GT', 'EQ', 'NE',
+    'LE', 'LT', 'GE', 'GT', 'EQ',
 ] + list(reserved.values())
 
 def t_WORD(t):  # covers WORD and reserved word tokens
@@ -33,7 +33,6 @@ def t_WORD(t):  # covers WORD and reserved word tokens
     return t
 
 t_EQ       = r'='
-t_NE       = r'!='
 t_LT       = r'<'
 t_LE       = r'<='
 t_GT       = r'>'
@@ -47,7 +46,7 @@ t_RPAREN  = r'\)'
 
 def t_INTEGER(t):
     r'\d+'
-    t.value = int(t.value)    
+    t.value = int(t.value)
     return t
 
 def t_QUOTED(t):
