@@ -277,12 +277,16 @@
                      request.setRequestHeader('X-CSRFToken', csrf_token);
                  },
                  success: function(result) {
-                     $.getJSON(api_url + 'markup/', function(data) {
-                         // update current row
-                         $('tr.table-success').empty().append($('<span>' + data.inline + '</span>'))
-                         // update infobox
-                         update_infobox(api_url + 'infobox/')
-                     })
+                     if (verb === 'DELETE') {
+                         $('tr.table-success').hide()
+                     } else {
+                         $.getJSON(api_url + 'markup/', function(data) {
+                             // update current row
+                             $('tr.table-success').empty().append($('<span>' + data.inline + '</span>'))
+                             // update infobox
+                             update_infobox(api_url + 'infobox/')
+                         })
+                     }
                  },
                  error: function(request, msg, error) {
                      console.log(request, msg, error);
