@@ -27,7 +27,8 @@ class GetDependingObjects:
             converted = [{key: getattr(item, key, None)
                           for key in ['inline', 'infobox_url']}
                          for item in values.all()]
-            result[key] = converted
+            if converted:
+                result[key] = converted
         return Response(result, status=status.HTTP_200_OK)
 
 

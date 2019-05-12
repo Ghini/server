@@ -7,6 +7,14 @@
  var csrf_token;
  var current_url;
 
+ var collection_icon = {
+     'Taxon': 'terminal',
+     'Accession': 'vcard-o',
+     'Contact': 'user-circle',
+     'Location': 'umbrella',
+     'Plant': 'tree'
+ }
+
  function partial(func, ...argsBound) {
      return function(...args) { // (*)
          return func.call(this, ...argsBound, ...args);
@@ -20,16 +28,16 @@
 
  function update_infobox(url, e) {
      if (typeof e !== 'undefined')
-         $(e.target).attr("disabled", "disabled");
+         $(e.delegateTarget).attr("disabled", "disabled");
      if (url === current_url) {
          return;
      }
      current_url = url;
-     $('td').removeClass('table-success');
+     $('tr').removeClass('table-success');
      if (typeof e !== 'undefined') {
          $('#infobox-object-text').empty();
-         $('#infobox-object-text').append($(e.target).clone());
-         $(e.target).addClass('table-success');
+         $('#infobox-object-text').append($(e.delegateTarget).find('span.content').clone());
+         $(e.delegateTarget).addClass('table-success');
      }
      var tbody = $('#infobox-table-body');
      tbody.empty();
@@ -52,7 +60,7 @@
              }
          });
          if (typeof e !== 'undefined')
-             $(e.target).removeAttr("disabled");
+             $(e.delegateTarget).removeAttr("disabled");
      });
  }
 
@@ -72,6 +80,62 @@
      current_url = undefined;
  }
 
+ function look_for_depending(e) {
+     var td = $(e.delegateTarget).closest('td')
+     var tr = $(td.closest('tr'))
+     var span = $(td).find('i')
+     span.empty()
+     var basename = $(tr).data('infobox-url').replace('/', '').replace('/infobox/', '').replace(/\//g, '-')
+     var depending_url = $(tr).data('infobox-url').replace('infobox/', 'depending/')
+     console.log(depending_url)
+     $.getJSON(depending_url, function(data) {
+         console.log(data)
+         var btn, next, tbody, itr, ispan;
+         jQuery.each(data, function(class_name, list_for_class) {
+             btn = $('<button class="fa fa-{}" data-toggle="collapse" data-target="#{}-{}"></button>'
+                 .format(collection_icon[class_name], basename, class_name))
+             btn.click(function(e){
+                 $(e.delegateTarget)
+                     .closest('tbody')
+                     .find('tr.as-of-{}'.format(basename))
+                     .collapse('hide')
+             })
+             $(span).append(btn)
+             next = $('<tr id="{0}-{1}" class="collapse as-of-{0}"></tr>'.format(basename, class_name))
+             $(tr).after(next)
+             next.append($('<td colspan="2" style="padding:0 12"><table width="100%"><tbody></tbody></table></td>'))
+             tbody = $(next).find('tbody')
+             jQuery.each(list_for_class, function(index, item) {
+                 itr = $('<tr class="{}-row"></tr>'.format(class_name));
+                 tbody.append(itr);  // add it as last child
+                 $(itr).attr('data-infobox-url', item.infobox_url);
+                 $(itr).attr('data-form-url', item.infobox_url.replace('infobox/', 'form/'));
+                 itr.click(partial(update_infobox, item.infobox_url));
+                 td = $('<td><span class="content">' + item.inline + '</span></td>');
+                 itr.append(td);
+                 td = $('<td></td>');
+                 itr.append(td);
+                 ispan = $('<i style="width:0px;display:inline-flex;"></i>')
+                 td.append(ispan)
+                 btn = $('<button class="fa fa-search"></button>')
+                 ispan.append(btn)
+                 $(btn).click(look_for_depending)
+             });
+             $('div#results-box tr.{}-row'.format(class_name)).contextmenu(
+                 partial(function(class_name, e) {
+                     $(e.delegateTarget).trigger('click');
+                     $('#ContextMenu-' + class_name).css({
+                         display: "block",
+                         left: e.pageX - 4,
+                         top: e.pageY - 6
+                     });
+                     return false;
+                 }, class_name));
+         })
+
+     })
+ }
+
  function lookup(e, term) {
      $('.search-filter').attr("disabled", "disabled");
      if(term === undefined) {
@@ -89,29 +153,36 @@
 
      api_url = '{% url 'filter' %}?q=' + $('#search-filter').val();
      $.getJSON(api_url, function(data) {
-         var tr, td;
          var first_td;
          jQuery.each(data, function(class_name, list_for_class) {
+             var itr, td, btn, div, ispan;
              jQuery.each(list_for_class, function(index, item) {
-                 tr = $('<tr class="' + class_name + '-row"></tr>');
-                 td = $('<td>' + item.inline + '</td>');
-                 $(td).attr('data-infobox-url', item.infobox_url);
-                 $(td).attr('data-form-url', item.infobox_url.replace('infobox/', 'form/'));
-                 tbody.append(tr);  // add it as last child
-                 tr.append(td);
-                 tr.click(partial(update_infobox, item.infobox_url));
+                 itr = $('<tr class="{}-row"></tr>'.format(class_name));
+                 tbody.append(itr);  // add it as last child
+                 $(itr).attr('data-infobox-url', item.infobox_url);
+                 $(itr).attr('data-form-url', item.infobox_url.replace('infobox/', 'form/'));
+                 itr.click(partial(update_infobox, item.infobox_url));
+                 td = $('<td><span class="content">' + item.inline + '</span></td>');
                  first_td = first_td || td;
+                 itr.append(td);
+                 td = $('<td></td>');
+                 itr.append(td);
+                 ispan = $('<i style="width:0px;display:inline-flex;"></i>')
+                 td.append(ispan)
+                 btn = $('<button class="fa fa-search"></button>')
+                 ispan.append(btn)
+                 $(btn).click(look_for_depending)
              });
-             $("body").on("contextmenu", "tbody tr." + class_name + '-row',
-                          partial(function(class_name, e) {
-                              $(e.target).trigger('click');
-                              $('#ContextMenu-' + class_name).css({
-                                  display: "block",
-                                  left: e.pageX - 4,
-                                  top: e.pageY - 6
-                              });
-                              return false;
-                          }, class_name));
+             $('div#results-box tr.{}-row'.format(class_name)).contextmenu(
+                 partial(function(class_name, e) {
+                     $(e.delegateTarget).trigger('click');
+                     $('#ContextMenu-' + class_name).css({
+                         display: "block",
+                         left: e.pageX - 4,
+                         top: e.pageY - 6
+                     });
+                     return false;
+                 }, class_name));
          });
          if (first_td) {
              $(first_td).trigger('click');
@@ -164,7 +235,7 @@
      if(parent_class === 'new') {
          form_url = $(e.target).attr('data-form-url');
      } else {
-         var active_row = $('td.table-success');
+         var active_row = $('tr.table-success');
          infobox_url = $(active_row).attr('data-infobox-url');
          form_url = $(active_row).attr('data-form-url');
      }
@@ -208,7 +279,7 @@
                  success: function(result) {
                      $.getJSON(api_url + 'markup/', function(data) {
                          // update current row
-                         $('td.table-success').empty().append($('<span>' + data.inline + '</span>'))
+                         $('tr.table-success').empty().append($('<span>' + data.inline + '</span>'))
                          // update infobox
                          update_infobox(api_url + 'infobox/')
                      })
@@ -241,7 +312,7 @@
      // collect the elements, get their height, sum the values, assign the rest to the results box
      var stealing = $('.stealing-height-from-results').map(function (i, x) { return parseInt($(x).css('height'))})
      var stolen = Object.values(stealing).slice(0, stealing.length).reduce((t, i) => t + i + 2)
-     $('#results-box').css('height', '' + (window.innerHeight - stolen) + 'px')
+     $('#results-box').css('height', '{}px'.format(window.innerHeight - stolen))
  }
 
  $(function() {  // run at document ready
@@ -344,31 +415,31 @@
          $('.context-menu.dropdown-menu').find('.dropdown-item').map((i, e) => [e.id.split('-')])
          $('#drop-insert').find('.dropdown-item').map((i, e) => [e.id.split('-')])
     -->
-    <div id="ContextMenu-AccessionList" class="context-menu dropdown-menu">
+    <div id="ContextMenu-Accession" class="context-menu dropdown-menu">
       <a class="dropdown-item" id="accession-edit-accession-PUT" href="#">Edit</a>
       <a class="dropdown-item" id="accession-edit-verification-POST" href="#">Add verification</a>
       <a class="dropdown-item" id="accession-edit-plant-POST" href="#">Add Plant</a>
       <a class="dropdown-item" id="accession-delete-accession-DELETE" href="#">Delete</a>
     </div>
 
-    <div id="ContextMenu-PlantList" class="context-menu dropdown-menu">
+    <div id="ContextMenu-Plant" class="context-menu dropdown-menu">
       <a class="dropdown-item" id="plant-edit-plant-PUT" href="#">Edit</a>
       <a class="dropdown-item" id="plant-edit-plant-POST-split" href="#">Split Plant</a>
       <a class="dropdown-item" id="plant-delete-plant-DELETE" href="#">Delete</a>
     </div>
 
-    <div id="ContextMenu-LocationList" class="context-menu dropdown-menu">
+    <div id="ContextMenu-Location" class="context-menu dropdown-menu">
       <a class="dropdown-item" id="location-edit-location-PUT" href="#">Edit</a>
       <a class="dropdown-item" id="location-delete-location-DELETE" href="#">Delete</a>
     </div>
 
-    <div id="ContextMenu-ContactList" class="context-menu dropdown-menu">
+    <div id="ContextMenu-Contact" class="context-menu dropdown-menu">
       <a class="dropdown-item" id="contact-edit-contact-PUT" href="#">Edit</a>
       <a class="dropdown-item" id="contact-edit-verification-POST" href="#">Add verification</a>
       <a class="dropdown-item" id="contact-delete-contact-DELETE" href="#">Delete</a>
     </div>
 
-    <div id="ContextMenu-TaxonList" class="context-menu dropdown-menu">
+    <div id="ContextMenu-Taxon" class="context-menu dropdown-menu">
       <a class="dropdown-item" id="taxon-edit-taxon-PUT" href="#">Edit</a>
       <a class="dropdown-item" id="taxon-edit-taxon-POST-subtaxon" href="#">Add sub taxon</a>
       <a class="dropdown-item" id="taxon-edit-verification-POST" href="#">Add verification</a>
@@ -464,3 +535,6 @@
       </div>
     </div>
     {% endblock %}
+    <!-- https://fontawesome.com/v4.7.0/icon/caret-left
+         https://fontawesome.com/v4.7.0/icon/th-list
+         https://fontawesome.com/v4.7.0/icon/list-ol    -->
