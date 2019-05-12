@@ -208,17 +208,6 @@
      }
  }
 
- function populate_edit_form() {}
- function populate_plant_form() {}
- function populate_verification_form() {}
-
- function populate_delete_form(data) {
-     var tbody = $('#modal-delete-tbody');
-     tbody.empty();
-     tbody.append($('<p>' + data.__class_name__ + '</p>'));
-     tbody.append($('<p>' + data.__shows_as__ + '</p>'));
- }
-
  function compute_api_url(form_url, parent_class, this_class, http_verb) {
      if (http_verb === 'POST') {
          if (this_class === 'plant' && parent_class === 'accession')
