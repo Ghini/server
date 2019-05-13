@@ -326,8 +326,27 @@
  }
 
  function switch_page(e) {
+     var appname = $(e.delegateTarget).data('app-name')
      $('div.pager-page').hide()
      $('div#home-page').show()
+     $('div#home-spare img').hide()
+     $('div#home-spare img#{}-logo'.format(appname)).show()
+ }
+
+ function link_statistics_to_searches() {
+     $('#home-page table td').css('width', 'unset');
+     $('#home-page table td.list-group-item-action').map(function (i, x) {
+         $(x).click(partial(replace_search_filter, $(x).data('query')));
+     });
+ }
+
+ function update_statistics() {
+     $('#home-page table td').map(function (i, x) {
+         $.getJSON("{% url 'count' %}?q=" + $(x).data('query'),
+                   function(data){
+                       $(x).text(data['count'])
+                   });
+     })
  }
 
  $(function() {  // run at document ready
@@ -355,6 +374,11 @@
      // register action on modal activation
      $('#drop-insert,.context-menu.dropdown-menu').find('.dropdown-item').click(perform_on_selected);
 
+     link_statistics_to_searches()
+     update_statistics()
+     $('div#home-spare img').hide()
+     $('div#home-spare img#ghini-logo').show()
+
      // keep track of height
      window.addEventListener("resize", reset_results_height)
      reset_results_height()
@@ -364,8 +388,8 @@
   <body class="container-fluid">
     <nav class="navbar navbar-expand-sm bg-light navbar-light stealing-height-from-results">
       <!-- Brand -->
-      <i class="navbar-brand pager-go-home" href="#"><img src="{% static 'taxasoft-32.png' %}"/></i>
-      <i class="navbar-brand pager-go-home" href="#"><img src="{% static 'ghini-32.png' %}"/></i>
+      <i class="navbar-brand pager-go-home" data-app-name="taxasoft" href="#"><img src="{% static 'taxasoft-32.png' %}"/></i>
+      <i class="navbar-brand pager-go-home" data-app-name="ghini" href="#"><img src="{% static 'ghini-32.png' %}"/></i>
 
       <!-- Links -->
       <ul class="navbar-nav mr-auto">
@@ -464,7 +488,64 @@
           </div>
         </div>
       </div>
-      <div class="pager-page" id="home-page">
+
+      <div class="container pager-page" id="home-page">
+        <div class="row justify-content-center">
+          <div class="col-7 align-self-center" id="home-spare">
+            <img class="rounded img-fluid align-middle" id="ghini-logo" src="{% static 'ghini-logo.png' %}">
+            <img class="rounded img-fluid" id="taxasoft-logo" src="{% static 'taxasoft-128.png' %}">
+          </div>
+          <div class="col-5">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th width="25%"></th>
+                  <th width="25%">total</th>
+                  <th width="25%">used</th>
+                  <th width="25%">unused</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>family +</th>
+                  <td id="count-family-total">0000</td>
+                  <td class="list-group-item-action" id="count-family-used" data-query="taxon where rank.id<=9 and count(verifications)>0">0000</td>
+                  <td id="count-family-unused">0000</td>
+                </tr>
+                <tr>
+                  <th>genus ±</th>
+                  <td id="count-genus-total">0000</td>
+                  <td class="list-group-item-action" id="count-genus-used" data-query="taxon where rank.id between 10 and 16 and count(verifications)>0">0000</td>
+                  <td id="count-genus-unused">0000</td>
+                </tr>
+                <tr>
+                  <th>species -</th>
+                  <td class="list-group-item-action" id="count-species-total" data-query="taxon where rank.id>=17">0000</td>
+                  <td class="list-group-item-action" id="count-species-used" data-query="taxon where rank.id>=17 and count(verifications)>0">0000</td>
+                  <td class="list-group-item-action" id="count-species-unused" data-query="taxon where rank.id>=17 and count(verifications)=0">0000</td>
+                </tr>
+                <tr>
+                  <th>accessions</th>
+                  <td class="list-group-item-action" id="count-accession-total" data-query="accession.id>=0">0000</td>
+                  <td class="list-group-item-action" id="count-accession-used" data-query="accession where sum(plants.quantity)>0">0000</td>
+                  <td class="list-group-item-action" id="count-accession-unused" data-query="accession where sum(plants.quantity)=0">0000</td>
+                </tr>
+                <tr>
+                  <th>plants</th>
+                  <td class="list-group-item-action" id="count-plant-total" data-query="plant.id>=0">0000</td>
+                  <td class="list-group-item-action" id="count-plant-used" data-query="plant where sum(quantity)>0">0000</td>
+                  <td class="list-group-item-action" id="count-plant-unused" data-query="plant where sum(quantity)=0">0000</td>
+                </tr>
+                <tr>
+                  <th>locations</th>
+                  <td class="list-group-item-action" id="count-location-total" data-query="location.id>=0">0000</td>
+                  <td class="list-group-item-action" id="count-location-used" data-query="location where sum(plants.quantity)>0">0000</td>
+                  <td class="list-group-item-action" id="count-location-unused" data-query="location where sum(plants.quantity)=0">0000</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
 
