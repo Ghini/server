@@ -412,134 +412,144 @@
 
     </nav>
 
-    <!-- here each object has an id which indicates what it does.  made up of four parts, it's:
-         (1) the class name of the root object, the one to which the edit is related.
-         compare with the above drop down menu, where this part is 'new';
-         (2) a verb, identifying the form that has to be activated, it's either edit or delete;
-         (3) the class name of the object we will edit, it helps us locate the table that we need copy into the form;
-         (4) the http verb to be executed if the form is confirmed.
-         (5) this one is optional, I'm not sure we need it.
-
-         $('.context-menu.dropdown-menu').find('.dropdown-item').map((i, e) => [e.id.split('-')])
-         $('#drop-insert').find('.dropdown-item').map((i, e) => [e.id.split('-')])
-    -->
-    <div id="ContextMenu-Accession" class="context-menu dropdown-menu">
-      <a class="dropdown-item" id="accession-edit-accession-PUT" href="#">Edit</a>
-      <a class="dropdown-item" id="accession-edit-verification-POST" href="#">Add verification</a>
-      <a class="dropdown-item" id="accession-edit-plant-POST" href="#">Add Plant</a>
-      <a class="dropdown-item" id="accession-delete-accession-DELETE" href="#">Delete</a>
-    </div>
-
-    <div id="ContextMenu-Plant" class="context-menu dropdown-menu">
-      <a class="dropdown-item" id="plant-edit-plant-PUT" href="#">Edit</a>
-      <a class="dropdown-item" id="plant-edit-plant-POST-split" href="#">Split Plant</a>
-      <a class="dropdown-item" id="plant-delete-plant-DELETE" href="#">Delete</a>
-    </div>
-
-    <div id="ContextMenu-Location" class="context-menu dropdown-menu">
-      <a class="dropdown-item" id="location-edit-location-PUT" href="#">Edit</a>
-      <a class="dropdown-item" id="location-delete-location-DELETE" href="#">Delete</a>
-    </div>
-
-    <div id="ContextMenu-Contact" class="context-menu dropdown-menu">
-      <a class="dropdown-item" id="contact-edit-contact-PUT" href="#">Edit</a>
-      <a class="dropdown-item" id="contact-edit-verification-POST" href="#">Add verification</a>
-      <a class="dropdown-item" id="contact-delete-contact-DELETE" href="#">Delete</a>
-    </div>
-
-    <div id="ContextMenu-Taxon" class="context-menu dropdown-menu">
-      <a class="dropdown-item" id="taxon-edit-taxon-PUT" href="#">Edit</a>
-      <a class="dropdown-item" id="taxon-edit-taxon-POST-taxon" href="#">Add sub taxon</a>
-      <a class="dropdown-item" id="taxon-edit-verification-POST-taxon" href="#">Add verification</a>
-      <a class="dropdown-item" id="taxon-delete-taxon-DELETE" href="#">Delete</a>
-    </div>
-
-    <div class="row">
-      <div class="col-7 stealing-height-from-results">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>results list</th>
-            </tr>
-          </thead>
-        </table>
-      </div>
-      <div class="col-5">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>info box for selected row</th>
-            </tr>
-          </thead>
-        </table>
-      </div>
-    </div>
-
-    <div class="row" >
-      <div class="col-7" style="overflow-y:scroll" id="results-box">
-        <table class="table table-hover">
-          <tbody id="results-table-body">
-          </tbody>
-        </table>
-      </div>
-      <div class="col-5">
-        <h5 id="infobox-object-text"></h5>
-        <table class="table">
-          <tbody id="infobox-table-body">
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- we only have two modal forms: delete and edit. -->
-    <div class="modal" id="modal-form-delete">
-      <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-
-          <!-- Modal Header -->
-          <div class="modal-header">
-            <h4 class="modal-title">Confirm Deletion</h4>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <div class="pager-container">
+      <div class="pager-page" id="results-page">
+        <div class="row">
+          <div class="col-7 stealing-height-from-results">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>results list</th>
+                </tr>
+              </thead>
+            </table>
           </div>
-
-          <!-- Modal body -->
-          <div class="modal-body" id="modal-delete-tbody">
-
+          <div class="col-5">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>info box for selected row</th>
+                </tr>
+              </thead>
+            </table>
           </div>
+        </div>
 
-          <!-- Modal footer -->
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-danger action-confirm" data-dismiss="modal">Delete</button>
+        <div class="row" >
+          <div class="col-7" style="overflow-y:scroll" id="results-box">
+            <table class="table table-hover">
+              <tbody id="results-table-body">
+              </tbody>
+            </table>
           </div>
-
+          <div class="col-5">
+            <h5 id="infobox-object-text"></h5>
+            <table class="table">
+              <tbody id="infobox-table-body">
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
+      <div class="pager-page" id="home-page">
+      </div>
     </div>
 
-    <div class="modal" id="modal-form-edit">
-      <div class="modal-dialog modal-lg">
-        <form class="modal-content">
-          {% csrf_token %}
+    <div id="forms-and-menus">
 
-          <!-- Modal Header --><!-- we change the title -->
-          <div class="modal-header">
-            <h4 class="modal-title"></h4>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <!-- first of a list of objects object where the id indicates what the object does.
+           id is made up of four parts, it's:
+           (1) the class name of the root object, the one to which the edit is related.
+           compare with the above drop down menu, where this part is 'new';
+           (2) a verb, identifying the form that has to be activated, it's either edit or delete;
+           (3) the class name of the object we will edit, it helps us locate the table that we need copy into the form;
+           (4) the http verb to be executed if the form is confirmed.
+           (5) this one is optional, I'm not sure we need it, possibly just for unicity.
+
+           $('.context-menu.dropdown-menu').find('.dropdown-item').map((i, e) => [e.id.split('-')])
+           $('#drop-insert').find('.dropdown-item').map((i, e) => [e.id.split('-')])
+      -->
+      <div id="ContextMenu-Accession" class="context-menu dropdown-menu">
+        <a class="dropdown-item" id="accession-edit-accession-PUT" href="#">Edit</a>
+        <a class="dropdown-item" id="accession-edit-verification-POST" href="#">Add verification</a>
+        <a class="dropdown-item" id="accession-edit-plant-POST" href="#">Add Plant</a>
+        <a class="dropdown-item" id="accession-delete-accession-DELETE" href="#">Delete</a>
+      </div>
+
+      <div id="ContextMenu-Plant" class="context-menu dropdown-menu">
+        <a class="dropdown-item" id="plant-edit-plant-PUT" href="#">Edit</a>
+        <a class="dropdown-item" id="plant-edit-plant-POST-split" href="#">Split Plant</a>
+        <a class="dropdown-item" id="plant-delete-plant-DELETE" href="#">Delete</a>
+      </div>
+
+      <div id="ContextMenu-Location" class="context-menu dropdown-menu">
+        <a class="dropdown-item" id="location-edit-location-PUT" href="#">Edit</a>
+        <a class="dropdown-item" id="location-delete-location-DELETE" href="#">Delete</a>
+      </div>
+
+      <div id="ContextMenu-Contact" class="context-menu dropdown-menu">
+        <a class="dropdown-item" id="contact-edit-contact-PUT" href="#">Edit</a>
+        <a class="dropdown-item" id="contact-edit-verification-POST" href="#">Add verification</a>
+        <a class="dropdown-item" id="contact-delete-contact-DELETE" href="#">Delete</a>
+      </div>
+
+      <div id="ContextMenu-Taxon" class="context-menu dropdown-menu">
+        <a class="dropdown-item" id="taxon-edit-taxon-PUT" href="#">Edit</a>
+        <a class="dropdown-item" id="taxon-edit-taxon-POST-taxon" href="#">Add sub taxon</a>
+        <a class="dropdown-item" id="taxon-edit-verification-POST-taxon" href="#">Add verification</a>
+        <a class="dropdown-item" id="taxon-delete-taxon-DELETE" href="#">Delete</a>
+      </div>
+
+      <!-- we only have two modal forms: delete and edit. -->
+      <div class="modal" id="modal-form-delete">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">Confirm Deletion</h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body" id="modal-delete-tbody">
+
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-danger action-confirm" data-dismiss="modal">Delete</button>
+            </div>
+
           </div>
+        </div>
+      </div>
 
-          <!-- Modal body --><!-- we clone the generated form into this element -->
-          <div class="modal-body">
+      <div class="modal" id="modal-form-edit">
+        <div class="modal-dialog modal-lg">
+          <form class="modal-content">
+            {% csrf_token %}
 
-          </div>
+            <!-- Modal Header --><!-- we change the title -->
+            <div class="modal-header">
+              <h4 class="modal-title"></h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
 
-          <!-- Modal footer --><!-- we change the primary action -->
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary action-confirm" data-dismiss="modal">Save</button>
-          </div>
+            <!-- Modal body --><!-- we clone the generated form into this element -->
+            <div class="modal-body">
 
-        </form>
+            </div>
+
+            <!-- Modal footer --><!-- we change the primary action -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-primary action-confirm" data-dismiss="modal">Save</button>
+            </div>
+
+          </form>
+        </div>
       </div>
     </div>
     {% endblock %}
