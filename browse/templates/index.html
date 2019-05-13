@@ -50,10 +50,22 @@
                  tbody.append(tr);  // add it as last child
                  tr.append($('<td width="40%">' + key.replace('_', ' ') + '</td>'));
                  if(value[0] === 'link') {
-                     td = $('<td>' + value[1] + '</td>');
-                     td.click(partial(replace_search_filter, value[2]));
-                     td.addClass('list-group-item-action');
-                     tr.append(td);
+                     if (typeof value[1] === 'string' || typeof value[1] === 'number') {  // single element
+                         td = $('<td>' + value[1] + '</td>');
+                         td.click(partial(replace_search_filter, value[2]));
+                         td.addClass('list-group-item-action');
+                         tr.append(td);
+                     } else {  // list of links
+                         td = $('<td></td>')
+                         tr.append(td);
+                         var div;
+                         jQuery.each(value[1], function(i, x) {
+                             div = $('<div>{}</div>'.format(x[0]))
+                             div.addClass('list-group-item-action');
+                             div.click(partial(replace_search_filter, x[1]));
+                             td.append(div)
+                         })
+                     }
                  } else {
                      tr.append($('<td>' + value + '</td>'));
                  }
