@@ -152,6 +152,11 @@ def p_operator_equals(p):
     p[0] = 'exact'
     print([i for i in p])
 
+def p_operator_not_equals(p):
+    'operator : NE'
+    p[0] = 'ne'
+    print([i for i in p])
+
 def p_operator_less_than(p):
     'operator : LT'
     p[0] = 'lt'

@@ -12,6 +12,22 @@ from collection.forms import VerificationForm, AccessionForm, ContactForm
 from garden.forms import PlantForm, LocationForm
 
 
+## implement the __ne  custom lookup, for `!=`
+# BEGIN
+from django.db.models.fields import Field
+from django.db.models import Lookup
+
+@Field.register_lookup
+class NotEqualLookup(Lookup):
+    lookup_name = 'ne'
+
+    def as_sql(self, compiler, connection):
+        lhs, lhs_params = self.process_lhs(compiler, connection)
+        rhs, rhs_params = self.process_rhs(compiler, connection)
+        params = lhs_params + rhs_params
+        return '%s <> %s' % (lhs, rhs), params
+# END
+
 # Create your views here.
 
 
