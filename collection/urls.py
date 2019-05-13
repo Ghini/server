@@ -15,6 +15,7 @@ urlpatterns = [
     path("accession/<str:code>/markup/", AccessionMarkup.as_view(), name="accession-markup"),
     path("accession/<str:code>/depending/", AccessionDepending.as_view(), name="accession-depending"),
     # verification
+    path("verification/form/", VerificationForm.as_view(), name="verification-post-form-bare"),
     path("accession/<str:accession_code>/verification/", VerificationList.as_view(), name="verification-list"),
     path("accession/<str:accession_code>/verification/form/", VerificationForm.as_view(), name="verification-post-form"),
     path("accession/<str:accession_code>/verification/<int:seq>/", VerificationDetail.as_view(), name="verification-detail"),

@@ -27,7 +27,9 @@ class VerificationForm(forms.ModelForm):
 
     @classmethod
     def as_view(cls):
-        def view(request, accession_code, seq=None):
+        def view(request, accession_code=None, seq=None):
+            if accession_code is None:
+                return JsonResponse({'form': "%s" % VerificationForm()})
             if seq is not None:
                 obj = Verification.objects.get(accession__code=accession_code, seq=seq)
                 return JsonResponse({'form': "%s" % VerificationForm(instance=obj)})
