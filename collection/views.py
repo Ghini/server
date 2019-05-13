@@ -61,7 +61,9 @@ class AccessionInfobox(AccessionDetail):
                               ", ".join([i.epithet for i in obj.taxa.all()]), )
             result['received_quantity'] = obj.received_quantity
             if obj.source is not None:
-                result['source'] = "%s" % obj.source
+                result['source'] = ('link',
+                                    "%s" % obj.source,
+                                    "contact.id={0.id}".format(obj.source))
             if obj.received_type:
                 result['received_type'] = obj.get_received_type_display()
             result['plant groups'] = obj.plants.count()
