@@ -139,12 +139,12 @@ def p_field_dot_fieldname(p):
 
 def p_operator_like(p):
     'operator : LIKE'
-    p[0] = 'i' + p[1]
+    p[0] = 'iexact'
     print([i for i in p])
 
 def p_operator_contains(p):
     'operator : CONTAINS'
-    p[0] = 'i' + p[1]
+    p[0] = 'icontains'
     print([i for i in p])
 
 def p_operator_equals(p):
