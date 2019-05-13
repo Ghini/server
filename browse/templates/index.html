@@ -242,7 +242,10 @@
      }
      var api_url = compute_api_url(form_url, parent_class, this_class, http_verb)
      if(http_verb === 'POST' && parent_class !== 'new') {
-         form_url = api_url + '/form/'
+         form_url = api_url + 'form/'
+     }
+     if (e.target.id === 'taxon-edit-verification-POST-taxon') {
+         form_url = "{% url 'verification-post-form-bare' %}"
      }
      console.log(form_url, this_class, http_verb, api_url)
      var modal_form = $('#modal-form-' + action_name);

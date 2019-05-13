@@ -6,7 +6,7 @@ from .forms import TaxonForm
 
 urlpatterns = [
     path("taxon/", TaxonList.as_view(), name="taxon-list"),
-    path("taxon//form/", TaxonForm.as_view(), name="taxon-post-form"),
+    path("taxon/form/", TaxonForm.as_view(), name="taxon-post-form"),
     path("taxon/<int:pk>/", TaxonDetail.as_view(), name="taxon-detail"),
     path("taxon/<int:pk>/form/", TaxonForm.as_view(), name="taxon-put-form"),
     path("taxon/<int:pk>/infobox/", TaxonInfobox.as_view(), name="taxon-infobox"),
