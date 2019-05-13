@@ -65,6 +65,17 @@ def index(request):
                                           'location_form': location_form,
                                           'verification_form': verification_form, })
 
+def count_json(request):
+    '''this view returns the count of a query'''
+    from .searchgrammar import parser
+    query_string = request.GET.get('q')
+    result = parser.parse(query_string)
+    total = 0
+    for key, qs in result.items():
+        total += qs.count()
+    return JsonResponse({'count': total})
+
+
 def filter_json(request):
     '''this view computes the search query results
 
