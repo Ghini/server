@@ -150,6 +150,8 @@
 
  function lookup(e, term) {
      $('.search-filter').attr("disabled", "disabled");
+     $('div.pager-page').hide()
+     $('div#results-page').show()
      if(term === undefined) {
          term = $('#search-filter').val();
          if(search_history.last() !== term && forward_history.last() !== term)
@@ -323,6 +325,11 @@
      $('#results-box').css('height', '{}px'.format(window.innerHeight - stolen))
  }
 
+ function switch_page(e) {
+     $('div.pager-page').hide()
+     $('div#home-page').show()
+ }
+
  $(function() {  // run at document ready
      $('#search-filter').on('keypress', function (e) {
          if(e.which === 13) {
@@ -338,11 +345,17 @@
      $('#forward-in-history').click(partial(follow_history, forward_history, search_history));
      $('#clean-history').click(clean_history);
 
+     $('i.pager-go-home').click(switch_page)
+     $('div.pager-page').hide()
+     $('div#home-page').show()
+
      $("body").bind('contextmenu', function (e) {
          e.preventDefault(); // prevents default menu
      });
      // register action on modal activation
      $('#drop-insert,.context-menu.dropdown-menu').find('.dropdown-item').click(perform_on_selected);
+
+     // keep track of height
      window.addEventListener("resize", reset_results_height)
      reset_results_height()
  });
@@ -351,8 +364,8 @@
   <body class="container-fluid">
     <nav class="navbar navbar-expand-sm bg-light navbar-light stealing-height-from-results">
       <!-- Brand -->
-      <a class="navbar-brand" href="#"><img src="{% static 'taxasoft-32.png' %}"/></a>
-      <a class="navbar-brand" href="#"><img src="{% static 'ghini-32.png' %}"/></a>
+      <i class="navbar-brand pager-go-home" href="#"><img src="{% static 'taxasoft-32.png' %}"/></i>
+      <i class="navbar-brand pager-go-home" href="#"><img src="{% static 'ghini-32.png' %}"/></i>
 
       <!-- Links -->
       <ul class="navbar-nav mr-auto">
