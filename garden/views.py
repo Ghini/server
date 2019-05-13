@@ -72,8 +72,8 @@ class PlantInfobox(PlantDetail):
             result['__detail_url__'] = reverse('plant-detail', args=[obj.accession.code, obj.code])
             result['__shows_as__'] = "%s" % obj
             del result['id']
-            result['accession'] = ('link', "%s" % obj.accession, 'accession=%s' % obj.accession.code)
-            result['location'] = ('link', "%s" % obj.location, 'location=%s' % obj.location.code)
+            result['accession'] = ('link', "%s" % obj.accession, 'accession="%s"' % obj.accession.code)
+            result['location'] = ('link', "%s" % obj.location, 'location="%s"' % obj.location.code)
             return Response(result, status=status.HTTP_200_OK)
         else:
             return Response([], status=status.HTTP_204_NO_CONTENT)
