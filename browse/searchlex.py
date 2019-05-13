@@ -15,6 +15,8 @@ reserved = {
     'or': 'OR',
     'not': 'NOT',
     'between': 'BETWEEN',
+    'count': 'COUNT',
+    'sum': 'SUM',
 }
 
 tokens = [
