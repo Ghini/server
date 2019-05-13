@@ -10,6 +10,9 @@ from garden.views import LocationList, PlantList
 # Get the token map from the lexer.  This is required.
 from .searchlex import tokens
 
+import logging
+logger = logging.getLogger(__name__)
+
 # a reminder
 ''' <DOMAIN>.<field> <op> <TERM>
     <DOMAIN> <op> <TERM>
@@ -44,7 +47,7 @@ def p_single_field_query(p):
     result, domain, dot, fieldname, operator, value = p
     queryset = domain.objects.filter(**{'{}__{}'.format(fieldname, operator): value})
     p[0] = {domain.__class__.__name__: queryset}
-    print('field', [i for i in p])
+    logger.debug('field: %s' % [i for i in p])
 
 
 def p_domain_query(p):
@@ -52,7 +55,7 @@ def p_domain_query(p):
     result, domain, operator, value = p
     queryset = list_views[domain]().run_query(value).all()  # should use 'operator'
     p[0] = {domain.__name__: queryset}
-    print('domain', [i for i in p])
+    logger.debug('domain: %s' % [i for i in p])
 
 def p_depending_query(p):
     'query : query PIPE DEPEND'
@@ -70,17 +73,17 @@ def p_terms_query(p):
         partial = list_views[domain]().run_query(p[1][0])  # should use all terms
         result[domain.__name__] = partial
     p[0] = result
-    print('most generic', [i for i in p])
+    logger.debug('most generic: %s' % [i for i in p])
 
 def p_sqlike_query(p):
     'query : domain WHERE expression'
     result, domain, _, query_set = p
     p[0] = {domain.__name__: query_set}
-    print('most specific', [i for i in p])
+    logger.debug('most specific: %s' % [i for i in p])
 
 def p_domain_word(p):
     'domain : WORD'
-    print('seen domain {0}'.format(p[1]))
+    logger.debug('seen domain {0}'.format(p[1]))
     global search_domain
     search_domain = classes.get(p[1].lower())
     p[0] = search_domain
@@ -137,12 +140,12 @@ def p_bfactor_between(p):
 def p_field_fieldname(p):
     'field : fieldname'
     p[0] = p[1]
-    print('fieldname {} is used as field starter'.format(p[1]))
+    logger.debug('fieldname {} is used as field starter'.format(p[1]))
 
 def p_field_dot_fieldname(p):
     'field : field DOT fieldname'
     p[0] = '{}__{}'.format(p[1], p[3])
-    print('composing field {}'.format(p[0]))
+    logger.debug('composing field {}'.format(p[0]))
 
 def p_aggregate_count(p):
     'aggregate : COUNT'
@@ -227,7 +230,7 @@ def p_value_reserved_count(p):
 
 # Error rule for syntax errors
 def p_error(p):
-    print("Syntax error in input on token {0.type}, {0.value}".format(p))
+    logger.debug("Syntax error in input on token {0.type}, {0.value}".format(p))
 
 # Build the parser
 parser = yacc.yacc()
