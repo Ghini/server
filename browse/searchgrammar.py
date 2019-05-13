@@ -61,7 +61,6 @@ def p_depending_query(p):
         for item in qs.all():
             result.update(item.depending_objects())
     p[0] = result
-    print([i for i in p])
 
 def p_terms_query(p):
     'query : terms'
@@ -100,11 +99,13 @@ def p_expression_or_bterm(p):
 
 def p_bterm_bfactor(p):
     'bterm : bfactor'
-    p[0] = p[1]
+    from django.db.models import Count  # forcing field for intersection
+    p[0] = p[1].annotate(temp_field=Count(None))
 
 def p_bterm_and_bfactor(p):
     'bterm : bterm AND bfactor'
-    p[0] = p[1].intersection(p[3])
+    from django.db.models import Count  # forcing field for intersection
+    p[0] = p[1].intersection(p[3].annotate(temp_field=Count(None)))
 
 def p_bfactor_not_factor(p):
     'bfactor : NOT bfactor'
@@ -118,14 +119,20 @@ def p_bfactor_comparison(p):
     'bfactor : field operator value'
     result, field, operator, value = p
     p[0] = search_domain.objects.filter(**{'{}__{}'.format(field, operator): value})
-    print([i for i in p])
+
+def p_bfactor_aggregate_comparison(p):
+    'bfactor : aggregate LPAREN field RPAREN operator value'
+    from django.db.models import Count, Sum  # adding field to qs
+    result, aggregate, _, field, _, operator, value = p
+    f = {'count': Count, 'sum': Sum}[aggregate]
+    q = search_domain.objects.annotate(temp_field=f(field))
+    p[0] = q.filter(**{'temp_field__{}'.format(operator): value})
 
 def p_bfactor_between(p):
     'bfactor : field BETWEEN value AND value'
     result, field, _, min_value, _, max_value = p
     p[0] = search_domain.objects.filter(**{'{}__lte'.format(field): max_value,
                                            '{}__gte'.format(field): min_value})
-    print([i for i in p])
 
 def p_field_fieldname(p):
     'field : fieldname'
@@ -137,86 +144,86 @@ def p_field_dot_fieldname(p):
     p[0] = '{}__{}'.format(p[1], p[3])
     print('composing field {}'.format(p[0]))
 
+def p_aggregate_count(p):
+    'aggregate : COUNT'
+    p[0] = 'count'
+
+def p_aggregate_sum(p):
+    'aggregate : SUM'
+    p[0] = 'sum'
+
 def p_operator_like(p):
     'operator : LIKE'
     p[0] = 'iexact'
-    print([i for i in p])
 
 def p_operator_contains(p):
     'operator : CONTAINS'
     p[0] = 'icontains'
-    print([i for i in p])
 
 def p_operator_equals(p):
     'operator : EQ'
     p[0] = 'exact'
-    print([i for i in p])
 
 def p_operator_not_equals(p):
     'operator : NE'
     p[0] = 'ne'
-    print([i for i in p])
 
 def p_operator_less_than(p):
     'operator : LT'
     p[0] = 'lt'
-    print([i for i in p])
 
 def p_operator_less_equals(p):
     'operator : LE'
     p[0] = 'lte'
-    print([i for i in p])
 
 def p_operator_greater_than(p):
     'operator : GT'
     p[0] = 'gt'
-    print([i for i in p])
 
 def p_operator_greater_equals(p):
     'operator : GE'
     p[0] = 'gte'
-    print([i for i in p])
 
 def p_terms_value(p):
     'terms : value'
     p[0] = [p[1]]
-    print([i for i in p])
 
 def p_terms_terms_value(p):
     'terms : terms value'
     p[0] = p[1]
     p[0].append(p[2])
-    print([i for i in p])
 
 def p_value_number(p):
     'value : INTEGER'
     p[0] = p[1]
-    print([i for i in p])
 
 def p_value_word(p):
     'value : WORD'
     p[0] = p[1]
-    print([i for i in p])
 
 def p_value_quoted(p):
     'value : QUOTED'
     p[0] = p[1]
-    print([i for i in p])
 
 def p_value_reserved_and(p):
     'value : AND'
     p[0] = p[1]
-    print([i for i in p])
 
 def p_value_reserved_or(p):
     'value : OR'
     p[0] = p[1]
-    print([i for i in p])
 
 def p_value_reserved_not(p):
     'value : NOT'
     p[0] = p[1]
-    print([i for i in p])
+
+def p_value_reserved_sum(p):
+    'value : SUM'
+    p[0] = p[1]
+
+def p_value_reserved_count(p):
+    'value : COUNT'
+    p[0] = p[1]
 
 # Error rule for syntax errors
 def p_error(p):
