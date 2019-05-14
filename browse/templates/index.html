@@ -508,15 +508,15 @@
               <tbody>
                 <tr>
                   <th>family +</th>
-                  <td id="count-family-total">0000</td>
+                  <td id="count-family-total" data-query="taxon where rank.id<=9">0000</td>
                   <td class="list-group-item-action" id="count-family-used" data-query="taxon where rank.id<=9 and count(verifications)>0">0000</td>
-                  <td id="count-family-unused">0000</td>
+                  <td id="count-family-unused" data-query="taxon where rank.id<=9 and count(verifications)=0">0000</td>
                 </tr>
                 <tr>
                   <th>genus ±</th>
-                  <td id="count-genus-total">0000</td>
+                  <td id="count-genus-total" data-query="taxon where rank.id between 10 and 16">0000</td>
                   <td class="list-group-item-action" id="count-genus-used" data-query="taxon where rank.id between 10 and 16 and count(verifications)>0">0000</td>
-                  <td id="count-genus-unused">0000</td>
+                  <td id="count-genus-unused" data-query="taxon where rank.id between 10 and 16 and count(verifications)=0">0000</td>
                 </tr>
                 <tr>
                   <th>species -</th>
