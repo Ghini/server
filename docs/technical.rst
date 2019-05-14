@@ -147,6 +147,10 @@ from ghini.desktop
      delete from genus_synonym where genus_id not in (select id from genus);
      delete from genus_synonym where synonym_id not in (select id from genus);
 
+#. consider removing history too, as long as it's not imported::
+
+     delete from history;
+
 #. open ghini.desktop-1.0
 
    #. export your (reduced) data to csv.
@@ -156,11 +160,12 @@ from ghini.desktop
 now to taxasoft-ghini
 .................................
 
-#. enter the directory;
+#. enter the directory of your check-out;
 #. activate the virtual environment;
-#. edit ``desktop_reader`` so that it points to your csv export; look in
-   particular for a string looking like ``/tmp/1.0/{}.txt`` and edit it
-   to match your situation.
+#. if you didn't export to ``/tmp/1.0/``, you need to edit ``desktop_reader``
+   so that it points to your csv export; look in particular for a string
+   looking like ``/tmp/1.0/{}.txt`` and edit it to match your situation.
+#. move any previous database out of the way;
 #. create a new database and initialize it::
 
      ./manage.py migrate
@@ -171,6 +176,10 @@ now to taxasoft-ghini
      import desktop_reader
      desktop_reader.do_import()
      EOF
+
+   this will output as many ``+`` as the objects it inserted, as many ``.`` as
+   the objects it already found in place.  for species, a ``v`` is added if
+   the related species is at lower rank.
 
 #. create your superuser::
 

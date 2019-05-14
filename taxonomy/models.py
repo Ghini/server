@@ -71,7 +71,7 @@ class Taxon(models.Model):
 
     @property
     def identify(self):
-        return self.show()
+        return self.parent.show()
 
     def __str__(self):
         return '{} {}'.format(self.binomial, self.authorship).strip()
