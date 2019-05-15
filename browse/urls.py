@@ -7,6 +7,6 @@ urlpatterns = [
     path('filter/', filter_json, name='filter'),
     path('count/', count_json, name='count'),
     path('get-filter-token/', get_filter_tokens, name='get-tokens'),
-    path('cash-token/', pay_token, name='cash-token'),
+    path('cash-token/<str:token>/', pay_token, name='cash-token'),
     
 ]

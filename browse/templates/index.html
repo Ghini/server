@@ -180,7 +180,7 @@
              tokens[token]=true;
              var itr, td, btn, div, ispan;
              function pay_token() {
-                 $.getJSON("{% url 'cash-token' %}?token={}".format(token), function(chunk) {
+                 $.getJSON("{% url 'cash-token' 'TK' %}".replace('TK', token), function(chunk) {
                      var processed = 0;
                      jQuery.each(chunk['chunk'], function(index, item) {
                          itr = $('<tr class="{}-row"></tr>'.format(class_name));

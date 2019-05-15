@@ -116,8 +116,7 @@ def get_filter_tokens(request):
     return JsonResponse(result)
 
 
-def pay_token(request):
-    token = request.GET.get('token')
+def pay_token(request, token):
     content = []
     try:
         iqs = queued_queries[token]
