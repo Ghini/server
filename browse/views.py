@@ -108,15 +108,16 @@ def get_filter_tokens(request):
     import uuid
     from .searchgrammar import parser
     query_string = request.GET.get('q')
-    result = parser.parse(query_string)
-    for key, qs in result.items():
+    result = {}
+    candidates = parser.parse(query_string)
+    for key, qs in candidates.items():
         if qs.count():
-            uuid = str(uuid.uuid4())
-            queued_queries[uuid] = [(item for item in qs.all()), 100000]
-            def update_expected(uuid, qs):
-                queued_queries[uuid][1] = qs.count()
-            threading.Thread(target=update_expected, args=(uuid, qs)).start()
-        result[key] = uuid
+            token = str(uuid.uuid4())
+            queued_queries[token] = [(item for item in qs.all()), 100000]
+            def update_expected(token, qs):
+                queued_queries[token][1] = qs.count()
+            threading.Thread(target=update_expected, args=(token, qs)).start()
+            result[key] = token
     return JsonResponse(result)
 
 
