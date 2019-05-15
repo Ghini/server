@@ -41,7 +41,10 @@ class Taxon(models.Model):
             field = item[1:]
             return getattr(self, field)
         import re
-        return re.sub(r'\.\w+', convert, self.rank.show_as)
+        result = re.sub(r'\.\w+', convert, self.rank.show_as)
+        if authorship and self.authorship:
+            result += ' ' + self.authorship
+        return result
 
     @property
     def family(self):
@@ -72,7 +75,7 @@ class Taxon(models.Model):
 
     @property
     def identify(self):
-        return self.parent.show()
+        return self.parent.show().strip()
 
     def __str__(self):
         return '{} {}'.format(self.binomial, self.authorship).strip()
@@ -86,7 +89,7 @@ class Taxon(models.Model):
 
     @property
     def twolines(self):
-        return {'item': self.inline,
+        return {'item': self.show(authorship=True),
                 'side': '',
                 'sub': '{2} - {0} verifications; {1} subtaxa'.format(len(self.verifications.all()), len(self.subtaxa.all()), self.family)}
 
