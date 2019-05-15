@@ -72,7 +72,7 @@ class TaxonInfobox(TaxonDetail):
                 else:
                     del result['parent']
                     parent = obj.parent
-                    while parent.rank.id >= Rank.family_id:
+                    while parent and parent.rank.id >= Rank.family_id:
                         result[parent.rank.name] = ('link', "%s" % parent,
                                                     "taxon where epithet={0.epithet} and rank.name={0.rank.name}".format(parent))
                         parent = parent.parent
@@ -91,7 +91,8 @@ class TaxonMarkup(TaxonDetail):
     def get(self, request, *args, **kwargs):
         qs = self.get_queryset()
         o = qs.first()
-        result = {'inline': o.inline,}
+        result = {'inline': o.inline,
+                  'twolines': o.twolines}
         return Response(result, status=status.HTTP_200_OK)
 
 

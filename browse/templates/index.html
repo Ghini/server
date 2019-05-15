@@ -120,12 +120,13 @@
              next.append($('<td colspan="2" style="padding:0 12"><table width="100%"><tbody></tbody></table></td>'))
              tbody = $(next).find('tbody')
              jQuery.each(list_for_class, function(index, item) {
+                 console.log(item)
                  itr = $('<tr class="{}-row"></tr>'.format(class_name));
                  tbody.append(itr);  // add it as last child
                  $(itr).attr('data-infobox-url', item.infobox_url);
                  $(itr).attr('data-form-url', item.infobox_url.replace('infobox/', 'form/'));
                  itr.click(partial(update_infobox, item.infobox_url));
-                 td = $('<td><span class="content">' + item.inline + '</span></td>');
+                 td = $('<td><div class="row"><span class="content">{0.item}</span><small>{0.side}</small></div><div class="row"><small>{0.sub}</small></div></td>'.format(item.twolines))
                  itr.append(td);
                  td = $('<td></td>');
                  itr.append(td);
@@ -183,11 +184,12 @@
                  $.getJSON("{% url 'cash-token' 'TK' %}".replace('TK', token), function(chunk) {
                      var processed = 0;
                      jQuery.each(chunk['chunk'], function(index, item) {
+                         console.log(item)
                          itr = $('<tr class="{}-row"></tr>'.format(class_name));
                          $(itr).attr('data-infobox-url', item.infobox_url);
                          $(itr).attr('data-form-url', item.infobox_url.replace('infobox/', 'form/'));
                          itr.click(partial(update_infobox, item.infobox_url));
-                         td = $('<td><span class="content">' + item.inline + '</span></td>');
+                         td = $('<td><div class="row"><span class="content">{0.item}</span><small>{0.side}</small></div><div class="row"><small>{0.sub}</small></div></td>'.format(item.twolines))
                          itr.append(td);
                          td = $('<td></td>');
                          itr.append(td);
@@ -310,9 +312,10 @@
                      if (verb === 'DELETE') {
                          $('tr.table-success').hide()
                      } else {
-                         $.getJSON(api_url + 'markup/', function(data) {
+                         $.getJSON(api_url + 'markup/', function(item) {
                              // update current row
-                             $('tr.table-success').empty().append($('<span>' + data.inline + '</span>'))
+                             $('tr.table-success').empty().append(
+                                 $('<td><div class="row"><span class="content">{0.item}</span><small>{0.side}</small></div><div class="row"><small>{0.sub}</small></div></td>'.format(item.twolines)))
                              // update infobox
                              update_infobox(api_url + 'infobox/')
                          })

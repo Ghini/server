@@ -41,7 +41,7 @@ class GetDependingObjects:
             if not values:
                 continue
             converted = [{key: getattr(item, key, None)
-                          for key in ['inline', 'infobox_url']}
+                          for key in ['inline', 'twolines', 'infobox_url']}
                          for item in values.all()]
             if converted:
                 result[key] = converted
@@ -95,7 +95,7 @@ def filter_json(request):
     result = parser.parse(query_string)
     for key, qs in result.items():
         converted = [{key: getattr(item, key, None)
-                      for key in ['inline', 'infobox_url']}
+                      for key in ['inline', 'twolines', 'infobox_url']}
                      for item in qs.all()]
         result[key] = converted
     return JsonResponse(result)
@@ -122,10 +122,10 @@ def pay_token(request, token):
               'chunk': content}
     try:
         iqs = queued_queries[token]
-        for i in range(50):
+        for i in range(20):
             item = next(iqs)
             content.append({key: getattr(item, key, None)
-                            for key in ['inline', 'infobox_url']})
+                            for key in ['inline', 'twolines', 'infobox_url']})
     except StopIteration:
         del queued_queries[token]
         result['done'] = True

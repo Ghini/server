@@ -21,6 +21,12 @@ class Location(models.Model):
         return "%s" % self
 
     @property
+    def twolines(self):
+        return {'item': self.inline,
+                'side': '{0} alive in {1} plant groups'.format(self.plants.count(), sum(p.quantity for p in self.plants.all())),
+                'sub': '(Location)'}
+
+    @property
     def infobox_url(self):
         return reverse('location-infobox', args=[self.code])
 
@@ -44,6 +50,12 @@ class Plant(models.Model):
     @property
     def inline(self):
         return "%s" % self
+
+    @property
+    def twolines(self):
+        return {'item': '{}.{}'.format(self.accession.code, self.code),
+                'side': '{0.quantity} alive in {0.location.inline}'.format(self),
+                'sub': format(self.accession.taxon.show())}
 
     @property
     def infobox_url(self):

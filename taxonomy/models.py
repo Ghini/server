@@ -85,6 +85,10 @@ class Taxon(models.Model):
         return "%s" % self
 
     @property
+    def twolines(self):
+        return {'item': self.inline, 'side': '', 'sub': ''}
+
+    @property
     def infobox_url(self):
         return reverse('taxon-infobox', args=[self.pk])
 

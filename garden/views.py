@@ -83,7 +83,8 @@ class PlantMarkup(PlantDetail):
     def get(self, request, *args, **kwargs):
         qs = self.get_queryset()
         o = qs.first()
-        result = {'inline': o.inline,}
+        result = {'inline': o.inline,
+                  'twolines': o.twolines, }
         return Response(result, status=status.HTTP_200_OK)
 
 
@@ -129,7 +130,8 @@ class LocationMarkup(LocationDetail):
     def get(self, request, *args, **kwargs):
         qs = self.get_queryset()
         o = qs.first()
-        result = {'inline': o.inline,}
+        result = {'inline': o.inline,
+                  'twolines': o.twolines, }
         return Response(result, status=status.HTTP_200_OK)
 
 

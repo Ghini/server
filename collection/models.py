@@ -60,6 +60,10 @@ class Contact(models.Model):
         return "%s" % self
 
     @property
+    def twolines(self):
+        return {'item': self.inline, 'side': '', 'sub': ''}
+
+    @property
     def infobox_url(self):
         return reverse('contact-infobox', args=[self.pk])
 
@@ -116,6 +120,15 @@ class Accession(models.Model):
     @property
     def inline(self):
         return "%s" % self
+
+    @property
+    def twolines(self):
+        str_locations = "{0} locations".format(len({p.location for p in self.plants.all()}))
+        if str_locations == "{0} locations".format(1):  # this is thinking of translations
+            str_locations = self.plants.first().location.inline
+        return {'item': self.code,
+                'side': '{0} plant groups in {1}'.format(self.plants.count(), str_locations),
+                'sub': format(self.taxon.show())}
 
     @property
     def infobox_url(self):
