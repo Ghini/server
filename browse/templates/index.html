@@ -139,9 +139,9 @@
                  itr.click(partial(update_infobox, item.infobox_url));
                  td = $(twolinestemplate.format(item.twolines))
                  itr.append(td);
-                 td = $('<td></td>');
+                 td = $('<td style="text-align:end;"></td>');
                  itr.append(td);
-                 ispan = $('<i style="width:0px;display:inline-flex;"></i>')
+                 ispan = $('<i style="width:0px;"></i>')
                  td.append(ispan)
                  btn = $('<button class="fa fa-search"></button>')
                  ispan.append(btn)
@@ -202,9 +202,9 @@
                          itr.click(partial(update_infobox, item.infobox_url));
                          td = $(twolinestemplate.format(item.twolines))
                          itr.append(td);
-                         td = $('<td></td>');
+                         td = $('<td style="text-align:end;"></td>');
                          itr.append(td);
-                         ispan = $('<i style="width:0px;display:inline-flex;"></i>')
+                         ispan = $('<i style="width:0px;"></i>')
                          td.append(ispan)
                          btn = $('<button class="fa fa-search"></button>')
                          ispan.append(btn)
