@@ -48,7 +48,7 @@ class Taxon(models.Model):
         step = self
         while step and step.rank.name != 'familia':
             step = step.parent
-        return step and step.epithet
+        return step and step.epithet or ''
 
     @property
     def genus(self):
@@ -86,7 +86,9 @@ class Taxon(models.Model):
 
     @property
     def twolines(self):
-        return {'item': self.inline, 'side': '', 'sub': ''}
+        return {'item': self.inline,
+                'side': '',
+                'sub': '{2} - {0} verifications; {1} subtaxa'.format(len(self.verifications.all()), len(self.subtaxa.all()), self.family)}
 
     @property
     def infobox_url(self):
