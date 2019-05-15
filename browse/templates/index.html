@@ -217,8 +217,7 @@
                          }
                          tbody.append(itr);  // add it as last child
                      })
-                     if (processed !== 0) {
-                         console.log('next chunk for token {}'.format(token))
+                     if (processed !== 0 && chunk.done !== true) {
                          // set Timeout for async iteration
                          setTimeout(pay_token, 1);
                      }

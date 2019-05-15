@@ -118,6 +118,8 @@ def get_filter_tokens(request):
 
 def pay_token(request, token):
     content = []
+    result = {'done': False,
+              'chunk': content}
     try:
         iqs = queued_queries[token]
         for i in range(50):
@@ -126,6 +128,7 @@ def pay_token(request, token):
                             for key in ['inline', 'infobox_url']})
     except StopIteration:
         del queued_queries[token]
+        result['done'] = True
     except KeyError:
         pass
-    return JsonResponse({'chunk': content})
+    return JsonResponse(result)
