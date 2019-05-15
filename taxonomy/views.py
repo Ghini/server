@@ -65,8 +65,17 @@ class TaxonInfobox(TaxonDetail):
             result['__shows_as__'] = "%s" % obj
             del result['id']
             if obj.parent:
-                result['parent'] = ('link', "%s" % obj.parent,
-                                    "taxon where epithet={0.epithet} and rank.name={0.rank.name}".format(obj.parent))
+                print(obj, obj.parent)
+                if obj.parent.rank.id < Rank.family_id:
+                    result['parent'] = ('link', "%s" % obj.parent,
+                                        "taxon where epithet={0.epithet} and rank.name={0.rank.name}".format(obj.parent))
+                else:
+                    del result['parent']
+                    parent = obj.parent
+                    while parent.rank.id >= Rank.family_id:
+                        result[parent.rank.name] = ('link', "%s" % parent,
+                                                    "taxon where epithet={0.epithet} and rank.name={0.rank.name}".format(parent))
+                        parent = parent.parent
             if obj.accepted:
                 result['accepted'] = ('link', "%s" % obj.accepted,
                                       "taxon where epithet={0.epithet} and rank.name={0.rank.name}".format(obj.accepted))

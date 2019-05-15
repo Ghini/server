@@ -5,6 +5,7 @@ from django.db import models
 
 class Rank(models.Model):
     species_id = 17
+    family_id = 9
     #id,name,short,show_as
     #0,"regnum","",".epithet sp.",False
     name = models.CharField(max_length=16)
