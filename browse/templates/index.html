@@ -6,6 +6,7 @@
  var search_history, forward_history;
  var csrf_token;
  var current_url;
+ var tokens={};
 
  var collection_icon = {
      'Taxon': 'terminal',
@@ -83,6 +84,7 @@
  };
 
  function clean_history(e) {
+     tokens={};
      search_history.length = 0;
      forward_history.length = 0;
      $('#search-filter').val('');
@@ -148,7 +150,12 @@
      })
  }
 
+ function now() {
+     return new Date().getTime();
+ }
+
  function lookup(e, term) {
+     tokens={};
      $('.search-filter').attr("disabled", "disabled");
      $('div.pager-page').hide()
      $('div#results-page').show()
@@ -165,28 +172,50 @@
      var tbody = $('#results-table-body');
      tbody.empty();
 
-     api_url = '{% url 'filter' %}?q=' + $('#search-filter').val();
+     api_url = "{% url 'get-tokens' %}?q=" + $('#search-filter').val();
      $.getJSON(api_url, function(data) {
-         var first_td;
-         jQuery.each(data, function(class_name, list_for_class) {
+         tbody.empty();
+         var first_td = true;
+         jQuery.each(data, function(class_name, token) {
+             tokens[token]=true;
              var itr, td, btn, div, ispan;
-             jQuery.each(list_for_class, function(index, item) {
-                 itr = $('<tr class="{}-row"></tr>'.format(class_name));
-                 tbody.append(itr);  // add it as last child
-                 $(itr).attr('data-infobox-url', item.infobox_url);
-                 $(itr).attr('data-form-url', item.infobox_url.replace('infobox/', 'form/'));
-                 itr.click(partial(update_infobox, item.infobox_url));
-                 td = $('<td><span class="content">' + item.inline + '</span></td>');
-                 first_td = first_td || td;
-                 itr.append(td);
-                 td = $('<td></td>');
-                 itr.append(td);
-                 ispan = $('<i style="width:0px;display:inline-flex;"></i>')
-                 td.append(ispan)
-                 btn = $('<button class="fa fa-search"></button>')
-                 ispan.append(btn)
-                 $(btn).click(look_for_depending)
-             });
+             function pay_token() {
+                 $.getJSON("{% url 'cash-token' %}?token={}".format(token), function(chunk) {
+                     var processed = 0;
+                     jQuery.each(chunk['chunk'], function(index, item) {
+                         itr = $('<tr class="{}-row"></tr>'.format(class_name));
+                         $(itr).attr('data-infobox-url', item.infobox_url);
+                         $(itr).attr('data-form-url', item.infobox_url.replace('infobox/', 'form/'));
+                         itr.click(partial(update_infobox, item.infobox_url));
+                         td = $('<td><span class="content">' + item.inline + '</span></td>');
+                         itr.append(td);
+                         td = $('<td></td>');
+                         itr.append(td);
+                         ispan = $('<i style="width:0px;display:inline-flex;"></i>')
+                         td.append(ispan)
+                         btn = $('<button class="fa fa-search"></button>')
+                         ispan.append(btn)
+                         $(btn).click(look_for_depending)
+                         if (first_td) {         
+                             $(td).trigger('click');
+                             first_td = false;
+                         }
+                         processed++;
+                         if(tokens[token] !== true) {
+                             console.log('dropping tokens')
+                             processed=0;
+                             return false;
+                         }
+                         tbody.append(itr);  // add it as last child
+                     })
+                     if (processed !== 0) {
+                         console.log('next chunk for token {}'.format(token))
+                         // set Timeout for async iteration
+                         setTimeout(pay_token, 1);
+                     }
+                 })
+             }
+             pay_token();
              $('div#results-box tr.{}-row'.format(class_name)).contextmenu(
                  partial(function(class_name, e) {
                      $(e.delegateTarget).trigger('click');
@@ -198,9 +227,6 @@
                      return false;
                  }, class_name));
          });
-         if (first_td) {
-             $(first_td).trigger('click');
-         }
          $('.search-filter').removeAttr("disabled");
 
          $('body').on("click", function() {
@@ -326,6 +352,7 @@
  }
 
  function switch_page(e) {
+     tokens={};
      var appname = $(e.delegateTarget).data('app-name')
      $('div.pager-page').hide()
      $('div#home-page').show()

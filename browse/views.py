@@ -99,3 +99,34 @@ def filter_json(request):
                      for item in qs.all()]
         result[key] = converted
     return JsonResponse(result)
+
+
+queued_queries = {}
+
+def get_filter_tokens(request):
+    import uuid
+    from .searchgrammar import parser
+    query_string = request.GET.get('q')
+    result = parser.parse(query_string)
+    for key, qs in result.items():
+        if qs.count():
+            uuid = str(uuid.uuid4())
+            queued_queries[uuid] = (item for item in qs.all())
+        result[key] = uuid
+    return JsonResponse(result)
+
+
+def pay_token(request):
+    token = request.GET.get('token')
+    content = []
+    try:
+        iqs = queued_queries[token]
+        for i in range(50):
+            item = next(iqs)
+            content.append({key: getattr(item, key, None)
+                            for key in ['inline', 'infobox_url']})
+    except StopIteration:
+        del queued_queries[token]
+    except KeyError:
+        pass
+    return JsonResponse({'chunk': content})
