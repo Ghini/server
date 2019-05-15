@@ -201,6 +201,15 @@
                              first_td = false;
                          }
                          processed++;
+                         $(itr).contextmenu(partial(function(class_name, e) {
+                             $(e.delegateTarget).trigger('click');
+                             $('#ContextMenu-' + class_name).css({
+                                 display: "block",
+                                 left: e.pageX - 4,
+                                 top: e.pageY - 6
+                             });
+                             return false;
+                         }, class_name));
                          if(tokens[token] !== true) {
                              console.log('dropping tokens')
                              processed=0;
@@ -216,16 +225,6 @@
                  })
              }
              pay_token();
-             $('div#results-box tr.{}-row'.format(class_name)).contextmenu(
-                 partial(function(class_name, e) {
-                     $(e.delegateTarget).trigger('click');
-                     $('#ContextMenu-' + class_name).css({
-                         display: "block",
-                         left: e.pageX - 4,
-                         top: e.pageY - 6
-                     });
-                     return false;
-                 }, class_name));
          });
          $('.search-filter').removeAttr("disabled");
 
