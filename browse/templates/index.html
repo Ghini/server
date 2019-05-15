@@ -125,12 +125,6 @@
          jQuery.each(data, function(class_name, list_for_class) {
              btn = $('<button class="fa fa-{}" data-toggle="collapse" data-target="#{}-{}"></button>'
                  .format(collection_icon[class_name], basename, class_name))
-             btn.click(function(e){
-                 $(e.delegateTarget)
-                     .closest('tbody')
-                     .find('tr.as-of-{}'.format(basename))
-                     .collapse('hide')
-             })
              $(span).append(btn)
              next = $('<tr id="{0}-{1}" class="collapse as-of-{0}"></tr>'.format(basename, class_name))
              $(tr).after(next)
