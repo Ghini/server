@@ -190,11 +190,14 @@
          var first_td = true;
          jQuery.each(data, function(class_name, token) {
              tokens[token]=true;
+             var read_so_far=0;
              var itr, td, btn, div, ispan;
              function pay_token() {
                  $.getJSON("{% url 'cash-token' 'TK' %}".replace('TK', token), function(chunk) {
                      var processed = 0;
                      jQuery.each(chunk['chunk'], function(index, item) {
+                         ++read_so_far;
+                         $('div#results-page .progress-bar').css('width', "{}%".format(100*read_so_far / chunk.expect));
                          console.log(item)
                          itr = $('<tr class="{}-row"></tr>'.format(class_name));
                          $(itr).attr('data-infobox-url', item.infobox_url);
@@ -233,9 +236,13 @@
                      if (processed !== 0 && chunk.done !== true) {
                          // set Timeout for async iteration
                          setTimeout(pay_token, 1);
+                     } else {
+                         $('div#results-page .row.progress').hide()
+                         $('div#results-page .progress-bar').css('width', "0%");
                      }
                  })
              }
+             $('div#results-page .row.progress').show()
              pay_token();
          });
          $('.search-filter').removeAttr("disabled");
@@ -418,6 +425,8 @@
      $('div#home-spare img').hide()
      $('div#home-spare img#ghini-logo').show()
 
+     $('div#results-page .row.progress').hide()
+
      // keep track of height
      window.addEventListener("resize", reset_results_height)
      reset_results_height()
@@ -490,6 +499,10 @@
 
     <div class="pager-container">
       <div class="pager-page" id="results-page">
+        <div style="position:fixed;z-index:999;width:100%" class="row progress">
+          <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="height:0.5rem;width:0%">
+          </div>
+        </div>
         <div class="row">
           <div class="col-7 stealing-height-from-results">
             <table class="table">

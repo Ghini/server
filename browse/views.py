@@ -11,6 +11,7 @@ from taxonomy.forms import TaxonForm
 from collection.forms import VerificationForm, AccessionForm, ContactForm
 from garden.forms import PlantForm, LocationForm
 
+import threading
 
 ## implement the __ne  custom lookup, for `!=`
 # BEGIN
@@ -111,7 +112,10 @@ def get_filter_tokens(request):
     for key, qs in result.items():
         if qs.count():
             uuid = str(uuid.uuid4())
-            queued_queries[uuid] = (item for item in qs.all())
+            queued_queries[uuid] = [(item for item in qs.all()), 100000]
+            def update_expected(uuid, qs):
+                queued_queries[uuid][1] = qs.count()
+            threading.Thread(target=update_expected, args=(uuid, qs)).start()
         result[key] = uuid
     return JsonResponse(result)
 
@@ -119,9 +123,10 @@ def get_filter_tokens(request):
 def pay_token(request, token):
     content = []
     result = {'done': False,
+              'expect': 0,
               'chunk': content}
     try:
-        iqs = queued_queries[token]
+        iqs, result['expect'] = queued_queries[token]
         for i in range(20):
             item = next(iqs)
             content.append({key: getattr(item, key, None)
