@@ -13,7 +13,7 @@ class Location(models.Model):
 
     def __str__(self):
         if self.name:
-            return '{} ({})'.format(self.code, self.name)
+            return '({}) {}'.format(self.code, self.name)
         return self.code
 
     @property
