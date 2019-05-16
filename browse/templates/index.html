@@ -128,7 +128,7 @@
              $(span).append(btn)
              next = $('<tr id="{0}-{1}" class="collapse as-of-{0}"></tr>'.format(basename, class_name))
              $(tr).after(next)
-             next.append($('<td colspan="2" style="padding:0 12 0 24"><table width="100%"><tbody></tbody></table></td>'))
+             next.append($('<td colspan="2" style="padding:0;padding-left:1.25rem;"><table width="100%"><tbody></tbody></table></td>'))
              tbody = $(next).find('tbody')
              jQuery.each(list_for_class, function(index, item) {
                  console.log(item)
