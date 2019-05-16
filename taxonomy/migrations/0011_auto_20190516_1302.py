@@ -44,7 +44,7 @@ def import_genus_to_family(apps, schema_editor):
                     orig.save()
                 orig = parent
                 for_sake_of_logging.append(orig.epithet)
-            print(", ".join(for_sake_of_logging))
+            print("\r{}".format(", ".join(for_sake_of_logging)), end=" ")
 
 
 class Migration(migrations.Migration):
