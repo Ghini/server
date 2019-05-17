@@ -70,11 +70,14 @@ def count_json(request):
     '''this view returns the count of a query'''
     from .searchgrammar import parser
     query_string = request.GET.get('q')
-    result = parser.parse(query_string)
+    candidates = parser.parse(query_string)
+    result = {}
     total = 0
-    for key, qs in result.items():
-        total += qs.count()
-    return JsonResponse({'count': total})
+    for key, qs in candidates.items():
+        result[key] = this = qs.count()
+        total += this
+    result['__total__'] = total
+    return JsonResponse(result)
 
 
 def filter_json(request):
@@ -93,8 +96,9 @@ def filter_json(request):
     '''
     from .searchgrammar import parser
     query_string = request.GET.get('q')
-    result = parser.parse(query_string)
-    for key, qs in result.items():
+    result = {}
+    candidates = parser.parse(query_string)
+    for key, qs in candidates.items():
         converted = [{key: getattr(item, key, None)
                       for key in ['inline', 'twolines', 'infobox_url']}
                      for item in qs.all()]

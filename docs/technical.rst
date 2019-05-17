@@ -84,25 +84,61 @@ Individual objects have more entry points, respectively for:
 
 **search API**
 
-``filter`` is the main query api entry point.  It expects a ``q`` parameter,
-which it interprets according to several search strategies.  Search
-strategies are described in some detail in the user manual.
+``filter/`` and ``get-filter-tokens/`` are the main query api entry point.
+Both expect a ``q`` parameter, which they interprets according to several
+search strategies.  Search strategies are described in some detail in the user
+manual.
 
-The result of a ``filter`` request is a dictionary, where the keys are the
-names of the collection in the result, and the values are the objects
-matched by the ``q`` query.
+The result of a ``get-filter-tokens/`` request is a dictionary, where the keys
+are the names of the collection in the result, and the values are *tokens*.
+You get as many tokens as the non-empty collections matching your query.
 
-Executing a search corresponds to constructing a queryset, each element in
-the queryset is returned as a dictionary, with the structure:
+The next step on the client side is to enter a loop to *cash* your *tokens*.
+Each invocation of the ``cash-token/<token>/`` returns you a dictionary with
+three entries:
+
+- ``chunk`` holds the list of items.
+- ``expect`` specifies the length of the expected complete set.  One possible
+  use is to update a progress bar.
+- ``done`` tells you whether this was the last chunk.
+
+Attempting to cash a token which was already paid in full will provide the
+empty result.  Same will happen if you attempt to cash an invalid token.  The
+empty result is ``expect:0``, ``done:True``, ``chunk:[]``.
+
+If you are somewhat too quick in cashing a new token, the ``expect`` value
+could still be a large hard-coded value.  The correct value is computed in a
+separate thread, so the server can provide all tokens as soon as possible.
+
+Tokens will expire after some delay in cashing them.  This prevents queries to
+stay active in the system while not any more relevant.
+
+For queries where you expect a small result set (less than ~70 elements), you
+can may prefer the ``filter/`` entry point.  ``filter`` short-circuits this
+process, providing the concrete result at once, in a dictionary having the
+same external structure as the ``get-filter-tokens`` result, one list of
+objects per non-empty collection, and values as the above ``chunk`` lists.
+
+One more entry point in this group is ``count/``, it accepts the same
+parameters as ``filter`` and ``get-filter-tokens``, and returns a dictionary
+with same external structure.  The values in this case are the matching query
+``count()``, plus a grand total under the key ``__total__``.  You can use this
+to decide whether to use ``filter`` or the chunked approach
+``get-filter-tokens``.
+
+On the server side, executing a search corresponds to constructing one or more
+queryset.  Each element in the queryset is subsequently converted into a
+dictionary, with the structure:
 
 :inline: The string shown in the result.  It may contain html tags.
+:twolines: Three elements to be shown in different parts of the client.
 :infobox_url: The url to get the corresponding infobox.
 
-The ``inline`` entry is meant to be included in the results box.  The
-``infobox_url`` provides quick access to the URL where we will get the
-infobox data, but you can just replace the trailing *infobox/* part and
-replace with whatever other valid suffix.  at the moment of writing, the
-URLs implemented are *form/*, *markup/*, *depending/*.
+The ``inline`` and ``twolines`` entries are meant to be included in the
+results box.  The ``infobox_url`` provides quick access to the URL where we
+will get the infobox data, but you can just replace the trailing *infobox/*
+part and replace with whatever other valid suffix.  at the moment of writing,
+the URLs implemented are *form/*, *markup/*, *depending/*.
 
 importing from ghini.desktop
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
