@@ -229,8 +229,11 @@ def p_value_reserved_count(p):
     p[0] = p[1]
 
 # Error rule for syntax errors
-def p_error(p):
-    logger.debug("Syntax error in input on token {0.type}, {0.value}".format(p))
+def p_error(token):
+    if token is not None:
+        print("Line %s, illegal token %s" % (token.lineno, token.value))
+    else:
+        print('Unexpected end of input')
 
 # Build the parser
 parser = yacc.yacc()
