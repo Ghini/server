@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from rest_framework import status
 from rest_framework.response import Response
 
+import uuid
+
 from taxonomy.forms import TaxonForm
 from collection.forms import VerificationForm, AccessionForm, ContactForm
 from garden.forms import PlantForm, LocationForm
@@ -29,8 +31,13 @@ class NotEqualLookup(Lookup):
         return '%s <> %s' % (lhs, rhs), params
 # END
 
-# Create your views here.
+queued_queries = {}
 
+def update_expected(token, qs):
+    queued_queries[token][1] = qs.count()
+
+
+# Create your views here.
 
 class GetDependingObjects:
     def get(self, request, *args, **kwargs):
@@ -38,14 +45,12 @@ class GetDependingObjects:
         result = {}
         qs = self.get_queryset()
         o = qs.first()
-        for key, values in o.depending_objects().items():
-            if not values:
-                continue
-            converted = [{key: getattr(item, key, None)
-                          for key in ['inline', 'twolines', 'infobox_url']}
-                         for item in values.all()]
-            if converted:
-                result[key] = converted
+        for key, qs in o.depending_objects().items():
+            if qs.count():
+                token = str(uuid.uuid4())
+                queued_queries[token] = [(item for item in qs.all()), 100000]
+                threading.Thread(target=update_expected, args=(token, qs)).start()
+                result[key] = token
         return Response(result, status=status.HTTP_200_OK)
 
 
@@ -106,10 +111,7 @@ def filter_json(request):
     return JsonResponse(result)
 
 
-queued_queries = {}
-
 def get_filter_tokens(request):
-    import uuid
     from .searchgrammar import parser
     query_string = request.GET.get('q')
     result = {}
@@ -118,8 +120,6 @@ def get_filter_tokens(request):
         if qs.count():
             token = str(uuid.uuid4())
             queued_queries[token] = [(item for item in qs.all()), 100000]
-            def update_expected(token, qs):
-                queued_queries[token][1] = qs.count()
             threading.Thread(target=update_expected, args=(token, qs)).start()
             result[key] = token
     return JsonResponse(result)
