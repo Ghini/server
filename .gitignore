@@ -1,6 +1,5 @@
 cookies.txt
 *.ipynb
-*~
 *pyc
 *.sqlite3
 docs/_*
