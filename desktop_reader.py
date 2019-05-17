@@ -34,12 +34,15 @@ pk2obj = {}
 
 def family_creator(o):
     del o['qualifier']
+    # epithet is unique at rank above species, within rank.
     result = Taxon.objects.get_or_create(rank=Family, epithet=o['family'])
-    print(o['family'], end="")
     return result
 
 
 def genus_creator(o):
+    if o['genus'].startswith('Zzz'):
+        return (pk2obj[('family', o['family_id'])], False)
+    # epithet is unique at rank above species, within rank.
     result = Taxon.objects.get_or_create(rank=Genus, epithet=o['genus'],
                                          defaults={'authorship': o['author'],
                                                    'parent': pk2obj[('family', o['family_id'])]})
@@ -47,17 +50,18 @@ def genus_creator(o):
 
 
 def species_creator(o):
+    # epithets at rank species and lower are not unique, not even within rank,
+    # it is only so in combination with parent, so we 'get_or_create' based on
+    # the three fields rank, epithet, parent.
     if o['sp'] in ['sp.', 'sp'] or o['infrasp1'] in ['sp', 'sp.']:
         return (pk2obj[('genus', o['genus_id'])], False)
-    result = Taxon.objects.get_or_create(rank=Species, epithet=o['sp'],
-                                         defaults={'authorship': o['sp_author'],
-                                                   'parent': pk2obj[('genus', o['genus_id'])]})
+    result = Taxon.objects.get_or_create(rank=Species, epithet=o['sp'], parent=pk2obj[('genus', o['genus_id'])],
+                                         defaults={'authorship': o['sp_author'], })
     if o['infrasp1'] != '' and o['infrasp1_rank'].strip():
         try:
             rank = Rank.objects.get(short=o['infrasp1_rank'].replace('cv.', 'cv'))
-            infrasp = Taxon.objects.get_or_create(rank=rank, epithet=o['infrasp1'],
-                                                  defaults={'authorship': o['infrasp1_author'],
-                                                            'parent': result[0]})
+            infrasp = Taxon.objects.get_or_create(rank=rank, epithet=o['infrasp1'], parent=result[0],
+                                                  defaults={'authorship': o['infrasp1_author'], })
             print('v', end='')
             return infrasp
         except Exception as e:
@@ -87,7 +91,7 @@ def accession_creator(o):
             defaults={ 'contact': default_contact,
                        'date': o['date_accd'] or '1901-01-01',
                        'level': '0',
-                       'seq': 2,
+                       'seq': 1,
             }
         )
         return result
@@ -106,21 +110,21 @@ def plant_creator(o):
 
 
 def do_import():
-    for (n, importer) in [('location', location_creator),
+    for (table, importer) in [('location', location_creator),
                           ('family', family_creator),
                           ('genus', genus_creator),
                           ('species', species_creator),
                           ('accession', accession_creator),
                           ('plant', plant_creator)]:
-        print('\n{}: '.format(n), end='')
-        with open('/tmp/1.0/{}.txt'.format(n)) as csvfile:
+        print('\n{}: '.format(table), end='')
+        with open('/tmp/1.0/{}.txt'.format(table)) as csvfile:
             spamreader = csv.reader(csvfile)
             header = next(spamreader)
             for row in spamreader:
                 o = {k: v for (k,v) in zip(header, row) if not k.startswith('_')}
                 oid = o.pop('id')
                 (obj, isnew) = importer(o)
-                pk2obj[(n, oid)] = obj
+                pk2obj[(table, oid)] = obj
                 print(isnew and '+' or '.', end='')
                 sys.stdout.flush()
     print()
