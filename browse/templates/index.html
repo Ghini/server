@@ -44,6 +44,40 @@
      $('#search-filter-button').trigger('click');
  }
 
+ function replace_tbody_with_dictionary(tbody, data) {
+     tbody.empty();
+     var tr, td;
+     jQuery.each(data, function(key, value) {
+         if (!key.startsWith('__') && value !== null && value !== '') {
+             tr = $("<tr></tr>");
+             tbody.append(tr);  // add it as last child
+             tr.append($('<td width="40%">' + key.replace('_', ' ') + '</td>'));
+             if(value[0] === 'link') {
+                 if (typeof value[1] === 'string' || typeof value[1] === 'number') {  // single element
+                     td = $('<td>' + value[1] + '</td>');
+                     td.click(partial(replace_search_filter, value[2]));
+                     td.addClass('list-group-item-action');
+                     tr.append(td);
+                 } else {  // list of links
+                     td = $('<td></td>')
+                     tr.append(td);
+                     var div;
+                     jQuery.each(value[1], function(i, x) {
+                         div = $('<div>{}</div>'.format(x[0]))
+                         div.addClass('list-group-item-action');
+                         div.click(partial(replace_search_filter, x[1]));
+                         td.append(div)
+                     })
+                 }
+             } else {
+                 tr.append($('<td>' + value + '</td>'));
+             }
+         }
+     });
+     if (typeof e !== 'undefined')
+         $(e.delegateTarget).removeAttr("disabled");
+ }
+
  function update_infobox(url, e) {
      if (typeof e !== 'undefined')
          $(e.delegateTarget).attr("disabled", "disabled");
@@ -59,39 +93,12 @@
      }
      var tbody = $('#infobox-table-body');
      tbody.empty();
-     $.getJSON(url, function(data) {
-         tbody.empty();
-         var tr, td;
-         jQuery.each(data, function(key, value) {
-             if (!key.startsWith('__') && value !== null && value !== '') {
-                 tr = $("<tr></tr>");
-                 tbody.append(tr);  // add it as last child
-                 tr.append($('<td width="40%">' + key.replace('_', ' ') + '</td>'));
-                 if(value[0] === 'link') {
-                     if (typeof value[1] === 'string' || typeof value[1] === 'number') {  // single element
-                         td = $('<td>' + value[1] + '</td>');
-                         td.click(partial(replace_search_filter, value[2]));
-                         td.addClass('list-group-item-action');
-                         tr.append(td);
-                     } else {  // list of links
-                         td = $('<td></td>')
-                         tr.append(td);
-                         var div;
-                         jQuery.each(value[1], function(i, x) {
-                             div = $('<div>{}</div>'.format(x[0]))
-                             div.addClass('list-group-item-action');
-                             div.click(partial(replace_search_filter, x[1]));
-                             td.append(div)
-                         })
-                     }
-                 } else {
-                     tr.append($('<td>' + value + '</td>'));
-                 }
-             }
-         });
-         if (typeof e !== 'undefined')
-             $(e.delegateTarget).removeAttr("disabled");
-     });
+     var rac_tbody = $('#infobox-recursive-info-tbody');
+     rac_tbody.empty()
+     if(url.match('taxonomy/taxon/')) {
+         $.getJSON(url.replace('infobox/', 'rac/'), partial(replace_tbody_with_dictionary, rac_tbody));
+     }
+     $.getJSON(url, partial(replace_tbody_with_dictionary, tbody));
  }
 
  if (!Array.prototype.last){
@@ -529,6 +536,8 @@
             <h5 id="infobox-object-text"></h5>
             <table class="table">
               <tbody id="infobox-table-body">
+              </tbody>
+              <tbody id="infobox-recursive-info-tbody">
               </tbody>
             </table>
           </div>

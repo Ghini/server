@@ -96,6 +96,42 @@ class TaxonMarkup(TaxonDetail):
         return Response(result, status=status.HTTP_200_OK)
 
 
+class TaxonRAC(TaxonDetail):
+    def get(self, request, *args, **kwargs):
+        import time
+        from django.db.models import Count, Sum
+        qs = self.get_queryset()
+        o = qs.first()
+        import collections
+        counts = collections.OrderedDict([('__epithet__', o.epithet),
+                                          ('__timer__', -time.time()),
+                                          ('accessions', 0),
+                                          ('plant groups', 0),
+                                          ('plants', 0)])
+        done = set()
+        todo = [o]
+        while todo:
+            o = todo.pop()
+            if o.id in done:
+                continue
+            done.add(o.id)
+            if o.accessions:
+                all_accessions = (o.accessions
+                                  .annotate(num_plant_groups=Count('plants'),
+                                            num_plants=Sum('plants__quantity'))
+                                  .aggregate(Count('id'), Sum('num_plant_groups'), Sum('num_plants')))
+                counts['accessions'] += all_accessions['id__count']
+                counts['plant groups'] += all_accessions['num_plant_groups__sum'] or 0
+                counts['plants'] += all_accessions['num_plants__sum'] or 0
+            todo.extend([i for i in o.subtaxa and o.subtaxa.all() or []])
+            if o.accepted:
+                todo.append(o.accepted)
+
+        counts['__timer__'] += time.time()
+        print(counts)
+        return Response(counts, status=status.HTTP_200_OK)
+        
+
 class TaxonDepending(GetDependingObjects, TaxonDetail):
     pass
 
