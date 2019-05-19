@@ -128,7 +128,6 @@ class TaxonRAC(TaxonDetail):
                 todo.append(o.accepted)
 
         counts['__timer__'] += time.time()
-        print(counts)
         return Response(counts, status=status.HTTP_200_OK)
         
 
