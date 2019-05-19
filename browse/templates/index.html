@@ -132,8 +132,8 @@
          var btn, next, tbody, itr, ispan;
          jQuery.each(data, function(class_name, token) {
              tokens[token] = true;
-             btn = $('<button class="fa fa-{}" data-toggle="collapse" data-target="#{}-{}"></button>'
-                 .format(collection_icon[class_name], basename, class_name))
+             btn = $('<button class="fa fa-{2}" data-toggle="collapse" data-target="#{0}-{1}"></button>'
+                 .format(basename, class_name, collection_icon[class_name]));
              $(span).append(btn)
              next = $('<tr id="{0}-{1}" class="collapse as-of-{0}"></tr>'.format(basename, class_name))
              $(tr).after(next)
