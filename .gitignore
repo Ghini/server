@@ -3,3 +3,5 @@ cookies.txt
 *pyc
 *.sqlite3
 docs/_*
+/browse/parser.out
+/browse/parsetab.py
