@@ -22,7 +22,7 @@
  var search_history, forward_history;
  var csrf_token;
  var current_url;
- var tokens={};
+ var tokens = {};
  var twolinestemplate='<td><div class="row"><span class="content">{0.item}</span><span class="side">{0.side}</span></div><div class="row"><span class="sub">{0.sub}</span></div></td>';
 
  var collection_icon = {
@@ -101,7 +101,7 @@
  };
 
  function clean_history(e) {
-     tokens={};
+     tokens = {};
      search_history.length = 0;
      forward_history.length = 0;
      $('#search-filter').val('');
@@ -123,7 +123,7 @@
          console.log(data)
          var btn, next, tbody, itr, ispan;
          jQuery.each(data, function(class_name, token) {
-             tokens[token]=true;
+             tokens[token] = true;
              btn = $('<button class="fa fa-{}" data-toggle="collapse" data-target="#{}-{}"></button>'
                  .format(collection_icon[class_name], basename, class_name))
              $(span).append(btn)
@@ -197,7 +197,8 @@
  }
 
  function lookup(e, term) {
-     tokens={};
+     tokens = {};
+     $.getJSON("{% url 'drop-token' '__all__' %}", function(data) {});
      $('.search-filter').attr("disabled", "disabled");
      $('div.pager-page').hide()
      $('div#results-page').show()
@@ -219,7 +220,7 @@
          jQuery.each(data, function(class_name, token) {
              tbody = $('#results-box .{}'.format(class_name));
              tbody.empty();
-             tokens[token]=true;
+             tokens[token] = true;
              $('div#results-page .row.progress').show()
              pay_token(tbody, class_name, token, activate_first_td);
              activate_first_td = false;
@@ -350,7 +351,7 @@
  }
 
  function switch_page(e) {
-     tokens={};
+     tokens = {};
      var appname = $(e.delegateTarget).data('app-name')
      $('div.pager-page').hide()
      $('div#home-page').show()
