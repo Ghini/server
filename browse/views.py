@@ -142,3 +142,14 @@ def pay_token(request, token):
     except KeyError:
         pass
     return JsonResponse(result)
+
+
+def drop_token(request, token):
+    try:
+        if token == '__all__':
+            queued_queries.clear()
+        else:
+            del queued_queries[token]
+    except KeyError:
+        pass
+    return JsonResponse({})

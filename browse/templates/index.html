@@ -102,6 +102,7 @@
 
  function clean_history(e) {
      tokens = {};
+     $.getJSON("{% url 'drop-token' '__all__' %}", function(data) {});
      search_history.length = 0;
      forward_history.length = 0;
      $('#search-filter').val('');
@@ -171,6 +172,7 @@
              processed++;
              if(tokens[token] !== true) {
                  console.log('dropping tokens')
+                 $.getJSON("{% url 'drop-token' 'TK' %}".replace('TK', token), function(data) {});
                  processed=0;
                  return false;
              }
@@ -352,6 +354,7 @@
 
  function switch_page(e) {
      tokens = {};
+     $.getJSON("{% url 'drop-token' '__all__' %}", function(data) {});
      var appname = $(e.delegateTarget).data('app-name')
      $('div.pager-page').hide()
      $('div#home-page').show()
