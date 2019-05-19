@@ -87,12 +87,10 @@ class Accession(models.Model):
 
     @property
     def taxon(self):
-        if len(self.verifications.all()) == 1:
-            return self.taxa.all()[0]
-        elif len(self.verifications.all()) == 0:
-            None
-        else:
-            return []
+        'best verification, and most recent'
+        if self.verifications.count() == 0:
+            return None
+        return self.verifications.order_by('-level', '-date')[0].taxon
 
     @property
     def qualifier(self):
