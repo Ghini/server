@@ -134,7 +134,7 @@ def p_bfactor_aggregate_comparison(p):
 def p_bfactor_between(p):
     'bfactor : field BETWEEN value AND value'
     result, field, _, min_value, _, max_value = p
-    p[0] = search_domain.objects.filter(**{'{}__range'.format(field): (min, max_value)})
+    p[0] = search_domain.objects.filter(**{'{}__range'.format(field): (min_value, max_value)})
 
 def p_field_fieldname(p):
     'field : fieldname'
