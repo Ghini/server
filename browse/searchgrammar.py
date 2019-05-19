@@ -207,6 +207,10 @@ def p_value_quoted(p):
     'value : QUOTED'
     p[0] = p[1]
 
+def p_value_squoted(p):
+    'value : SQUOTED'
+    p[0] = p[1]
+
 def p_value_reserved_and(p):
     'value : AND'
     p[0] = p[1]

@@ -21,7 +21,7 @@ reserved = {
 
 tokens = [
     'PIPE',
-    'INTEGER', 'QUOTED', 'WORD',
+    'INTEGER', 'QUOTED', 'SQUOTED', 'WORD',
     'DOT',
     'LPAREN', 'RPAREN',
     'LE', 'LT', 'GE', 'GT', 'EQ', 'NE',
@@ -55,6 +55,11 @@ def t_INTEGER(t):
 
 def t_QUOTED(t):
     r'"[^"]*"'
+    t.value = t.value[1:-1]
+    return t
+
+def t_SQUOTED(t):
+    r"'[^']*'"
     t.value = t.value[1:-1]
     return t
 
