@@ -319,8 +319,9 @@
                      } else {
                          $.getJSON(api_url + 'markup/', function(item) {
                              // update current row
-                             $('tr.table-success').empty().append(
-                                 $(twolinestemplate.format(item.twolines)))
+                             $('tr.table-success td:first').remove();
+                             $('tr.table-success').prepend(
+                                 $(twolinestemplate.format(item.twolines)));
                              // update infobox
                              update_infobox(api_url + 'infobox/')
                          })
