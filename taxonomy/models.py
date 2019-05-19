@@ -103,5 +103,5 @@ class Taxon(models.Model):
         return reverse('taxon-infobox', args=[self.pk])
 
     def depending_objects(self):
-        return {'Accession': self.accessions,
-                'Taxon': self.subtaxa}
+        return {'Accession': self.accessions.order_by('code'),
+                'Taxon': self.subtaxa.order_by('rank_id', 'epithet', 'authorship')}
