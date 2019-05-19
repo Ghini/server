@@ -46,7 +46,7 @@ def p_single_field_query(p):
     'query : domain DOT fieldname operator value'
     result, domain, dot, fieldname, operator, value = p
     queryset = domain.objects.filter(**{'{}__{}'.format(fieldname, operator): value})
-    p[0] = {domain.__class__.__name__: queryset}
+    p[0] = {domain.__name__: queryset}
     logger.debug('field: %s' % [i for i in p])
 
 
