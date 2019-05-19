@@ -91,14 +91,12 @@
          $('#infobox-object-text').append($(e.delegateTarget).find('span.content').clone());
          $(e.delegateTarget).addClass('table-success');
      }
-     var tbody = $('#infobox-table-body');
-     tbody.empty();
-     var rac_tbody = $('#infobox-recursive-info-tbody');
-     rac_tbody.empty()
+     $('#infobox-table tbody').empty();
      if(url.match('taxonomy/taxon/')) {
-         $.getJSON(url.replace('infobox/', 'rac/'), partial(replace_tbody_with_dictionary, rac_tbody));
+         $.getJSON(url.replace('infobox/', 'rac/'),
+                   partial(replace_tbody_with_dictionary, $('#infobox-rac-tbody')));
      }
-     $.getJSON(url, partial(replace_tbody_with_dictionary, tbody));
+     $.getJSON(url, partial(replace_tbody_with_dictionary, $('#infobox-main-tbody')));
  }
 
  if (!Array.prototype.last){
@@ -534,10 +532,10 @@
           </div>
           <div class="col-5">
             <h5 id="infobox-object-text"></h5>
-            <table class="table">
-              <tbody id="infobox-table-body">
+            <table class="table" id="infobox-table">
+              <tbody id="infobox-main-tbody">
               </tbody>
-              <tbody id="infobox-recursive-info-tbody">
+              <tbody id="infobox-rac-tbody">
               </tbody>
             </table>
           </div>
