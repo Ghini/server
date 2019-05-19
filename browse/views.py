@@ -125,7 +125,7 @@ def get_filter_tokens(request):
     return JsonResponse(result)
 
 
-def pay_token(request, token):
+def cash_token(request, token):
     content = []
     result = {'done': False,
               'expect': 0,
