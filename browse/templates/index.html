@@ -126,7 +126,6 @@
      var depending_url = $(tr).data('infobox-url').replace('infobox/', 'depending/')
      console.log(depending_url)
      $.getJSON(depending_url, function(data) {
-         console.log(data)
          var btn, next, tbody, itr, ispan;
          jQuery.each(data, function(class_name, token) {
              tokens[token] = true;
@@ -156,7 +155,6 @@
                          ++read_so_far;
              $('div#results-page .progress-bar.{}'.format(class_name))
                  .css('width', "{}%".format(100*read_so_far / chunk.expect));
-             console.log(item)
              itr = $('<tr class="{}-row"></tr>'.format(class_name));
              $(itr).attr('data-infobox-url', item.infobox_url);
              $(itr).attr('data-form-url', item.infobox_url.replace('infobox/', 'form/'));
