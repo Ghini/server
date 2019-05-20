@@ -51,9 +51,10 @@ def p_single_field_query(p):
 
 
 def p_domain_query(p):
-    'query : domain operator value'
+    'query : domain EQ value'
+    # TODO: should accept and use 'operator', not just EQ
     result, domain, operator, value = p
-    queryset = list_views[domain]().run_query(value).all()  # should use 'operator'
+    queryset = list_views[domain]().run_query(value).all()
     p[0] = {domain.__name__: queryset}
     logger.debug('domain: %s' % [i for i in p])
 
