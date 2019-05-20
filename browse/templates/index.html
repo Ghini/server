@@ -44,7 +44,11 @@
      $('#search-filter-button').trigger('click');
  }
 
- function replace_tbody_with_dictionary(tbody, data) {
+ function replace_tbody_with_dictionary(tbody, url, data) {
+     if(url !== current_url) {
+         console.log('got answer for »{}« while we moved to »{}«'.format(url, current_url))
+         return;
+     }
      tbody.empty();
      var tr, td;
      jQuery.each(data, function(key, value) {
@@ -94,9 +98,9 @@
      $('#infobox-table tbody').empty();
      if(url.match('taxonomy/taxon/')) {
          $.getJSON(url.replace('infobox/', 'rac/'),
-                   partial(replace_tbody_with_dictionary, $('#infobox-rac-tbody')));
+                   partial(replace_tbody_with_dictionary, $('#infobox-rac-tbody'), url));
      }
-     $.getJSON(url, partial(replace_tbody_with_dictionary, $('#infobox-main-tbody')));
+     $.getJSON(url, partial(replace_tbody_with_dictionary, $('#infobox-main-tbody'), url));
  }
 
  if (!Array.prototype.last){
