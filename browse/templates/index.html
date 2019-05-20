@@ -367,7 +367,7 @@ information.
      // collect the elements, get their height, sum the values, assign the rest to the results box
      var stealing = $('.stealing-height-from-results').map(function (i, x) { return parseInt($(x).css('height'))})
      var stolen = Object.values(stealing).slice(0, stealing.length).reduce((t, i) => t + i + 2)
-     $('#results-box').css('height', '{}px'.format(window.innerHeight - stolen))
+     $('#locked-height-container > div').css('height', '{}px'.format(window.innerHeight - stolen))
  }
 
  function switch_page(e) {
@@ -528,7 +528,7 @@ information.
           </div>
         </div>
 
-        <div class="row" >
+        <div class="row" id="locked-height-container">
           <div class="col-7" style="overflow-y:scroll" id="results-box">
             <table class="table table-hover">
               <tbody class="Taxon">
@@ -543,7 +543,7 @@ information.
               </tbody>
             </table>
           </div>
-          <div class="col-5">
+          <div class="col-5" style="overflow-y:scroll">
             <h5 id="infobox-object-text"></h5>
             <table class="table" id="infobox-table">
               <tbody id="infobox-main-tbody">
@@ -551,6 +551,11 @@ information.
               <tbody id="infobox-rac-tbody">
               </tbody>
             </table>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 stealing-height-from-results">
+            http://ghini.github.io/
           </div>
         </div>
       </div>
