@@ -129,6 +129,9 @@ def p_bterm_and_bfactor(p):
 
 def p_bfactor_not_factor(p):
     'bfactor : NOT bfactor'
+    # TODO (making a note while I have no internet access) this does not
+    # seem to work well, it produces extra columns, or anyway a query which
+    # doesn't merge -
     p[0] = search_domain.objects.difference(p[2])
 
 def p_bfactor_expression(p):
