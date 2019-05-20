@@ -47,6 +47,17 @@ class Taxon(models.Model):
         return result
 
     @property
+    def derivation_up_to_order(self):
+        result = []
+        step = self
+        while step.rank.id >= Rank.family_id:
+            step = step.parent
+            if step is None:
+                break
+            result.append(step.epithet)
+        return result
+
+    @property
     def family(self):
         step = self
         while step and step.rank.name != 'familia':

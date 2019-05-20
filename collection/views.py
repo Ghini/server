@@ -65,7 +65,8 @@ class AccessionInfobox(AccessionDetail):
             result['__shows_as__'] = "%s" % obj
             result['code'] = obj.code
             result['taxa'] = ('link', [("{} ({})".format(i.show(), i.family),
-                                        "taxon where epithet={0.epithet} and rank.name={0.rank.name}".format(i))
+                                        "taxon where epithet={0.epithet} and rank.name={0.rank.name}".format(i),
+                                        '\n'.join(i.derivation_up_to_order))
                                        for i in obj.taxa.all()])
             result['received_quantity'] = obj.received_quantity
             if obj.source is not None:
