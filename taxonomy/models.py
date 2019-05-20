@@ -9,7 +9,7 @@ class Rank(models.Model):
     #id,name,short,show_as
     #0,"regnum","",".epithet sp.",False
     name = models.CharField(max_length=16)
-    short = models.CharField(max_length=8)
+    short = models.CharField(max_length=8, blank=True)
     show_as = models.CharField(max_length=48, default='<i>.epithet</i> sp.')
 
     def __str__(self):
