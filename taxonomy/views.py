@@ -108,12 +108,13 @@ class TaxonRAC(TaxonDetail):
         from django.db.models import Count, Sum
         qs = self.get_queryset()
         o = qs.first()
+        accession_id_list = []
         import collections
         counts = collections.OrderedDict([('__epithet__', o.epithet),
                                           ('__timer__', -time.time()),
                                           ('accessions', 0),
                                           ('plant groups', 0),
-                                          ('plants', 0)])
+                                          ('living plants', 0)])
         done = set()
         todo = [o]
         while todo:
@@ -122,16 +123,20 @@ class TaxonRAC(TaxonDetail):
                 continue
             done.add(o.id)
             if o.accessions:
-                all_accessions = (o.accessions
-                                  .annotate(num_plant_groups=Count('plants'),
-                                            num_plants=Sum('plants__quantity'))
-                                  .aggregate(Count('id'), Sum('num_plant_groups'), Sum('num_plants')))
-                counts['accessions'] += all_accessions['id__count']
-                counts['plant groups'] += all_accessions['num_plant_groups__sum'] or 0
-                counts['plants'] += all_accessions['num_plants__sum'] or 0
+                for a in o.accessions.all():
+                    accession_id_list.append(str(a.id))
+                    counts['accessions'] += 1
+                    plants_this_accession = a.plants.aggregate(Count('id'), Sum('quantity'))
+                    counts['plant groups'] += plants_this_accession['id__count']
+                    counts['living plants'] += plants_this_accession['quantity__sum'] or 0
             todo.extend([i for i in o.subtaxa and o.subtaxa.all() or []])
             if o.accepted:
                 todo.append(o.accepted)
+
+        if accession_id_list:
+            counts['accessions'] = ('link',
+                                    counts['accessions'],
+                                    'accession where id in [{}]'.format(' '.join(accession_id_list)))
 
         counts['__timer__'] += time.time()
         return Response(counts, status=status.HTTP_200_OK)
