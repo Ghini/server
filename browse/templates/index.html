@@ -221,6 +221,7 @@ information.
      $('.search-filter').attr("disabled", "disabled");
      $('div.pager-page').hide()
      $('div#results-page').show()
+     reset_results_height()
      if(term === undefined) {
          term = $('#search-filter').val();
          if(search_history.last() !== term && forward_history.last() !== term)
