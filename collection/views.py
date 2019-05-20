@@ -19,8 +19,15 @@ class AccessionList(RequestLoginOnNonSafeMixin, generics.ListCreateAPIView):
     queryset = Accession.objects.all()
     serializer_class = AccessionSerializer
 
-    def run_query(self, q):
-        return self.get_queryset().filter(code__contains=q).order_by('code')
+    def run_query(self, q, order=True):
+        result = self.get_queryset().filter(code__contains=q)
+        if order:
+            result = self.order_query(result)
+        return result
+
+    def order_query(self, result):
+        result = result.order_by('code')
+        return result
 
 
 class AccessionDetail(RequestLoginOnNonSafeMixin, generics.RetrieveUpdateDestroyAPIView):
@@ -83,8 +90,15 @@ class ContactList(RequestLoginOnNonSafeMixin, generics.ListCreateAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
 
-    def run_query(self, q):
-        return self.get_queryset().filter(name__icontains=q).order_by('name')
+    def run_query(self, q, order=True):
+        result = self.get_queryset().filter(name__icontains=q)
+        if order:
+            result = self.order_query(result)
+        return result
+
+    def order_query(self, result):
+        result = result.order_by('name')
+        return result
 
 
 class ContactDetail(RequestLoginOnNonSafeMixin, generics.RetrieveUpdateDestroyAPIView):

@@ -41,8 +41,15 @@ class PlantList(generics.ListCreateAPIView):
         queryset = Plant.objects.filter(accession=accession)
         return queryset
 
-    def run_query(self, q):
-        return Plant.objects.filter(accession__code__contains=q).order_by('accession__code', 'code')
+    def run_query(self, q, order=True):
+        result = Plant.objects.filter(accession__code__contains=q)
+        if order:
+            result = self.order_query(result)
+        return result
+
+    def order_query(self, result):
+        result = result.order_by('accession__code', 'code')
+        return result
 
     serializer_class = PlantSerializer
 
@@ -96,9 +103,16 @@ class LocationList(RequestLoginOnNonSafeMixin, generics.ListCreateAPIView):
     serializer_class = LocationSerializer
     queryset = Location.objects.all()
 
-    def run_query(self, q):
+    def run_query(self, q, order=True):
         from django.db.models import Q
-        return self.get_queryset().filter(Q(name__contains=q) | Q(code=q)).order_by('code')
+        result = self.get_queryset().filter(Q(name__contains=q) | Q(code=q))
+        if order:
+            result = self.order_query(result)
+        return result
+
+    def order_query(self, result):
+        result = result.order_by('code')
+        return result
 
 
 class LocationDetail(RequestLoginOnNonSafeMixin, generics.RetrieveUpdateDestroyAPIView):

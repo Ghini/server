@@ -41,8 +41,15 @@ class TaxonList(RequestLoginOnNonSafeMixin, generics.ListCreateAPIView):
     class Meta:
         ordering = ['rank', 'epithet']
 
-    def run_query(self, q):
-        return self.get_queryset().filter(epithet__contains=q).order_by('rank', 'epithet')
+    def run_query(self, q, order=True):
+        result = self.get_queryset().filter(epithet__contains=q)
+        if order:
+            result = self.order_query(result)
+        return result
+
+    def order_query(self, result):
+        result = result.order_by('rank', 'epithet')
+        return result
 
 
 class TaxonDetail(RequestLoginOnNonSafeMixin, generics.RetrieveUpdateDestroyAPIView):

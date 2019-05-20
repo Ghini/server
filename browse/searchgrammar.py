@@ -66,12 +66,28 @@ def p_depending_query(p):
             result.update(item.depending_objects())
     p[0] = result
 
-def p_terms_query(p):
+def p_terms_and_query(p):
     'query : terms'
     import collections
     result = collections.OrderedDict()
     for domain in [Taxon, Accession, Plant, Location, Contact]:
-        partial = list_views[domain]().run_query(p[1][0])  # should use all terms
+        partials = [list_views[domain]().run_query(i, order=(len(p[1])==1)) for i in p[1]]
+        partial = partials.pop()
+        while partials:
+            partial = partial.intersection(partials.pop())
+        result[domain.__name__] = partial
+    p[0] = result
+    logger.debug('most generic: %s' % [i for i in p])
+
+def p_terms_or_query(p):
+    'query : OR terms'
+    import collections
+    result = collections.OrderedDict()
+    for domain in [Taxon, Accession, Plant, Location, Contact]:
+        partials = [list_views[domain]().run_query(i, order=(len(p[1])==1)) for i in p[2]]
+        partial = partials.pop()
+        while partials:
+            partial = partial.union(partials.pop())
         result[domain.__name__] = partial
     p[0] = result
     logger.debug('most generic: %s' % [i for i in p])
