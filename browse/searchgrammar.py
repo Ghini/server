@@ -148,6 +148,20 @@ def p_bfactor_aggregate_comparison(p):
     q = search_domain.objects.annotate(temp_field=f(field))
     p[0] = q.filter(**{'temp_field__{}'.format(operator): value})
 
+def p_valuelist_value(p):
+    'valuelist : value'
+    p[0] = [p[1]]
+
+def p_valuelist_valuelist_value(p):
+    'valuelist : valuelist value'
+    p[0] = p[1]
+    p[0].append(p[2])
+
+def p_bfactor_list_comprehension(p):
+    'bfactor : field IN LBRACKET valuelist RBRACKET'
+    result, field, _, _, value, _ = p
+    p[0] = search_domain.objects.filter(**{'{}__in'.format(field): value})
+
 def p_bfactor_between(p):
     'bfactor : field BETWEEN value AND value'
     result, field, _, min_value, _, max_value = p

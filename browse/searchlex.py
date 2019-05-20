@@ -11,6 +11,7 @@ reserved = {
     'where' : 'WHERE',
     'contains': 'CONTAINS',
     'depending': 'DEPEND',
+    'in': 'IN',
     'and': 'AND',
     'or': 'OR',
     'not': 'NOT',
@@ -24,6 +25,7 @@ tokens = [
     'INTEGER', 'QUOTED', 'SQUOTED', 'WORD',
     'DOT',
     'LPAREN', 'RPAREN',
+    'LBRACKET', 'RBRACKET',
     'LE', 'LT', 'GE', 'GT', 'EQ', 'NE',
 ] + list(reserved.values())
 
@@ -47,6 +49,9 @@ t_PIPE     = r'\|'
 
 t_LPAREN  = r'\('
 t_RPAREN  = r'\)'
+
+t_LBRACKET  = r'\['
+t_RBRACKET  = r'\]'
 
 def t_INTEGER(t):
     r'\d+'
