@@ -162,6 +162,11 @@ def p_bfactor_list_comprehension(p):
     result, field, _, _, value, _ = p
     p[0] = search_domain.objects.filter(**{'{}__in'.format(field): value})
 
+def p_bfactor_not_list_comprehension(p):
+    'bfactor : field NOT IN LBRACKET valuelist RBRACKET'
+    result, field, _, _, _, value, _ = p
+    p[0] = search_domain.objects.exclude(**{'{}__in'.format(field): value})
+
 def p_bfactor_between(p):
     'bfactor : field BETWEEN value AND value'
     result, field, _, min_value, _, max_value = p
