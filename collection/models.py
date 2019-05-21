@@ -111,7 +111,7 @@ class Accession(models.Model):
     def __str__(self):
         if self.verifications.all():
             best_verification = self.verifications.order_by('-level').all()[0]
-            return "{} ({})".format(self.code, best_verification.taxon.show())
+            return "{} ({})".format(self.code, best_verification.taxon.identify())
         else:
             return self.code
 
@@ -126,7 +126,7 @@ class Accession(models.Model):
             str_locations = self.plants.first().location.inline
         return {'item': self.code,
                 'side': '{0} plant groups in {1}'.format(self.plants.count(), str_locations),
-                'sub': format(self.taxon.show())}
+                'sub': format(self.taxon.identify())}
 
     @property
     def infobox_url(self):
@@ -155,7 +155,7 @@ class Verification(models.Model):
     date = models.DateField(blank=False, null=False)
 
     def __str__(self):
-        return "{0.contact.name} says {0.accession.code} is a {1} - level {0.level}".format(self, self.taxon.show())
+        return "{0.contact.name} says {0.accession.code} is a {1} - level {0.level}".format(self, self.taxon.identify())
 
     class Meta:
         unique_together = (('accession', 'seq'),

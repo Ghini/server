@@ -55,7 +55,7 @@ class Plant(models.Model):
     def twolines(self):
         return {'item': '{}.{}'.format(self.accession.code, self.code),
                 'side': '{0.quantity} alive in {0.location.inline}'.format(self),
-                'sub': format(self.accession.taxon.show())}
+                'sub': format(self.accession.taxon.identify())}
 
     @property
     def infobox_url(self):

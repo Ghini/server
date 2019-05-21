@@ -36,15 +36,19 @@ class Taxon(models.Model):
     accepted = models.ForeignKey('self', blank=True, null=True, related_name='synonyms', on_delete=models.SET_NULL)
 
     def show(self, authorship=False):
+        result = self.identify().replace(' sp.', '')
+        if authorship and self.authorship:
+            result += ' ' + self.authorship
+        return result
+
+    def identify(self, qualifier=None):
         def convert(match):
             item = match.group(0)
             field = item[1:]
             return getattr(self, field)
         import re
         result = re.sub(r'\.\w+', convert, self.rank.show_as)
-        if authorship and self.authorship:
-            result += ' ' + self.authorship
-        return result
+        return result.strip()
 
     @property
     def derivation_up_to_order(self):
@@ -72,24 +76,22 @@ class Taxon(models.Model):
         return step and step.epithet
 
     @property
-    def binomial(self):
-        if self.rank.id < Rank.species_id:
-            return self.epithet
-        if self.rank.id > Rank.species_id:
-            trailer = "{} {}".format(self.rank.short, self.epithet)
+    def scientific(self):
+        if self.rank.name == 'cultivar':
+            step = self.parent
         else:
-            trailer = ''
-        step = self
-        while step and step.rank.name != 'species':
-            step = step.parent
-        return step and '{} {} {}'.format(step.genus, step.epithet, trailer).strip()
+            step = self
+        return step.show()
 
     @property
-    def identify(self):
-        return self.parent.show().strip()
+    def binomial(self):
+        step = self
+        while step.rank.id > Rank.species_id:
+            step = step.parent
+        return step.show()
 
     def __str__(self):
-        return '{} {}'.format(self.binomial, self.authorship).strip()
+        return self.show(True)
 
     def __repr__(self):
         return self.__str__()

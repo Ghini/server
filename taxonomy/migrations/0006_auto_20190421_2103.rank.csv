@@ -15,4 +15,4 @@ id,name,short,shows_as
 18,"subspecies","subsp.",".binomial subsp. .epithet"
 19,"varietas","var.",".binomial var. .epithet"
 20,"forma","f.",".binomial f. .epithet"
-21,"cultivar","cv",".identify '.epithet'"
+21,"cultivar","cv",".scientific '.epithet'"
