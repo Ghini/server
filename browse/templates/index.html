@@ -130,9 +130,11 @@
      var tr = $(td.closest('tr'))
      var span = $(td).find('i')
      span.empty()
+     span.append($('<div class="spinner-border text-primary"></div>'));
      var basename = $(tr).data('infobox-url').replace('/', '').replace('/infobox/', '').replace(/[\/\.%]/g, '-')
      var depending_url = $(tr).data('infobox-url').replace('infobox/', 'depending/')
      $.getJSON(depending_url, function(data) {
+         span.empty()
          var btn, next, tbody, itr, ispan;
          jQuery.each(data, function(class_name, token) {
              tokens[token] = true;
