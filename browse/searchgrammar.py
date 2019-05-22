@@ -139,11 +139,13 @@ def p_bfactor_comparison(p):
 
 def p_bfactor_aggregate_comparison(p):
     'bfactor : aggregate LPAREN field RPAREN operator value'
-    from django.db.models import Count, Sum  # adding field to qs
+    from django.db.models import Count, Sum, Value  # adding field to qs
     result, aggregate, _, field, _, operator, value = p
     f = {'count': Count, 'sum': Sum}[aggregate]
-    q = p.parser.search_domain.objects.annotate(temp_field=f(field))
-    matching = set(i['id'] for i in q.filter(**{'temp_field__{}'.format(operator): value}).values('id'))
+    q = p.parser.search_domain.objects.annotate(temp_field=f(field) or Value(0))
+    q = q.filter(**{'temp_field__{}'.format(operator): value})
+    q = q.only('id', field, 'temp_field')
+    matching = set(i['id'] for i in q.values('id'))
     p[0] = p.parser.search_domain.objects.filter(id__in=matching)
 
 def p_valuelist_value(p):
