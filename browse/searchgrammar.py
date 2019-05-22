@@ -7,6 +7,8 @@ from taxonomy.views import TaxonList, RankList
 from collection.views import AccessionList, ContactList, VerificationList
 from garden.views import LocationList, PlantList
 
+from django.db.models import F  # used where forcing field for intersection
+
 # Get the token map from the lexer.  This is required.
 from .searchlex import tokens
 
@@ -116,13 +118,11 @@ def p_expression_or_bterm(p):
 
 def p_bterm_bfactor(p):
     'bterm : bfactor'
-    from django.db.models import Count  # forcing field for intersection
-    p[0] = p[1].annotate(temp_field=Count(None))
+    p[0] = p[1]
 
 def p_bterm_and_bfactor(p):
     'bterm : bterm AND bfactor'
-    from django.db.models import Count  # forcing field for intersection
-    p[0] = p[1].intersection(p[3].annotate(temp_field=Count(None)))
+    p[0] = p[1].intersection(p[3])
 
 def p_bfactor_not_factor(p):
     'bfactor : NOT bfactor'
