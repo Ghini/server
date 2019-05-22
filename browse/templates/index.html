@@ -56,7 +56,6 @@
              tr = $("<tr></tr>");
              tbody.append(tr);  // add it as last child
              tr.append($('<td width="40%">' + key.replace('_', ' ') + '</td>'));
-             console.log(value);
              if(value[0] === 'link') {
                  if (typeof value[1] === 'string' || typeof value[1] === 'number') {  // single element
                      td = $('<td>{}</td>'.format(value[1]));
@@ -133,7 +132,6 @@
      span.empty()
      var basename = $(tr).data('infobox-url').replace('/', '').replace('/infobox/', '').replace(/[\/\.%]/g, '-')
      var depending_url = $(tr).data('infobox-url').replace('infobox/', 'depending/')
-     console.log(depending_url)
      $.getJSON(depending_url, function(data) {
          var btn, next, tbody, itr, ispan;
          jQuery.each(data, function(class_name, token) {
@@ -145,6 +143,8 @@
              $(tr).after(next)
              next.append($('<td colspan="2" style="padding:0;padding-left:1.25rem;"><table width="100%"><tbody></tbody></table></td>'))
              tbody = $(next).find('tbody')
+             $('div#results-page .progress-bar.{}'.format(class_name)).css('width', "0%");
+             $('div#results-page .progress-bar.{}'.format(class_name)).data('read-so-far', '0');
              pay_token(tbody, class_name, token, false);
          })
 
@@ -157,13 +157,14 @@
 
  function pay_token(tbody, class_name, token, first_td) {
      var itr, itd, ispan, btn;
-     var read_so_far=0;
-     $.getJSON("{% url 'cash-token' 'TK' %}".replace('TK', token), function(chunk) {
+     $.getJSON("{% url 'cash-token' 'TK' %}".replace('TK', token), function(data) {
+         var read_so_far = parseInt($('div#results-page .progress-bar.{}'.format(class_name)).data('read-so-far'));
+         console.log(data);
          var processed = 0;
-         jQuery.each(chunk['chunk'], function(index, item) {
-                         ++read_so_far;
+         jQuery.each(data['chunk'], function(index, item) {
+             read_so_far += 1;
              $('div#results-page .progress-bar.{}'.format(class_name))
-                 .css('width', "{}%".format(100*read_so_far / chunk.expect));
+                 .css('width', "{}%".format(100 * read_so_far / data.expect));
              itr = $('<tr class="{}-row"></tr>'.format(class_name));
              $(itr).attr('data-infobox-url', item.infobox_url);
              $(itr).attr('data-form-url', item.infobox_url.replace('infobox/', 'form/'));
@@ -200,12 +201,14 @@
                  });
                  return false;
              }, class_name));
-         if (processed !== 0 && chunk.done !== true) {
+         if (processed !== 0 && data.done !== true) {
              // set Timeout for async iteration
+             $('div#results-page .progress-bar.{}'.format(class_name)).data('read-so-far', read_so_far);
              setTimeout(partial(pay_token, tbody, class_name, token, false), 1);
          } else {
              $('div#results-page .row.progress').hide()
              $('div#results-page .progress-bar').css('width', "0%");
+             $('div#results-page .progress-bar').data('read-so-far', '0');
          }
      })
  }
@@ -231,6 +234,7 @@
 
      api_url = "{% url 'get-tokens' %}?q=" + $('#search-filter').val();
      $.getJSON(api_url, function(data) {
+         console.log(data);
          var activate_first_td = true;
          var tbody;
          jQuery.each(data, function(class_name, token) {
@@ -238,6 +242,7 @@
              tbody.empty();
              tokens[token] = true;
              $('div#results-page .row.progress').show()
+             $('div#results-page .progress-bar.{}'.format(class_name)).data('read-so-far', '0');
              pay_token(tbody, class_name, token, activate_first_td);
              activate_first_td = false;
          });
@@ -289,7 +294,6 @@
      if (e.target.id === 'taxon-edit-verification-POST-taxon') {
          form_url = "{% url 'verification-post-form-bare' %}"
      }
-     console.log(form_url, this_class, http_verb, api_url)
      var modal_form = $('#modal-form-' + action_name);
      var modal_form_body = $(modal_form).find('.modal-body');
      $(modal_form).find('.modal-title').empty();
@@ -498,11 +502,11 @@
     <div class="pager-container">
       <div class="pager-page" id="results-page">
         <div style="position:fixed;z-index:999;height:0.5rem;width:100%" class="row progress">
-          <div class="progress-bar Taxon" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="height:0.5rem;width:0%"></div>
-          <div class="progress-bar Accession" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="height:0.5rem;width:0%"></div>
-          <div class="progress-bar Contact" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="height:0.5rem;width:0%"></div>
-          <div class="progress-bar Plant" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="height:0.5rem;width:0%"></div>
-          <div class="progress-bar Location" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="height:0.5rem;width:0%"></div>
+          <div class="progress-bar Taxon" style="width:0%"></div>
+          <div class="progress-bar bg-info Accession" style="width:0%"></div>
+          <div class="progress-bar bg-warning Contact" style="width:0%"></div>
+          <div class="progress-bar bg-success Plant" style="width:0%"></div>
+          <div class="progress-bar bg-light Location" style="width:0%"></div>
         </div>
         <div class="row">
           <div class="col-7 stealing-height-from-results">
