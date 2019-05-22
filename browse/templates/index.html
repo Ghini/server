@@ -596,7 +596,7 @@
                   <th>accessions</th>
                   <td class="list-group-item-action" id="count-accession-total" data-query="accession where id!=0">0000</td>
                   <td class="list-group-item-action" id="count-accession-used" data-query="accession where sum(plants.quantity)>0">0000</td>
-                  <td class="list-group-item-action" id="count-accession-unused" data-query="accession where sum(plants.quantity)=0">0000</td>
+                  <td class="list-group-item-action" id="count-accession-unused" data-query="accession where not sum(plants.quantity)>0">0000</td>
                 </tr>
                 <tr>
                   <th>plants</th>
