@@ -50,23 +50,36 @@
          return;
      }
      tbody.empty();
-     var tr, td;
+     var tr, td, is_collapsible, btn, target_id, additional, div0;
      jQuery.each(data, function(key, value) {
          if (!key.startsWith('__') && value !== null && value !== '') {
              tr = $("<tr></tr>");
              tbody.append(tr);  // add it as last child
+             if (key.endsWith('+')) {
+                 key = key.slice(0, -1);
+                 target_id = 'info-{}'.format(key);
+                 additional = ' id="{}" class="collapse"'.format(target_id);
+                 btn = $('<button style="margin-left:10px" class="fa fa-plus-square-o" data-toggle="collapse" data-target="#{}"></button>'.format(target_id));
+             } else {
+                 additional = '';
+                 btn = undefined;
+             }
              tr.append($('<td width="40%">' + key.replace('_', ' ') + '</td>'));
+             if(btn)
+                 $(tr).find('td').append(btn);
+             td = $('<td></td>');
+             tr.append(td);
              if(value[0] === 'link') {
                  if (typeof value[1] === 'string' || typeof value[1] === 'number') {  // single element
-                     td = $('<td>{}</td>'.format(value[1]));
-                     td.addClass('list-group-item-action');
-                     td.click(partial(replace_search_filter, value[2]));
+                     div0 = $('<div{}>{}</div>'.format(additional, value[1]));
+                     td.append(div0);
+                     div0.addClass('list-group-item-action');
+                     div0.click(partial(replace_search_filter, value[2]));
                      if(value[3] !== undefined)
-                         td.attr('title', value[3]);
-                     tr.append(td);
+                         div0.attr('title', value[3]);
                  } else {  // list of links
-                     td = $('<td></td>')
-                     tr.append(td);
+                     div0 = $('<div{}></div>'.format(additional))
+                     td.append(div0);
                      var div;
                      jQuery.each(value[1], function(i, x) {
                          div = $('<div>{}</div>'.format(x[0]))
@@ -74,11 +87,11 @@
                          div.click(partial(replace_search_filter, x[1]));
                          if(x[2] !== undefined)
                              div.attr('title', x[2]);
-                         td.append(div)
+                         div0.append(div)
                      })
                  }
              } else {
-                 tr.append($('<td>' + value + '</td>'));
+                 td.append($('<div{}>{}</div>'.format(additional, value)));
              }
          }
      });

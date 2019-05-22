@@ -70,7 +70,11 @@ class TaxonInfobox(TaxonDetail):
             result['__class_name__'] = 'Taxon'
             result['__detail_url__'] = reverse('taxon-detail', args=[obj.pk])
             result['__shows_as__'] = "%s" % obj
-            del result['id']
+            for key in ['id', 'epithet', 'authorship']:
+                try:
+                    del result[key]
+                except:
+                    pass
             if obj.parent:
                 if obj.parent.rank.id < Rank.family_id:
                     result['parent'] = ('link', "%s" % obj.parent,
@@ -86,7 +90,7 @@ class TaxonInfobox(TaxonDetail):
                 result['accepted'] = ('link', "%s" % obj.accepted,
                                       "taxon where epithet={0.epithet} and rank.name={0.rank.name}".format(obj.accepted))
             if obj.synonyms:
-                result['synonyms'] = ", ".join("%s" % i for i in obj.synonyms.all())
+                result['synonyms+'] = ", ".join("%s" % i for i in obj.synonyms.all())
             result['rank'] = "%s" % obj.rank
             return Response(result, status=status.HTTP_200_OK)
         else:
