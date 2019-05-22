@@ -95,7 +95,7 @@ def p_terms_or_query(p):
 def p_sqlike_query(p):
     'query : domain WHERE expression'
     result, domain, _, query_set = p
-    p[0] = {domain.__name__: query_set}
+    p[0] = {domain.__name__: query_set.distinct()}
     logger.debug('most specific: %s' % [i for i in p])
 
 def p_domain_word(p):
