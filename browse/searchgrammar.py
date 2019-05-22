@@ -39,8 +39,6 @@ list_views = {Taxon: TaxonList,
               Plant: PlantList,
 }
 
-search_domain = None
-
 
 def p_single_field_query(p):
     'query : domain DOT fieldname operator value'
@@ -101,9 +99,8 @@ def p_sqlike_query(p):
 def p_domain_word(p):
     'domain : WORD'
     logger.debug('seen domain {0}'.format(p[1]))
-    global search_domain
-    search_domain = classes.get(p[1].lower())
-    p[0] = search_domain
+    p.parser.search_domain = classes.get(p[1].lower())
+    p[0] = p.parser.search_domain
 
 def p_fieldname_word(p):
     'fieldname : WORD'
@@ -129,10 +126,7 @@ def p_bterm_and_bfactor(p):
 
 def p_bfactor_not_factor(p):
     'bfactor : NOT bfactor'
-    # TODO (making a note while I have no internet access) this does not
-    # seem to work well, it produces extra columns, or anyway a query which
-    # doesn't merge -
-    p[0] = search_domain.objects.difference(p[2])
+    p[0] = p.parser.search_domain.objects.difference(p[2])
 
 def p_bfactor_expression(p):
     'bfactor : LPAREN expression RPAREN'
@@ -141,15 +135,16 @@ def p_bfactor_expression(p):
 def p_bfactor_comparison(p):
     'bfactor : field operator value'
     result, field, operator, value = p
-    p[0] = search_domain.objects.filter(**{'{}__{}'.format(field, operator): value})
+    p[0] = p.parser.search_domain.objects.filter(**{'{}__{}'.format(field, operator): value})
 
 def p_bfactor_aggregate_comparison(p):
     'bfactor : aggregate LPAREN field RPAREN operator value'
     from django.db.models import Count, Sum  # adding field to qs
     result, aggregate, _, field, _, operator, value = p
     f = {'count': Count, 'sum': Sum}[aggregate]
-    q = search_domain.objects.annotate(temp_field=f(field))
-    p[0] = q.filter(**{'temp_field__{}'.format(operator): value})
+    q = p.parser.search_domain.objects.annotate(temp_field=f(field))
+    matching = set(i['id'] for i in q.filter(**{'temp_field__{}'.format(operator): value}).values('id'))
+    p[0] = p.parser.search_domain.objects.filter(id__in=matching)
 
 def p_valuelist_value(p):
     'valuelist : value'
@@ -163,17 +158,17 @@ def p_valuelist_valuelist_value(p):
 def p_bfactor_list_comprehension(p):
     'bfactor : field IN LBRACKET valuelist RBRACKET'
     result, field, _, _, value, _ = p
-    p[0] = search_domain.objects.filter(**{'{}__in'.format(field): value})
+    p[0] = p.parser.search_domain.objects.filter(**{'{}__in'.format(field): value})
 
 def p_bfactor_not_list_comprehension(p):
     'bfactor : field NOT IN LBRACKET valuelist RBRACKET'
     result, field, _, _, _, value, _ = p
-    p[0] = search_domain.objects.exclude(**{'{}__in'.format(field): value})
+    p[0] = p.parser.search_domain.objects.exclude(**{'{}__in'.format(field): value})
 
 def p_bfactor_between(p):
     'bfactor : field BETWEEN value AND value'
     result, field, _, min_value, _, max_value = p
-    p[0] = search_domain.objects.filter(**{'{}__range'.format(field): (min_value, max_value)})
+    p[0] = p.parser.search_domain.objects.filter(**{'{}__range'.format(field): (min_value, max_value)})
 
 def p_field_fieldname(p):
     'field : fieldname'
@@ -278,4 +273,6 @@ def p_error(token):
         print('Unexpected end of input')
 
 # Build the parser
-parser = yacc.yacc()
+
+def parser():
+    return yacc.yacc()
