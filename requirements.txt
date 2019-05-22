@@ -4,3 +4,5 @@ pytz==2019.1
 sqlparse==0.3.0
 django_select2
 django_admin
+Pillow==6.0.0
+ply==3.11
