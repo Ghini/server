@@ -276,5 +276,8 @@ def p_error(token):
 
 # Build the parser
 
-def parser():
-    return yacc.yacc()
+def parse(string):
+    from .searchlex import get_lexer
+    parser = yacc.yacc()
+    lexer = get_lexer()
+    return parser.parse(string, lexer=lexer)

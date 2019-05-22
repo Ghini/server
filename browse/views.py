@@ -73,10 +73,10 @@ def index(request):
 
 def count_json(request):
     '''this view returns the count of a query'''
-    from .searchgrammar import parser
+    from .searchgrammar import parse
 
     query_string = request.GET.get('q')
-    candidates = parser().parse(query_string) or {}
+    candidates = parse(query_string) or {}
     result = {}
     total = 0
     for key, qs in candidates.items():
@@ -88,23 +88,11 @@ def count_json(request):
 
 
 def filter_json(request):
-    '''this view computes the search query results
-
-    it looks for patterns in the query string and runs the corresponding
-    search strategy.
-
-    <DOMAIN>.<field> <op> <TERM>
-    <DOMAIN> <op> <TERM>
-    <TERMS>
-    <DOMAIN> where <COMPLEX-QUERY>
-
-    each can have a trailing '|depending'.
-
-    '''
-    from .searchgrammar import parser
+    '''this view computes the search query results    '''
+    from .searchgrammar import parse
     query_string = request.GET.get('q')
     result = {}
-    candidates = parser().parse(query_string) or {}
+    candidates = parse(query_string) or {}
     for key, qs in candidates.items():
         converted = [{key: getattr(item, key, None)
                       for key in ['inline', 'twolines', 'infobox_url']}
@@ -114,10 +102,10 @@ def filter_json(request):
 
 
 def get_filter_tokens(request):
-    from .searchgrammar import parser
+    from .searchgrammar import parse
     query_string = request.GET.get('q')
     result = {}
-    candidates = parser().parse(query_string) or {}
+    candidates = parse(query_string) or {}
     for key, qs in candidates.items():
         if qs.count():
             token = str(uuid.uuid4())

@@ -84,4 +84,5 @@ def t_error(t):
     t.lexer.skip(1)
 
 # Build the lexer
-lexer = lex.lex()
+def get_lexer():
+    return lex.lex()
