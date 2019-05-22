@@ -143,8 +143,6 @@
              $(tr).after(next)
              next.append($('<td colspan="2" style="padding:0;padding-left:1.25rem;"><table width="100%"><tbody></tbody></table></td>'))
              tbody = $(next).find('tbody')
-             $('div#results-page .progress-bar.{}'.format(class_name)).css('width', "0%");
-             $('div#results-page .progress-bar.{}'.format(class_name)).data('read-so-far', '0');
              pay_token(tbody, class_name, token, false);
          })
 
@@ -158,13 +156,15 @@
  function pay_token(tbody, class_name, token, first_td) {
      var itr, itd, ispan, btn;
      $.getJSON("{% url 'cash-token' 'TK' %}".replace('TK', token), function(data) {
-         var read_so_far = parseInt($('div#results-page .progress-bar.{}'.format(class_name)).data('read-so-far'));
          console.log(data);
+         $('div#results-page .progress-bar.{}'.format(class_name)).attr('data-expect', data.expect);
+         var read_so_far = parseInt($('div#results-page .progress-bar.{}'.format(class_name)).attr('data-read-so-far'));
+         var total_expected = sumDataEntries('div#results-page .progress-bar', 'expect');
          var processed = 0;
          jQuery.each(data['chunk'], function(index, item) {
              read_so_far += 1;
              $('div#results-page .progress-bar.{}'.format(class_name))
-                 .css('width', "{}%".format(100 * read_so_far / data.expect));
+                 .css('width', "{}%".format(100 * read_so_far / total_expected));
              itr = $('<tr class="{}-row"></tr>'.format(class_name));
              $(itr).attr('data-infobox-url', item.infobox_url);
              $(itr).attr('data-form-url', item.infobox_url.replace('infobox/', 'form/'));
@@ -186,11 +186,13 @@
              if(tokens[token] !== true) {
                  console.log('dropping tokens')
                  $.getJSON("{% url 'drop-token' 'TK' %}".replace('TK', token), function(data) {});
+                 $('div#results-page .progress-bar.{}'.format(class_name)).attr('data-expect', '0');
                  processed=0;
                  return false;
              }
              tbody.append(itr);  // add it as last child
          })
+         $('div#results-page .progress-bar.{}'.format(class_name)).attr('data-read-so-far', read_so_far);
          $('div#results-box tr.{}-row'.format(class_name)).contextmenu(
              partial(function(class_name, e) {
                  $(e.delegateTarget).trigger('click');
@@ -203,14 +205,26 @@
              }, class_name));
          if (processed !== 0 && data.done !== true) {
              // set Timeout for async iteration
-             $('div#results-page .progress-bar.{}'.format(class_name)).data('read-so-far', read_so_far);
              setTimeout(partial(pay_token, tbody, class_name, token, false), 1);
          } else {
-             $('div#results-page .row.progress').hide()
-             $('div#results-page .progress-bar').css('width', "0%");
-             $('div#results-page .progress-bar').data('read-so-far', '0');
+             setTimeout(function(){
+                 var total_expected = sumDataEntries('div#results-page .progress-bar', 'expect');
+                 var read_so_far = sumDataEntries('div#results-page .progress-bar', 'read-so-far');
+                 if(total_expected === read_so_far) {
+                     $('div#results-page .row.progress').hide();
+                 }
+             }, 1250);
          }
      })
+ }
+
+ function sumDataEntries(q, data_field) {
+     function dtz(x) {
+         return parseInt(x) || 0;
+     }
+     return Object.values($(q).map(function(index, obj) {
+         return($(obj).attr('data-' + data_field))
+     })).reduce((a, b) => dtz(a) + dtz(b));
  }
 
  function lookup(e, term) {
@@ -232,6 +246,9 @@
      current_url = undefined;
      $('#results-box tbody').empty();
 
+     $('div#results-page .progress-bar').css('width', '0%');
+     $('div#results-page .progress-bar').attr('data-read-so-far', '0');
+     $('div#results-page .progress-bar').attr('data-expect', '0');
      api_url = "{% url 'get-tokens' %}?q=" + $('#search-filter').val();
      $.getJSON(api_url, function(data) {
          console.log(data);
@@ -242,7 +259,6 @@
              tbody.empty();
              tokens[token] = true;
              $('div#results-page .row.progress').show()
-             $('div#results-page .progress-bar.{}'.format(class_name)).data('read-so-far', '0');
              pay_token(tbody, class_name, token, activate_first_td);
              activate_first_td = false;
          });
