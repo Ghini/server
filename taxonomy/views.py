@@ -13,6 +13,35 @@ from .serializers import TaxonSerializer
 
 from browse.views import GetDependingObjects
 
+
+def organize_by_ranges(id_list):
+    '''return singletons and ranges definitions
+
+    this way we can avoid matching 1…500 as 500 elements.
+    '''
+    import numpy as np
+    id_list = np.array(sorted(id_list))
+    index = id_list[1:] - id_list[:-1] - 1
+    zipped = np.dstack((index, id_list[:-1], id_list[1:]))[0]
+    np_todo = zipped[index!=0,:]
+    todo = list(np_todo)
+    todo.reverse()
+    ranges = []
+    singletons = []
+    bottom = id_list[0]
+    while todo:
+        _, top, next_bottom = todo.pop()
+        if top == bottom:
+            singletons.append(top)
+        elif top == bottom + 1:
+            singletons.append(top)
+            singletons.append(bottom)
+        else:
+            ranges.append((bottom, top))
+        bottom = next_bottom
+    return (singletons, ranges)
+
+
 # Create your views here.
 
 def index(request):
@@ -128,7 +157,7 @@ class TaxonRAC(TaxonDetail):
             done.add(o.id)
             if o.accessions:
                 for a in o.accessions.all():
-                    accession_id_list.append(str(a.id))
+                    accession_id_list.append(a.id)
                     counts['accessions'] += 1
                     plants_this_accession = a.plants.aggregate(Count('id'), Sum('quantity'))
                     counts['plant groups'] += plants_this_accession['id__count']
@@ -138,9 +167,13 @@ class TaxonRAC(TaxonDetail):
                 todo.append(o.accepted)
 
         if accession_id_list:
+            singletons, ranges = organize_by_ranges(accession_id_list)
+            clauses = ['id between {} and {}'.format(i, j) for (i, j) in ranges]
+            if singletons:
+                clauses.append('id in [{}]'.format(' '.join(str(i) for i in singletons)))
             counts['accessions'] = ('link',
                                     counts['accessions'],
-                                    'accession where id in [{}]'.format(' '.join(accession_id_list)))
+                                    'accession where {}'.format(' or '.join(clauses)))
 
         counts['__timer__'] += time.time()
         return Response(counts, status=status.HTTP_200_OK)
