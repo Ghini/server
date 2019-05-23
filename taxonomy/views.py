@@ -31,11 +31,8 @@ def organize_by_ranges(id_list):
     bottom = id_list[0]
     while todo:
         _, top, next_bottom = todo.pop()
-        if top == bottom:
-            singletons.append(top)
-        elif top == bottom + 1:
-            singletons.append(top)
-            singletons.append(bottom)
+        if top < bottom + 250:
+            singletons.extend([i for i in range(bottom, top + 1)])
         else:
             ranges.append((bottom, top))
         bottom = next_bottom
@@ -157,7 +154,7 @@ class TaxonRAC(TaxonDetail):
             done.add(o.id)
             if o.accessions:
                 for a in o.accessions.all():
-                    accession_id_list.append(str(a.id))
+                    accession_id_list.append(a.id)
                     counts['accessions'] += 1
                     plants_this_accession = a.plants.aggregate(Count('id'), Sum('quantity'))
                     counts['plant groups'] += plants_this_accession['id__count']
@@ -167,9 +164,13 @@ class TaxonRAC(TaxonDetail):
                 todo.append(o.accepted)
 
         if accession_id_list:
+            singletons, ranges = organize_by_ranges(accession_id_list)
+            clauses = ['id between {} and {}'.format(i, j) for (i, j) in ranges]
+            if singletons:
+                clauses.append('id in [{}]'.format(' '.join(str(i) for i in singletons)))
             counts['accessions'] = ('link',
                                     counts['accessions'],
-                                    'accession where id in [{}]'.format(' '.join(accession_id_list)))
+                                    'accession where {}'.format(' or '.join(clauses)))
 
         counts['__timer__'] += time.time()
         return Response(counts, status=status.HTTP_200_OK)
