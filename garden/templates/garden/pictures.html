@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+</head>
+<body>
+
+  <div id="hotel-carousel-{{hotel.slug}}" class="carousel slide" data-ride="carousel">
+    <ul class="carousel-indicators" style="top:20px">
+      {% for image in hotel.pictures.all %}
+      <li data-target="#hotel-carousel-{{hotel.slug}}" data-slide-to="{{forloop.counter0}}"></li>
+      {% endfor %}
+    </ul>
+    <div class="carousel-inner">
+      {% for image in hotel.pictures.all %}
+      {% thumbnail image.picture 800x0 upscale as img %}
+      <div class="carousel-item{% if forloop.counter0 == 0 %} active{% endif %}">
+        <img src="{{ img.url }}" />
+      </div>
+      {% endfor %}
+    </div>
+    <!-- Left and right controls -->
+    <a class="carousel-control-prev" href="#hotel-carousel-{{hotel.slug}}" data-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </a>
+    <a class="carousel-control-next" href="#hotel-carousel-{{hotel.slug}}" data-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </a>
+  </div>
+  
+  {% endblock %}
