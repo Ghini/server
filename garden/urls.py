@@ -1,5 +1,6 @@
 from rest_framework.routers import DefaultRouter
 from django.urls import path
+
 from .views import (PlantList, PlantDetail, PlantInfobox, PlantMarkup, PlantDepending,
                     LocationList, LocationDetail, LocationInfobox, LocationMarkup, LocationDepending, )
 from .forms import PlantForm, LocationForm
