@@ -70,3 +70,13 @@ class LocationPlanner(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     date_done = models.DateField(blank=True)
     plant = models.ForeignKey(Plant, null=True, blank=True, on_delete=models.SET_NULL)
+
+
+class PlantImage(models.Model):
+    plant = models.ForeignKey(Plant, on_delete=models.CASCADE)
+    height = models.IntegerField(blank=False, default=1)
+    width = models.IntegerField(blank=False, default=1)
+    image = models.ImageField(upload_to='images/plants/', height_field='height', width_field='width')
+
+    def __str__(self):
+        return '{}'.format(self.image)
