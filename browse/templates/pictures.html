@@ -59,12 +59,27 @@
 
  /* Container for image text */
  .caption-container {
+     position: fixed;
+     height: 32px;
+     width: 100%;
+     top: 0;
      font-weight: bold;
      font-size: 18px;
      text-align: center;
      background-color: #222;
      padding: 2px 16px;
      color: white;
+     z-index: 1;
+ }
+
+ .scrollable {
+     width: 100%;
+     margin-top: 36px; /* matching caption-container height */
+     z-index: -1;
+ }
+
+ .row {
+     margin-right: 0;
  }
 
  .row:after {
@@ -76,12 +91,17 @@
  /* Six columns side by side */
  .column {
      float: left;
+     margin-left: 6px;
+     margin-bottom: 6px;
      width: 16.66%;
  }
 
  /* Add a transparency effect for thumnbail images */
  .demo {
-     padding-right: 8px;
+     margin-left: 6px;
+     border-width: thin !important;
+     border-style: solid !important;
+     border: white;
      opacity: 0.6;
  }
 
@@ -93,6 +113,15 @@
 <script>
  var slideIndex = 1;
  showSlides(slideIndex);
+
+ function checkKey(e) {
+     e = e || window.event;
+     if(e.keyCode === 37) {
+         plusSlides(-1)
+     } else if (e.keyCode === 39) {
+         plusSlides(1)
+     }
+ }
 
  // Next/previous controls
  function plusSlides(n) {
@@ -118,6 +147,7 @@
  }
  $(function() {  // run at document ready
      $(document).prop('title', "{{ images.count }} pics : {{ object_name }}");
+     document.onkeydown = checkKey;
      showSlides(1);
  })
 </script>
@@ -128,27 +158,29 @@
     <p id="caption">&nbsp;</p>
   </div>
 
-  <!-- Thumbnail images -->
-  <div class="row">
-    {% for image in images.all %}
-    {% get_thumbnail image.image.path "300x200" as thumbnail %}
-    <div class="column">
-      <img class="demo cursor" src="{{ thumbnail.url }}" style="width:100%" onclick="currentSlide({{ forloop.counter }})" alt="{{ object_name }} - {{ image.image.name }}">
+  <div class="scrollable">
+    <!-- Thumbnail images -->
+    <div class="row">
+      {% for image in images.all %}
+      {% get_thumbnail image.image.path "300x200" as thumbnail %}
+      <div class="column">
+        <img class="demo cursor" src="{{ thumbnail.url }}" style="width:100%" onclick="currentSlide({{ forloop.counter }})" alt="{{ object_name }} - {{ image.image.name }}">
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
-  </div>
 
-  <div class="container">
-    {% for image in images.all %}
-    <div class="mySlides">
-      <img src="{{ image.image.url }}" style="width:100%">
+    <div class="container">
+      {% for image in images.all %}
+      <div class="mySlides">
+        <img src="{{ image.image.url }}" style="width:100%">
+      </div>
+      {% endfor %}
+
+      <!-- Next and previous buttons -->
+      <i class="prev fa fa-arrow-left" onclick="plusSlides(-1)"></i>
+      <i class="next fa fa-arrow-right" onclick="plusSlides(1)"></i>
+
     </div>
-    {% endfor %}
-
-    <!-- Next and previous buttons -->
-    <i class="prev fa fa-arrow-left" onclick="plusSlides(-1)"></i>
-    <i class="next fa fa-arrow-right" onclick="plusSlides(1)"></i>
-
   </div>
   
   {% endblock %}

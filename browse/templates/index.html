@@ -450,7 +450,7 @@
          }
      });
      csrf_token = getCookie('csrftoken');
-     pictures_window = window.open(null,'pictures');
+     pictures_window = window.open(undefined, 'pictures');
      document.onkeydown = checkKey;
      $('#search-filter-button').click(lookup);
      search_history = [];
