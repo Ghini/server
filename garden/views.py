@@ -151,3 +151,10 @@ class LocationMarkup(LocationDetail):
 
 class LocationDepending(GetDependingObjects, LocationDetail):
     pass
+
+
+def plant_images_carousel(request, accession_code, code):
+    plant = Plant.objects.get(accession__code=accession_code, code=code)
+    print(plant, plant.images, plant.images.all())
+    return render(request, 'garden/pictures.html',
+                  {'plant': plant, })

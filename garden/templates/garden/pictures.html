@@ -1,29 +1,38 @@
 {% extends "base.html" %}
 {% load static %}
+{% load thumbnails %}
 
 {% block content %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+ /* Make the image fully responsive */
+ .carousel-inner img {
+     height: 100%;
+     width: 100%;
+ }
+ body {
+     background: grey;
+ }
+</style>
 </head>
 <body>
-
-  <div id="hotel-carousel-{{hotel.slug}}" class="carousel slide" data-ride="carousel">
-    <ul class="carousel-indicators" style="top:20px">
-      {% for image in hotel.pictures.all %}
-      <li data-target="#hotel-carousel-{{hotel.slug}}" data-slide-to="{{forloop.counter0}}"></li>
-      {% endfor %}
+  <div id="plant-carousel" class="carousel slide" data-ride="carousel">
+    <ul class="carousel-indicators" style="top:20px">{% for image in plant.images.all %}
+      <li data-target="#plant-carousel" data-slide-to="{{forloop.counter0}}"></li>{% endfor %}
     </ul>
     <div class="carousel-inner">
-      {% for image in hotel.pictures.all %}
-      {% thumbnail image.picture 800x0 upscale as img %}
-      <div class="carousel-item{% if forloop.counter0 == 0 %} active{% endif %}">
-        <img src="{{ img.url }}" />
+      {% for image in plant.images.all %}
+      {% get_thumbnail image.image.path "800x600" as thumbnail %}
+      <div class="carousel-item{% if forloop.counter0 == 0 %} active{% endif %} ">
+        <img class="d-block w-100" src="{{ image.image.url }}" />
       </div>
       {% endfor %}
     </div>
     <!-- Left and right controls -->
-    <a class="carousel-control-prev" href="#hotel-carousel-{{hotel.slug}}" data-slide="prev">
+    <a class="carousel-control-prev" href="#plant-carousel" data-slide="prev">
       <span class="carousel-control-prev-icon"></span>
     </a>
-    <a class="carousel-control-next" href="#hotel-carousel-{{hotel.slug}}" data-slide="next">
+    <a class="carousel-control-next" href="#plant-carousel" data-slide="next">
       <span class="carousel-control-next-icon"></span>
     </a>
   </div>

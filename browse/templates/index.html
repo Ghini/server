@@ -24,6 +24,7 @@
  var current_url;
  var tokens = {};
  var twolinestemplate='<td><div class="row"><span class="content">{0.item}</span><span class="side">{0.side}</span></div><div class="row"><span class="sub">{0.sub}</span></div></td>';
+ var pictures_window;
 
  var collection_icon = {
      'Taxon': 'terminal',
@@ -106,6 +107,7 @@
          return;
      }
      current_url = url;
+     window.open(url.replace('infobox/', 'images-carousel/'), 'pictures');
      $('tr').removeClass('table-success');
      if (typeof e !== 'undefined') {
          $('#infobox-object-text').empty();
@@ -435,6 +437,7 @@
          }
      });
      csrf_token = getCookie('csrftoken');
+     pictures_window = window.open(null,'pictures');
 
      $('#search-filter-button').click(lookup);
      search_history = [];

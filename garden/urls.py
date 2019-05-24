@@ -1,7 +1,7 @@
 from rest_framework.routers import DefaultRouter
 from django.urls import path
 
-from .views import (PlantList, PlantDetail, PlantInfobox, PlantMarkup, PlantDepending,
+from .views import (PlantList, PlantDetail, PlantInfobox, PlantMarkup, PlantDepending, plant_images_carousel,
                     LocationList, LocationDetail, LocationInfobox, LocationMarkup, LocationDepending, )
 from .forms import PlantForm, LocationForm
 
@@ -15,6 +15,7 @@ urlpatterns = [
     path("accession/<str:accession_code>/plant/<str:code>/infobox/", PlantInfobox.as_view(), name="plant-infobox"),
     path("accession/<str:accession_code>/plant/<str:code>/markup/", PlantMarkup.as_view(), name="plant-markup"),
     path("accession/<str:accession_code>/plant/<str:code>/depending/", PlantDepending.as_view(), name="plant-depending"),
+    path("accession/<str:accession_code>/plant/<str:code>/images-carousel/", plant_images_carousel, name="plant-images"),
     # location
     path("location/", LocationList.as_view(), name="location-list"),
     path("location/form/", LocationForm.as_view(), name="location-post-form"),

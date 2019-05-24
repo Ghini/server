@@ -73,7 +73,7 @@ class LocationPlanner(models.Model):
 
 
 class PlantImage(models.Model):
-    plant = models.ForeignKey(Plant, on_delete=models.CASCADE)
+    plant = models.ForeignKey(Plant, related_name="images", on_delete=models.CASCADE)
     height = models.IntegerField(blank=False, default=1)
     width = models.IntegerField(blank=False, default=1)
     image = models.ImageField(upload_to='images/plants/', height_field='height', width_field='width')

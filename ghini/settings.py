@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
 
+    'thumbnails',
     'django_select2',
 
     'taxonomy.apps.TaxonomyConfig',
