@@ -41,7 +41,6 @@ def update_expected(token, qs):
 
 class GetDependingObjects:
     def get(self, request, *args, **kwargs):
-        from django.core import serializers
         result = {}
         qs = self.get_queryset()
         o = qs.first()
