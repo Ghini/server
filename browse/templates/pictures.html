@@ -127,7 +127,8 @@
      $(captionText).text($(dots[slideIndex-1]).attr('alt'));
  }
  $(function() {  // run at document ready
-     $(document).prop('title', "{{ object_name }} : {{ images.count }} pics");
+     $(document).prop('title', "{{ images.count }} pics : {{ object_name }}");
+     showSlides(1);
  })
 </script>
 </head>
