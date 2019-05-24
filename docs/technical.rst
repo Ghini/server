@@ -78,9 +78,16 @@ suffix ``-post-form``.
 
 Individual objects have more entry points, respectively for:
 
-- The populated html form (suffix ``-put-form``)
-- A json data dictionary for the infobox (suffix ``-infobox``)
-- A dictionary with several representations for the same object (suffix ``-markup``)
+- The populated html form (django suffix ``-form``)
+- A json data dictionary for the infobox (django suffix ``-infobox``)
+- A dictionary with several representations for the same object (django suffix ``-markup``)
+- A json data dictionary with *depending* objects, and the definition of the
+  concept depends on the object.  A Location considers the plants located
+  there as its depending objects, a Taxon its subtaxa **and** the accessions
+  verified to it.  The result has the same shape as the dictionary returned
+  by a search.  (django suffix ``-depending``)
+- A rendered html page with object pictures (django suffix ``-carousel``)
+
 
 **search API**
 
