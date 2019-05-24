@@ -36,10 +36,10 @@
  .next {
      cursor: pointer;
      position: absolute;
-     top: 40%;
+     top: 0%;
      width: auto;
+     height: 100%;
      padding: 16px;
-     margin-top: -50px;
      color: white;
      font-weight: bold;
      font-size: 20px;
@@ -50,14 +50,14 @@
 
  /* Position the "next button" to the right */
  .next {
-     right: 0;
-     border-radius: 3px 0 0 3px;
+     right: 16px;
+     border-radius: 0 3px 0 3px;
  }
 
  /* On hover, add a black background color with a little bit see-through */
  .prev:hover,
  .next:hover {
-     background-color: rgba(0, 0, 0, 0.8);
+     background-color: rgba(200, 250, 0, 0.4);
  }
 
  /* Number text (1/3 etc) */
@@ -114,47 +114,43 @@
  }
 
  function showSlides(n) {
-     var i;
      var slides = $(".mySlides");
      if (slides.length === 0) { return };
      var dots = $(".demo.cursor");
      var captionText = $("#caption");
-     console.log(slides, dots, captionText);
      if (n > slides.length) {slideIndex = 1}
      if (n < 1) {slideIndex = slides.length}
      $(slides).css('display', 'none');
      $(dots).removeClass('active');
-     console.log(slideIndex, slides[slideIndex-1]);
      $(slides[slideIndex-1]).css('display', "block");
      $(dots[slideIndex-1]).addClass("active");
-     captionText.innerHTML = dots[slideIndex-1].alt;
+     $(captionText).text($(dots[slideIndex-1]).attr('alt'));
  }
  $(function() {  // run at document ready
-     console.log('here');
-     $(document).prop('title', "{{ plant }} : {{ plant.images.count }} pics");
+     $(document).prop('title', "{{ object_name }} : {{ images.count }} pics");
  })
 </script>
 </head>
 <body>
   <!-- Image text -->
   <div class="caption-container">
-    <p id="caption"></p>
+    <p id="caption">&nbsp;</p>
   </div>
 
   <!-- Thumbnail images -->
   <div class="row">
-    {% for image in plant.images.all %}
+    {% for image in images.all %}
     {% get_thumbnail image.image.path "300x200" as thumbnail %}
     <div class="column">
-      <img class="demo cursor" src="{{ thumbnail.url }}" style="width:100%" onclick="currentSlide({{ forloop.counter }})" alt="{{ image.plant }} - {{ image.image.name }}">
+      <img class="demo cursor" src="{{ thumbnail.url }}" style="width:100%" onclick="currentSlide({{ forloop.counter }})" alt="{{ object_name }} - {{ image.image.name }}">
     </div>
     {% endfor %}
   </div>
 
   <div class="container">
-    {% for image in plant.images.all %}
+    {% for image in images.all %}
     <div class="mySlides">
-      <div class="numbertext">{{ forloop.counter }} / {{ plant.images.count }}</div>
+      <div class="numbertext">{{ forloop.counter }} / {{ images.count }}</div>
       <img src="{{ image.image.url }}" style="width:100%">
     </div>
     {% endfor %}
