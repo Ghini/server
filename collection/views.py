@@ -77,6 +77,7 @@ class AccessionInfobox(AccessionDetail):
                 result['received_type'] = obj.get_received_type_display()
             result['plant groups'] = obj.plants.count()
             result['living plants'] = sum(p.quantity for p in obj.plants.all())
+            result['plant pictures'] = obj.images.count()
             for key, value in serializer.data.items():
                 if key == 'id':
                     continue

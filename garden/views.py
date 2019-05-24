@@ -81,6 +81,7 @@ class PlantInfobox(PlantDetail):
             del result['id']
             result['accession'] = ('link', "%s" % obj.accession, 'accession="%s"' % obj.accession.code)
             result['location'] = ('link', "%s" % obj.location, 'location="%s"' % obj.location.code)
+            result['pictures'] = obj.images.count()
             return Response(result, status=status.HTTP_200_OK)
         else:
             return Response([], status=status.HTTP_204_NO_CONTENT)
