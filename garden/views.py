@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from .models import Plant, Location
 from .serializers import PlantSerializer, LocationSerializer
 from taxonomy.views import RequestLoginOnNonSafeMixin
-from browse.views import GetDependingObjects
+from browse.views import GetDependingObjects, ImagesCarousel
 
 # Create your views here.
 
@@ -153,8 +153,5 @@ class LocationDepending(GetDependingObjects, LocationDetail):
     pass
 
 
-def plant_images_carousel(request, accession_code, code):
-    plant = Plant.objects.get(accession__code=accession_code, code=code)
-    print(plant, plant.images, plant.images.all())
-    return render(request, 'garden/pictures.html',
-                  {'plant': plant, })
+class PlantCarousel(ImagesCarousel, PlantDetail):
+    pass

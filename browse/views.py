@@ -54,6 +54,15 @@ class GetDependingObjects:
         return Response(result, status=status.HTTP_200_OK)
 
 
+class ImagesCarousel:
+    def get(self, request, *args, **kwargs):
+        result = {}
+        qs = self.get_queryset()
+        o = qs.first()
+        return render(request, 'pictures.html',
+                      {'images': o.images.all(), })
+
+
 @login_required
 @requires_csrf_token
 def index(request):
