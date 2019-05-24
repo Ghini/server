@@ -1,6 +1,6 @@
 from django.urls import path, re_path
 from .views import (RankList, RankDetail,
-                    TaxonList, TaxonDetail, TaxonInfobox, TaxonMarkup, TaxonDepending, TaxonRAC,
+                    TaxonList, TaxonDetail, TaxonInfobox, TaxonMarkup, TaxonDepending, TaxonCarousel, TaxonRAC,
                     index)
 from .forms import TaxonForm
 
@@ -12,6 +12,7 @@ urlpatterns = [
     path("taxon/<int:pk>/infobox/", TaxonInfobox.as_view(), name="taxon-infobox"),
     path("taxon/<int:pk>/markup/", TaxonMarkup.as_view(), name="taxon-markup"),
     path("taxon/<int:pk>/depending/", TaxonDepending.as_view(), name="taxon-depending"),
+    path("taxon/<int:pk>/carousel/", TaxonCarousel.as_view(), name="taxon-carousel"),
     path("taxon/<int:pk>/rac/", TaxonRAC.as_view(), name="recursive-accession-count"),
     path("rank/", RankList.as_view(), name="rank-list"),
     path("rank/<int:pk>/", RankDetail.as_view(), name="rank-detail"),

@@ -58,9 +58,13 @@ class ImagesCarousel:
         result = {}
         qs = self.get_queryset()
         o = qs.first()
-        return render(request, 'pictures.html',
-                      {'object_name': '{}'.format(o),
-                       'images': o.images.all(), })
+        try:
+            d = {'object_name': '{}'.format(o),
+                 'images': o.images.all(), }
+        except:
+            d = {'object_name': 'not defining',
+                 'images': []}
+        return render(request, 'pictures.html', d)
 
 
 @login_required

@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import (AccessionDetail, AccessionList, AccessionInfobox, AccessionMarkup, AccessionDepending,
+from .views import (AccessionDetail, AccessionList, AccessionInfobox, AccessionMarkup, AccessionDepending, AccessionCarousel,
                     VerificationDetail, VerificationList,
-                    ContactDetail, ContactList, ContactInfobox, ContactMarkup, ContactDepending, )
+                    ContactDetail, ContactList, ContactInfobox, ContactMarkup, ContactDepending, ContactCarousel, )
 from .forms import AccessionForm, VerificationForm, ContactForm
 
 
@@ -14,6 +14,7 @@ urlpatterns = [
     path("accession/<str:code>/infobox/", AccessionInfobox.as_view(), name="accession-infobox"),
     path("accession/<str:code>/markup/", AccessionMarkup.as_view(), name="accession-markup"),
     path("accession/<str:code>/depending/", AccessionDepending.as_view(), name="accession-depending"),
+    path("accession/<str:code>/carousel/", AccessionCarousel.as_view(), name="accession-carousel"),
     # verification
     path("verification/form/", VerificationForm.as_view(), name="verification-post-form-bare"),
     path("accession/<str:accession_code>/verification/", VerificationList.as_view(), name="verification-list"),
@@ -28,4 +29,5 @@ urlpatterns = [
     path("contact/<int:pk>/form/", ContactForm.as_view(), name="contact-form"),
     path("contact/<int:pk>/markup/", ContactMarkup.as_view(), name="contact-markup"),
     path("contact/<int:pk>/depending/", ContactDepending.as_view(), name="contact-depending"),
+    path("contact/<int:pk>/carousel/", ContactCarousel.as_view(), name="contact-carousel"),
 ]

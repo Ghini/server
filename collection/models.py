@@ -86,6 +86,18 @@ class Accession(models.Model):
     source = models.ForeignKey(Contact, blank=True, null=True, on_delete=models.SET_NULL)
 
     @property
+    def images(self):
+        plants_generator = (p for p in self.plants.all())
+        result = next(plants_generator).images
+        while True:
+            try:
+                qs = next(plants_generator).images
+            except:
+                break
+            result |= qs
+        return result
+
+    @property
     def taxon(self):
         'best verification, and most recent'
         if self.verifications.count() == 0:

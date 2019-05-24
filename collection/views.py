@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from .models import Accession, Contact, Verification
 from .serializers import AccessionSerializer, ContactSerializer, VerificationSerializer
 from taxonomy.views import RequestLoginOnNonSafeMixin
-from browse.views import GetDependingObjects
+from browse.views import GetDependingObjects, ImagesCarousel
 
 # Create your views here.
 
@@ -172,3 +172,11 @@ class VerificationDetail(RequestLoginOnNonSafeMixin, generics.RetrieveUpdateDest
         return queryset
 
     serializer_class = VerificationSerializer
+
+
+class ContactCarousel(ImagesCarousel, ContactDetail):
+    pass
+
+
+class AccessionCarousel(ImagesCarousel, AccessionDetail):
+    pass

@@ -155,3 +155,7 @@ class LocationDepending(GetDependingObjects, LocationDetail):
 
 class PlantCarousel(ImagesCarousel, PlantDetail):
     pass
+
+
+class LocationCarousel(ImagesCarousel, LocationDetail):
+    pass

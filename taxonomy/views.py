@@ -11,7 +11,7 @@ from .models import Rank, Taxon
 from .serializers import RankSerializer
 from .serializers import TaxonSerializer
 
-from browse.views import GetDependingObjects
+from browse.views import GetDependingObjects, ImagesCarousel
 
 
 def organize_by_ranges(id_list):
@@ -177,6 +177,10 @@ class TaxonRAC(TaxonDetail):
         
 
 class TaxonDepending(GetDependingObjects, TaxonDetail):
+    pass
+
+
+class TaxonCarousel(ImagesCarousel, TaxonDetail):
     pass
 
 
