@@ -140,36 +140,6 @@
      current_url = undefined;
  }
 
- function look_for_depending(e) {
-     var td = $(e.delegateTarget).closest('td')
-     var tr = $(td.closest('tr'))
-     var span = $(td).find('i')
-     span.empty()
-     span.append($('<div class="spinner-border text-primary"></div>'));
-     var basename = $(tr).data('infobox-url').replace('/', '').replace('/infobox/', '').replace(/[\/\.%]/g, '-')
-     var depending_url = $(tr).data('infobox-url').replace('infobox/', 'depending/')
-     $.getJSON(depending_url, function(data) {
-         span.empty()
-         var btn, next, tbody, itr, ispan;
-         jQuery.each(data, function(class_name, token) {
-             tokens[token] = true;
-             btn = $('<button class="fa fa-{2}" data-toggle="collapse" data-target="#{0}-{1}"></button>'
-                 .format(basename, class_name, collection_icon[class_name]));
-             $(span).append(btn)
-             next = $('<tr id="{0}-{1}" class="collapse as-of-{0}"></tr>'.format(basename, class_name))
-             $(tr).after(next)
-             next.append($('<td colspan="2" style="padding:0;padding-left:1.25rem;"><table width="100%"><tbody></tbody></table></td>'))
-             tbody = $(next).find('tbody')
-             pay_token(tbody, class_name, token, false);
-         })
-
-     })
- }
-
- function now() {
-     return new Date().getTime();
- }
-
  function pay_token(tbody, class_name, token, first_td) {
      var itr, itd, ispan, btn;
      $.getJSON("{% url 'cash-token' 'TK' %}".replace('TK', token), function(data) {
@@ -233,6 +203,36 @@
              }, 1250);
          }
      })
+ }
+
+ function look_for_depending(e) {
+     var td = $(e.delegateTarget).closest('td')
+     var tr = $(td.closest('tr'))
+     var span = $(td).find('i')
+     span.empty()
+     span.append($('<div class="spinner-border text-primary"></div>'));
+     var basename = $(tr).data('infobox-url').replace('/', '').replace('/infobox/', '').replace(/[\/\.%]/g, '-')
+     var depending_url = $(tr).data('infobox-url').replace('infobox/', 'depending/')
+     $.getJSON(depending_url, function(data) {
+         span.empty()
+         var btn, next, tbody, itr, ispan;
+         jQuery.each(data, function(class_name, token) {
+             tokens[token] = true;
+             btn = $('<button class="fa fa-{2}" data-toggle="collapse" data-target="#{0}-{1}"></button>'
+                 .format(basename, class_name, collection_icon[class_name]));
+             $(span).append(btn)
+             next = $('<tr id="{0}-{1}" class="collapse as-of-{0}"></tr>'.format(basename, class_name))
+             $(tr).after(next)
+             next.append($('<td colspan="2" style="padding:0;padding-left:1.25rem;"><table width="100%"><tbody></tbody></table></td>'))
+             tbody = $(next).find('tbody')
+             pay_token(tbody, class_name, token, false);
+         })
+
+     })
+ }
+
+ function now() {
+     return new Date().getTime();
  }
 
  function sumDataEntries(q, data_field) {
