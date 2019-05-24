@@ -433,14 +433,12 @@
  function checkKey(e) {
      e = e || window.event;
      var move_to;
-     if(e.keyCode == '37') {
+     if(e.keyCode === 37) {
          move_to = $('tr.table-success').prev();
-     } else if (e.keyCode == '39') {
+     } else if (e.keyCode === 39) {
          move_to = $('tr.table-success').next();
      }
      if(move_to && move_to.length !== 0) {
-         var active_row = $('tr.table-success');
-         $(active_row).removeClass('table-success');
          $(move_to).trigger('click');
      }
  }
