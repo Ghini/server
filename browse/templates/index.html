@@ -431,6 +431,8 @@
  }
 
  function checkKey(e) {
+     if(!$(document.activeElement).hasClass('container-fluid'))
+         return;
      e = e || window.event;
      var move_to;
      if(e.keyCode === 37) {
