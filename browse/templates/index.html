@@ -437,15 +437,27 @@
  }
 
  function checkKey(e) {
+     e = e || window.event;
+     console.log(e.keyCode);
+     if (e.ctrlKey)
+         switch (e.keyCode) {
+             case 76:  // L
+                 $('input#search-filter').focus();
+             case 75:  // K
+                 return false;
+             case 65:  // A
+                 return (!$(document.activeElement).hasClass('container-fluid'));
+             default:
+                 return true;
+         }
      if(!$(document.activeElement).hasClass('container-fluid'))
          return;
-     e = e || window.event;
      var move_to;
      if(e.keyCode === 37) {
-         move_to = $('tr.table-success').prev();
+         move_to = $('tr.table-success').prev()
      } else if (e.keyCode === 39) {
-         move_to = $('tr.table-success').next();
-     }
+         move_to = $('tr.table-success').next()
+     };
      if(move_to && move_to.length !== 0) {
          $(move_to).trigger('click');
          if(!isScrolledIntoView(move_to))
