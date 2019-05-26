@@ -87,14 +87,15 @@ class Accession(models.Model):
 
     @property
     def images(self):
-        plants_generator = (p for p in self.plants.all())
-        result = next(plants_generator).images
-        while True:
-            try:
+        from garden.models import PlantImage
+        result = PlantImage.objects.none()
+        try:
+            plants_generator = (p for p in self.plants.all())
+            while True:
                 qs = next(plants_generator).images
-            except:
-                break
-            result |= qs
+                result |= qs
+        except:
+            pass
         return result
 
     @property
