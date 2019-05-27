@@ -170,7 +170,7 @@ class TaxonRAC(TaxonDetail):
                 clauses.append('id in [{}]'.format(' '.join(str(i) for i in singletons)))
             counts['accessions'] = ('link',
                                     counts['accessions'],
-                                    'accession where {}'.format(' or '.join(clauses)))
+                                    'accession where ({})'.format(' or '.join(clauses)))
 
         counts['__timer__'] += time.time()
         return Response(counts, status=status.HTTP_200_OK)
