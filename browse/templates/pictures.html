@@ -78,26 +78,25 @@
      z-index: -1;
  }
 
- .row {
+ .thumbs-row {
      margin-right: 0;
  }
 
- .row:after {
+ .thumbs-row:after {
      content: "";
      display: table;
      clear: both;
  }
 
  /* Six columns side by side */
- .column {
+ .thumbs-column {
      float: left;
      margin-left: 6px;
      margin-bottom: 6px;
-     width: 16.66%;
  }
 
  /* Add a transparency effect for thumnbail images */
- .demo {
+ .thumbs-element {
      margin-left: 6px;
      border-width: thin !important;
      border-style: solid !important;
@@ -106,7 +105,7 @@
  }
 
  .active,
- .demo:hover {
+ .thumbs-element:hover {
      opacity: 1;
  }
 </style>
@@ -136,7 +135,7 @@
  function showSlides(n) {
      var slides = $(".mySlides");
      if (slides.length === 0) { return };
-     var dots = $(".demo.cursor");
+     var dots = $(".thumbs-element.cursor");
      if (n > slides.length) { slideIndex = 1 }
      else if (n < 1) { slideIndex = slides.length };
      $(slides).css('display', 'none');
@@ -160,11 +159,11 @@
 
   <div class="scrollable">
     <!-- Thumbnail images -->
-    <div class="row">
+    <div class="thumbs-row">
       {% for image in images.all %}
       {% get_thumbnail image.image.path "300x200" as thumbnail %}
-      <div class="column">
-        <img class="demo cursor" src="{{ thumbnail.url }}" style="width:100%" onclick="currentSlide({{ forloop.counter }})" alt="{{ object_name }} - {{ image.image.name }}">
+      <div class="thumbs-column">
+        <img class="thumbs-element cursor" src="{{ thumbnail.url }}" onclick="currentSlide({{ forloop.counter }})" alt="{{ object_name }} - {{ image.image.name }}">
       </div>
       {% endfor %}
     </div>
