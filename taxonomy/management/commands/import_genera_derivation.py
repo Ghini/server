@@ -6,16 +6,7 @@ from django.utils.crypto import get_random_string
 class Command(BaseCommand):
     help = 'import full genera derivation'
 
-    def add_arguments(self, parser):
-        parser.add_argument('total', type=int, help='Indicates the number of users to be created')
-
-        # Optional argument
-        parser.add_argument('-p', '--prefix', type=str, help='Define a username prefix', )
-
     def handle(self, *args, **kwargs):
-        total = kwargs['total']
-        prefix = kwargs['prefix']
-
         # We can import the model directly
         from taxonomy.models import Taxon, Rank
         rank = {name: Rank.objects.get(name=name)
@@ -48,7 +39,7 @@ class Command(BaseCommand):
                         orig.save()
                     orig = parent
                     for_sake_of_logging.append(orig.epithet)
-                print("\r{}".format(", ".join(for_sake_of_logging)), end=" ")
+                self.stdout.write("\r{}".format(", ".join(for_sake_of_logging)), ending=" ")
 
         for i in range(total):
             if prefix:

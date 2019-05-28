@@ -61,7 +61,7 @@ def species_creator(s, o):
             rank = Rank.objects.get(short=o['infrasp1_rank'].replace('cv.', 'cv'))
             infrasp = Taxon.objects.get_or_create(rank=rank, epithet=o['infrasp1'], parent=result[0],
                                                   defaults={'authorship': o['infrasp1_author'], })
-            s.stdout.write('v', end='')
+            s.stdout.write('v', ending='')
             return infrasp
         except Exception as e:
             s.stderr.write('\n', type(e).__name__, e, o)
@@ -125,7 +125,7 @@ class Command(BaseCommand):
                                   ('species', species_creator),
                                   ('accession', accession_creator),
                                   ('plant', plant_creator)]:
-            self.stdout.write('\n{}: '.format(table), end='')
+            self.stdout.write('\n{}: '.format(table), ending='')
             with open('{}{}.txt'.format(basedir, table)) as csvfile:
                 spamreader = csv.reader(csvfile)
                 header = next(spamreader)
@@ -134,7 +134,7 @@ class Command(BaseCommand):
                     oid = o.pop('id')
                     (obj, isnew) = importer(self, o)
                     pk2obj[(table, oid)] = obj
-                    self.stdout.write(isnew and '+' or '.', end='')
+                    self.stdout.write(isnew and '+' or '.', ending='')
                     sys.stdout.flush()
         self.stdout.write()
 
