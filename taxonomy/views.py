@@ -14,13 +14,15 @@ from .serializers import TaxonSerializer
 from browse.views import GetDependingObjects, ImagesCarousel
 
 
-def organize_by_ranges(id_list):
+def organize_by_ranges(id_list, distance=250):
     '''return singletons and ranges definitions
 
     this way we can avoid matching 1…500 as 500 elements.
     '''
     import numpy as np
-    id_list = np.array(sorted(id_list))
+    id_list = sorted(id_list)
+    id_list.append(id_list[-1])
+    id_list = np.array(id_list)
     index = id_list[1:] - id_list[:-1] - 1
     zipped = np.dstack((index, id_list[:-1], id_list[1:]))[0]
     np_todo = zipped[index!=0,:]
@@ -31,7 +33,7 @@ def organize_by_ranges(id_list):
     bottom = id_list[0]
     while todo:
         _, top, next_bottom = todo.pop()
-        if top < bottom + 250:
+        if top < bottom + distance - 1:
             singletons.extend([i for i in range(bottom, top + 1)])
         else:
             ranges.append((bottom, top))
