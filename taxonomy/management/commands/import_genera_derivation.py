@@ -6,7 +6,18 @@ from django.utils.crypto import get_random_string
 class Command(BaseCommand):
     help = 'import full genera derivation'
 
+    def add_arguments(self, parser):
+        parser.add_argument('--filter-genera', type=str, default=None,
+                            help='location of genus.txt from ghini.desktop csv export')
+
     def handle(self, *args, **kwargs):
+        genus_txt = kwargs['filter_genera']
+        accept_genera = set()
+        if genus_txt:
+            with open(genus_txt) as f:
+                for line in f.readlines():
+                    genus, _ = line.split(',', 1)
+                    accept_genera.add(genus)
         # We can import the model directly
         from taxonomy.models import Taxon, Rank
         rank = {name: Rank.objects.get(name=name)
@@ -22,6 +33,8 @@ class Command(BaseCommand):
                     if not line:
                         break
                     lines.append(line.split(':'))
+                if accept_genera and orig_epithet not in accept_genera:
+                    continue
                 orig, _ = Taxon.objects.get_or_create(epithet=orig_epithet, rank=rank['genus'])
                 for_sake_of_logging = [orig.epithet]
                 acc_rank, acc_epithet = lines.pop()

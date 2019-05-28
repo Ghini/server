@@ -220,6 +220,18 @@ now to taxasoft-ghini
 
      ./manage.py import_genera_derivation
 
+   have something else to do in the meanwhile, this will take no less than
+   one full hour.  on my laptop, writing to a sqlite3 database, it lasts 2
+   hours.
+
+   if you're in a hurry, ask for a partial genus import, limiting to the
+   genera in your trimmed database::
+
+     ./manage.py import_genera_derivation --filter-genera <your genus.txt file>
+
+   you can repeat the command without filtering, whenever you know you're
+   not going to use the database for a couple of hours.
+
 #. run the command::
 
      ./manage.py import_desktop <location of second export>
@@ -227,6 +239,15 @@ now to taxasoft-ghini
    this will output as many ``+`` as the objects it inserted, as many ``.`` as
    the objects it already found in place.  for species, a ``v`` is added if
    the related species is at lower rank.
+
+   the genus list in particular, that should be just a sequence of dots.  if
+   it is not, it's because you're importing genera that were not created
+   during the previous steps.  that's clearly not good and you should review
+   your data.
+
+   the opposite goes for the species list: remember that with ghini reloaded
+   fictive species are not any more needed.  A dot tells you that the
+   corresponding taxon was found in the database, at some higher rank.
 
    it is normal that importing accessions takes longer: for each object we
    are creating not only the accession but also the verificaiton object that
