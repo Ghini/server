@@ -907,14 +907,12 @@ Acoelorraphe
 familia:Arecaceae
 subfamilia:Coryphoideae
 tribus:Trachycarpeae
-subtribus:Unplaced
 genus:Acoelorraphe
 
 Acoelorrhaphe
 familia:Arecaceae
 subfamilia:Coryphoideae
 tribus:Trachycarpeae
-subtribus:Unplaced
 genus:Acoelorraphe
 
 Acoidium
@@ -1048,7 +1046,6 @@ Acrisione
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Senecioneae
-subtribus:Unplaced
 genus:Acrisione
 
 Acrista
@@ -3788,7 +3785,6 @@ Alsmithia
 familia:Arecaceae
 subfamilia:Arecoideae
 tribus:Areceae
-subtribus:Unplaced
 genus:Heterospathe
 
 Alsobia
@@ -8382,7 +8378,6 @@ Arrudaria
 familia:Arecaceae
 subfamilia:Coryphoideae
 tribus:Trachycarpeae
-subtribus:Unplaced
 genus:Copernicia
 
 Arsenjevia
@@ -11025,7 +11020,6 @@ Barkerwebbia
 familia:Arecaceae
 subfamilia:Arecoideae
 tribus:Areceae
-subtribus:Unplaced
 genus:Heterospathe
 
 Barkhausia
@@ -11992,7 +11986,6 @@ Bentinckia
 familia:Arecaceae
 subfamilia:Arecoideae
 tribus:Areceae
-subtribus:Unplaced
 genus:Bentinckia
 
 Bentleya
@@ -13996,7 +13989,6 @@ Brachyglottis
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Senecioneae
-subtribus:Unplaced
 genus:Brachyglottis
 
 Brachylaena
@@ -14192,7 +14184,6 @@ Brahea
 familia:Arecaceae
 subfamilia:Coryphoideae
 tribus:Trachycarpeae
-subtribus:Unplaced
 genus:Brahea
 
 Brainea
@@ -17291,7 +17282,6 @@ Capelio
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Senecioneae
-subtribus:Unplaced
 genus:Capelio
 
 Capeobolus
@@ -18868,7 +18858,6 @@ Centropappus
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Senecioneae
-subtribus:Unplaced
 genus:Centropappus
 
 Centropetalum
@@ -22690,7 +22679,6 @@ Clinostigma
 familia:Arecaceae
 subfamilia:Arecoideae
 tribus:Areceae
-subtribus:Unplaced
 genus:Clinostigma
 
 Clinostylis
@@ -23698,7 +23686,6 @@ Colpothrinax
 familia:Arecaceae
 subfamilia:Coryphoideae
 tribus:Trachycarpeae
-subtribus:Unplaced
 genus:Colpothrinax
 
 Colquhounia
@@ -24293,7 +24280,6 @@ Copernicia
 familia:Arecaceae
 subfamilia:Coryphoideae
 tribus:Trachycarpeae
-subtribus:Unplaced
 genus:Copernicia
 
 Copiapoa
@@ -24855,7 +24841,6 @@ Coryphomia
 familia:Arecaceae
 subfamilia:Coryphoideae
 tribus:Trachycarpeae
-subtribus:Unplaced
 genus:Copernicia
 
 Corysanthes
@@ -27825,7 +27810,6 @@ Cyrtostachys
 familia:Arecaceae
 subfamilia:Arecoideae
 tribus:Areceae
-subtribus:Unplaced
 genus:Cyrtostachys
 
 Cyrtostylis
@@ -30307,7 +30291,6 @@ Dictyosperma
 familia:Arecaceae
 subfamilia:Arecoideae
 tribus:Areceae
-subtribus:Unplaced
 genus:Dictyosperma
 
 Dictyospermum
@@ -30665,7 +30648,6 @@ Diglossophyllum
 familia:Arecaceae
 subfamilia:Coryphoideae
 tribus:Trachycarpeae
-subtribus:Unplaced
 genus:Serenoa
 
 Diglyphis
@@ -32381,7 +32363,6 @@ Dolichoglottis
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Senecioneae
-subtribus:Unplaced
 genus:Dolichoglottis
 
 Dolichokentia
@@ -32636,7 +32617,6 @@ Doronicum
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Senecioneae
-subtribus:Unplaced
 genus:Doronicum
 
 Dorothea
@@ -32883,7 +32863,6 @@ Dransfieldia
 familia:Arecaceae
 subfamilia:Arecoideae
 tribus:Areceae
-subtribus:Unplaced
 genus:Dransfieldia
 
 Draperia
@@ -36626,7 +36605,6 @@ Erythea
 familia:Arecaceae
 subfamilia:Coryphoideae
 tribus:Trachycarpeae
-subtribus:Unplaced
 genus:Brahea
 
 Erythradenia
@@ -41111,7 +41089,6 @@ Glaucothea
 familia:Arecaceae
 subfamilia:Coryphoideae
 tribus:Trachycarpeae
-subtribus:Unplaced
 genus:Brahea
 
 Glaux
@@ -43514,7 +43491,6 @@ Haastia
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Senecioneae
-subtribus:Unplaced
 genus:Haastia
 
 Habenaria
@@ -46209,7 +46185,6 @@ Heterospathe
 familia:Arecaceae
 subfamilia:Arecoideae
 tribus:Areceae
-subtribus:Unplaced
 genus:Heterospathe
 
 Heterosperma
@@ -48213,7 +48188,6 @@ Hydriastele
 familia:Arecaceae
 subfamilia:Arecoideae
 tribus:Areceae
-subtribus:Unplaced
 genus:Hydriastele
 
 Hydrilla
@@ -49206,7 +49180,6 @@ Iguanura
 familia:Arecaceae
 subfamilia:Arecoideae
 tribus:Areceae
-subtribus:Unplaced
 genus:Iguanura
 
 Ihlenfeldtia
@@ -57287,7 +57260,6 @@ Loxococcus
 familia:Arecaceae
 subfamilia:Arecoideae
 tribus:Areceae
-subtribus:Unplaced
 genus:Loxococcus
 
 Loxodera
@@ -66255,7 +66227,6 @@ Neowashingtonia
 familia:Arecaceae
 subfamilia:Coryphoideae
 tribus:Trachycarpeae
-subtribus:Unplaced
 genus:Washingtonia
 
 Neowerdermannia
@@ -71441,7 +71412,6 @@ Papuacalia
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Senecioneae
-subtribus:Unplaced
 genus:Papuacalia
 
 Papuacedrus
@@ -80309,7 +80279,6 @@ Pseudocadiscus
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Senecioneae
-subtribus:Unplaced
 genus:Stenops
 
 Pseudocalymma
@@ -82112,7 +82081,6 @@ Ptychandra
 familia:Arecaceae
 subfamilia:Arecoideae
 tribus:Areceae
-subtribus:Unplaced
 genus:Heterospathe
 
 Ptychocarpus
@@ -84627,7 +84595,6 @@ Rhopaloblaste
 familia:Arecaceae
 subfamilia:Arecoideae
 tribus:Areceae
-subtribus:Unplaced
 genus:Rhopaloblaste
 
 Rhopalobrachium
@@ -89458,7 +89425,6 @@ Serenoa
 familia:Arecaceae
 subfamilia:Coryphoideae
 tribus:Trachycarpeae
-subtribus:Unplaced
 genus:Serenoa
 
 Serianthes
@@ -93149,7 +93115,6 @@ Stenops
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Senecioneae
-subtribus:Unplaced
 genus:Stenops
 
 Stenorrhynchos
@@ -98820,7 +98785,6 @@ Traversia
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Senecioneae
-subtribus:Unplaced
 genus:Traversia
 
 Traxilum
@@ -101411,7 +101375,6 @@ Urostemon
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Senecioneae
-subtribus:Unplaced
 genus:Urostemon
 
 Urostephanus
@@ -103105,7 +103068,6 @@ Washingtonia
 familia:Arecaceae
 subfamilia:Coryphoideae
 tribus:Trachycarpeae
-subtribus:Unplaced
 genus:Washingtonia
 
 Waterhousea

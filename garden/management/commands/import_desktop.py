@@ -136,5 +136,5 @@ class Command(BaseCommand):
                     pk2obj[(table, oid)] = obj
                     self.stdout.write(isnew and '+' or '.', ending='')
                     sys.stdout.flush()
-        self.stdout.write()
+        self.stdout.write('')
 

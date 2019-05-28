@@ -179,10 +179,11 @@ from ghini.desktop
 
 #. close ghini
 
-   the result of the above steps is an expendable sqlite3 database: maybe
-   you used something else, and we do not want to touch your original data.
+   the result of the above steps is an expendable sqlite3 database: this way
+   whatever we do on it, it has zero impact on your original data.
 
-#. remove all taxonomic information that is not used, straight on the database::
+#. remove all taxonomic information that is not used.  we do this straight
+   on the expendable database::
 
      sqlite3 ghini.db
      delete from genus where id not in (select genus_id from species);
@@ -190,13 +191,15 @@ from ghini.desktop
      delete from genus_synonym where genus_id not in (select id from genus);
      delete from genus_synonym where synonym_id not in (select id from genus);
 
-#. consider removing history too, as long as it's not imported::
+#. consider removing history too, it's not imported anyway::
 
      delete from history;
 
 #. open ghini.desktop-1.0
 
    #. export your (reduced) data to csv.
+
+      this will take a fraction of the time for the previous export.
 
 #. close ghini
 
@@ -205,24 +208,29 @@ now to taxasoft-ghini
 
 #. enter the directory of your check-out;
 #. activate the virtual environment;
-#. if you didn't export to ``/tmp/1.0/``, you need to edit ``desktop_reader``
-   so that it points to your csv export; look in particular for a string
-   looking like ``/tmp/1.0/{}.txt`` and edit it to match your situation.
 #. move any previous database out of the way;
 #. create a new database and initialize it::
 
      ./manage.py migrate
 
+#. consider whether you also want the intermediate taxa, between ranks
+   familia and genus.  since importing this information takes rather long,
+   it is not included in the 'migration' command.  if you want this data,
+   you must request the import explicitly, with::
+
+     ./manage.py import_genera_derivation
+
 #. run the command::
 
-     ./manage.py shell <<EOF
-     import desktop_reader
-     desktop_reader.do_import()
-     EOF
+     ./manage.py import_desktop <location of second export>
 
    this will output as many ``+`` as the objects it inserted, as many ``.`` as
    the objects it already found in place.  for species, a ``v`` is added if
    the related species is at lower rank.
+
+   it is normal that importing accessions takes longer: for each object we
+   are creating not only the accession but also the verificaiton object that
+   links the accession to the corresponding taxon.
 
 #. create your superuser::
 
