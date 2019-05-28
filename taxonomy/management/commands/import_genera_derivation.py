@@ -33,17 +33,13 @@ class Command(BaseCommand):
                     for_sake_of_logging.append("-->{}".format(orig.epithet))
                 while lines:
                     parent_rank, parent_epithet = lines.pop()
-                    parent, _ = Taxon.objects.get_or_create(epithet=parent_epithet, rank=rank[parent_rank])
+                    parent, is_new_parent = Taxon.objects.get_or_create(epithet=parent_epithet, rank=rank[parent_rank])
                     if orig.parent != parent:
                         orig.parent = parent
                         orig.save()
                     orig = parent
                     for_sake_of_logging.append(orig.epithet)
+                    if not is_new_parent:
+                        break
                 self.stdout.write("\r{}".format(", ".join(for_sake_of_logging)), ending=" ")
-
-        for i in range(total):
-            if prefix:
-                username = '{prefix}_{random_string}'.format(prefix=prefix, random_string=get_random_string())
-            else:
-                username = get_random_string()
-            User.objects.create_user(username=username, email='', password='123')
+        self.stdout.write("\rdone")
