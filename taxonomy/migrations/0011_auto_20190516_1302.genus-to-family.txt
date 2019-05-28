@@ -15,7 +15,6 @@ Aaronsohnia
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Anthemideae
-subtribus:Unassigned
 genus:Aaronsohnia
 
 Abarema
@@ -302,7 +301,6 @@ Acanthodesmos
 familia:Asteraceae
 subfamilia:Cichorioideae
 tribus:Vernonieae
-subtribus:Unassigned
 genus:Acanthodesmos
 
 Acanthodium
@@ -1874,7 +1872,6 @@ Aechmanthera
 familia:Acanthaceae
 subfamilia:Acanthoideae
 tribus:Ruellieae
-subtribus:Unassigned
 genus:Aechmanthera
 
 Aechmea
@@ -2266,7 +2263,6 @@ Afroaster
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Afroaster
 
 Afrobrunnichia
@@ -2912,7 +2908,6 @@ Ajaniopsis
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Anthemideae
-subtribus:Unassigned
 genus:Ajaniopsis
 
 Ajax
@@ -3455,7 +3450,6 @@ Allittia
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Allittia
 
 Allium
@@ -5425,7 +5419,6 @@ genus:Andryala
 
 Andrzeiowskia
 familia:Brassicaceae
-tribus:Unassigned
 genus:Andrzeiowskia
 
 Anechites
@@ -7195,7 +7188,6 @@ Apodocephala
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Apodocephala
 
 Apodolirion
@@ -8908,7 +8900,6 @@ genus:Hystrix
 
 Asperuginoides
 familia:Brassicaceae
-tribus:Unassigned
 genus:Asperuginoides
 
 Asperugo
@@ -13932,7 +13923,6 @@ Brachyactis
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Neobrachyactis
 
 Brachycalycium
@@ -14614,7 +14604,6 @@ Brocchia
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Anthemideae
-subtribus:Unassigned
 genus:Brocchia
 
 Brocchinia
@@ -14971,7 +14960,6 @@ genus:Thryptomene
 
 Buchingera
 familia:Brassicaceae
-tribus:Unassigned
 genus:Asperuginoides
 
 Buchloe
@@ -16789,7 +16777,6 @@ genus:Camelina
 
 Camelinopsis
 familia:Brassicaceae
-tribus:Unassigned
 genus:Camelinopsis
 
 Camellia
@@ -17197,7 +17184,6 @@ Cancriniella
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Anthemideae
-subtribus:Unassigned
 genus:Cancriniella
 
 Candolleodendron
@@ -20270,7 +20256,6 @@ genus:Chamguava
 
 Chamira
 familia:Brassicaceae
-tribus:Unassigned
 genus:Chamira
 
 Chamissoa
@@ -28031,7 +28016,6 @@ genus:Dactylis
 
 Dactylocardamum
 familia:Brassicaceae
-tribus:Unassigned
 genus:Dactylocardamum
 
 Dactylocladus
@@ -28604,7 +28588,6 @@ Daveaua
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Anthemideae
-subtribus:Unassigned
 genus:Daveaua
 
 Davejonesia
@@ -29250,7 +29233,6 @@ Denekia
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Denekia
 
 Denhamia
@@ -31595,7 +31577,6 @@ genus:Dipogon
 
 Dipoma
 familia:Brassicaceae
-tribus:Unassigned
 genus:Dipoma
 
 Diporidium
@@ -32333,7 +32314,6 @@ Doellingeria
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Doellingeria
 
 Doemia
@@ -35110,7 +35090,6 @@ Endopappus
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Anthemideae
-subtribus:Unassigned
 genus:Endopappus
 
 Endopogon
@@ -36049,7 +36028,6 @@ Eremosis
 familia:Asteraceae
 subfamilia:Cichorioideae
 tribus:Vernonieae
-subtribus:Unassigned
 genus:Eremosis
 
 Eremosparton
@@ -36170,7 +36148,6 @@ Ericameria
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Ericameria
 
 Ericentrodea
@@ -36988,7 +36965,6 @@ Eucephalus
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Eucephalus
 
 Euceraea
@@ -39115,7 +39091,6 @@ Formania
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Formania
 
 Formanodendron
@@ -39194,7 +39169,6 @@ genus:Cespedesia
 
 Fourraea
 familia:Brassicaceae
-tribus:Unassigned
 genus:Fourraea
 
 Foveolaria
@@ -42038,7 +42012,6 @@ Gossweilera
 familia:Asteraceae
 subfamilia:Cichorioideae
 tribus:Vernonieae
-subtribus:Unassigned
 genus:Gossweilera
 
 Gossweilerochloa
@@ -45381,7 +45354,6 @@ genus:Apodytes
 
 Hemilophia
 familia:Brassicaceae
-tribus:Unassigned
 genus:Hemilophia
 
 Hemimeris
@@ -45800,7 +45772,6 @@ Herrickia
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Herrickia
 
 Herschelia
@@ -46199,7 +46170,6 @@ Heteroplexis
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Heteroplexis
 
 Heteropogon
@@ -47622,7 +47592,6 @@ genus:Horvatia
 
 Horwoodia
 familia:Brassicaceae
-tribus:Unassigned
 genus:Horwoodia
 
 Hosackia
@@ -47877,7 +47846,6 @@ Hulteniella
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Anthemideae
-subtribus:Unassigned
 genus:Hulteniella
 
 Hulthemia
@@ -49169,7 +49137,6 @@ genus:Icuria
 
 Idahoa
 familia:Brassicaceae
-tribus:Unassigned
 genus:Idahoa
 
 Ideleria
@@ -49493,7 +49460,6 @@ Inulanthera
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Anthemideae
-subtribus:Unassigned
 genus:Inulanthera
 
 Inuloides
@@ -49561,7 +49527,6 @@ Ionactis
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Ionactis
 
 Iondra
@@ -54318,7 +54283,6 @@ genus:Lemooria
 
 Lemphoria
 familia:Brassicaceae
-tribus:Unassigned
 genus:Andrzeiowskia
 
 Lemuranthe
@@ -54665,7 +54629,6 @@ Lepidolopha
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Anthemideae
-subtribus:Unassigned
 genus:Lepidolopha
 
 Lepidolopsis
@@ -54686,7 +54649,6 @@ Lepidophorum
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Anthemideae
-subtribus:Unassigned
 genus:Lepidophorum
 
 Lepidopironia
@@ -56864,7 +56826,6 @@ Lonas
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Anthemideae
-subtribus:Unassigned
 genus:Lonas
 
 Lonchitis
@@ -58758,7 +58719,6 @@ Mairia
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Mairia
 
 Maizilla
@@ -61983,7 +61943,6 @@ genus:Micromyrtus
 
 Micromystria
 familia:Brassicaceae
-tribus:Unassigned
 genus:Andrzeiowskia
 
 Micropaegma
@@ -64701,7 +64660,6 @@ Nannoglottis
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Nannoglottis
 
 Nannorrhops
@@ -66621,7 +66579,6 @@ genus:Neuontobotrys
 
 Neuracanthus
 familia:Acanthaceae
-subfamilia:Unassigned
 genus:Neuracanthus
 
 Neurachne
@@ -66974,7 +66931,6 @@ Nivellea
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Anthemideae
-subtribus:Unassigned
 genus:Nivellea
 
 Nivenia
@@ -67785,7 +67741,6 @@ genus:Ochthochloa
 
 Ochthodium
 familia:Brassicaceae
-tribus:Unassigned
 genus:Ochthodium
 
 Ochyrella
@@ -67812,7 +67767,6 @@ Oclemena
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Oclemena
 
 Ocotea
@@ -68618,7 +68572,6 @@ genus:Oncinotis
 
 Oncoba
 familia:Salicaceae
-tribus:Unassigned
 genus:Oncoba
 
 Oncocalamus
@@ -69038,7 +68991,6 @@ Opisthopappus
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Anthemideae
-subtribus:Unassigned
 genus:Opisthopappus
 
 Opizia
@@ -69457,7 +69409,6 @@ Oreostemma
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Oreostemma
 
 Oreostylidium
@@ -70323,7 +70274,6 @@ Otospermum
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Anthemideae
-subtribus:Unassigned
 genus:Otospermum
 
 Otostegia
@@ -74346,7 +74296,6 @@ genus:Petrobium
 
 Petrocallis
 familia:Brassicaceae
-tribus:Unassigned
 genus:Petrocallis
 
 Petrocodon
@@ -74672,7 +74621,6 @@ Phalacrocarpum
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Anthemideae
-subtribus:Unassigned
 genus:Phalacrocarpum
 
 Phalacroseris
@@ -75688,7 +75636,6 @@ Physacanthus
 familia:Acanthaceae
 subfamilia:Acanthoideae
 tribus:Ruellieae
-subtribus:Unassigned
 genus:Physacanthus
 
 Physalis
@@ -79620,7 +79567,6 @@ Printzia
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Printzia
 
 Priogymnanthus
@@ -80125,7 +80071,6 @@ genus:Pseudanthus
 
 Pseudarabidella
 familia:Brassicaceae
-tribus:Unassigned
 genus:Andrzeiowskia
 
 Pseudarrhenatherum
@@ -80617,7 +80562,6 @@ genus:Everardia
 
 Pseudofortuynia
 familia:Brassicaceae
-tribus:Unassigned
 genus:Pseudofortuynia
 
 Pseudofumaria
@@ -82566,7 +82510,6 @@ genus:Pyramidanthe
 
 Pyramidium
 familia:Brassicaceae
-tribus:Unassigned
 genus:Veselskya
 
 Pyramidoptera
@@ -83235,7 +83178,6 @@ genus:Momordica
 
 Raphanorhyncha
 familia:Brassicaceae
-tribus:Unassigned
 genus:Raphanorhyncha
 
 Raphanus
@@ -86885,7 +86827,6 @@ Sarcanthemum
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Sarcanthemum
 
 Sarcanthopsis
@@ -88398,7 +88339,6 @@ genus:Schrenkia
 
 Schrenkiella
 familia:Brassicaceae
-tribus:Unassigned
 genus:Schrenkiella
 
 Schroeterella
@@ -94624,7 +94564,6 @@ genus:Subpilocereus
 
 Subularia
 familia:Brassicaceae
-tribus:Unassigned
 genus:Subularia
 
 Succisa
@@ -98303,7 +98242,6 @@ Toiyabea
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Toiyabea
 
 Tolbonia
@@ -98383,7 +98321,6 @@ Tonestus
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Tonestus
 
 Tongoloa
@@ -99602,7 +99539,6 @@ Tridactylina
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Anthemideae
-subtribus:Unassigned
 genus:Tridactylina
 
 Tridax
@@ -99844,7 +99780,6 @@ Triniteurybia
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Triniteurybia
 
 Triniusa
@@ -101028,7 +100963,6 @@ Ugamia
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Anthemideae
-subtribus:Unassigned
 genus:Ugamia
 
 Ugni
@@ -102250,7 +102184,6 @@ Vernoniopsis
 familia:Asteraceae
 subfamilia:Asteroideae
 tribus:Astereae
-subtribus:Unassigned
 genus:Vernoniopsis
 
 Veronica
@@ -102299,7 +102232,6 @@ genus:Vesalea
 
 Veselskya
 familia:Brassicaceae
-tribus:Unassigned
 genus:Veselskya
 
 Veseyochloa
