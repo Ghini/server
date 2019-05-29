@@ -68,3 +68,37 @@ class TaxonTestCase(TestCase):
         self.assertEquals(gen_nov.show(), 'Gen. (Aq520454) sp.')
         self.assertEquals(cv.show(), "Gen. (Aq520454) sp. Shute Harbour (D.A.Halford Q811) 'Due di Denari'")
         
+
+class OrganizeByRangesTestCase(TestCase):
+    def test_sequence(self):
+        from .views import organize_by_ranges
+        ids = list(range(1, 20))
+        self.assertEquals(organize_by_ranges(ids, 5), ([], [(1, 19)]))
+    def test_short_sequence(self):
+        from .views import organize_by_ranges
+        ids = list(range(1, 20))
+        self.assertEquals(organize_by_ranges(ids, 500), (ids, []))
+    def test_implicit_short_sequence(self):
+        from .views import organize_by_ranges
+        ids = list(range(1, 20))
+        self.assertEquals(organize_by_ranges(ids), (ids, []))
+    def test_singletons(self):
+        from .views import organize_by_ranges
+        ids = [1,3,5,7,9]
+        self.assertEquals(organize_by_ranges(ids, 5), (ids, []))
+    def test_singletons_plus_short_sequence(self):
+        from .views import organize_by_ranges
+        ids = [1,3,5,7,8,9]
+        self.assertEquals(organize_by_ranges(ids, 5), (ids, []))
+    def test_singletons_plus_short_sequence2(self):
+        from .views import organize_by_ranges
+        ids = [1,3,5,7,8,9]
+        self.assertEquals(organize_by_ranges(ids, 3), ([1,3,5], [(7,9)]))
+    def test_singletons_plus_sequence(self):
+        from .views import organize_by_ranges
+        ids = [1,3,5,6,7,8,9]
+        self.assertEquals(organize_by_ranges(ids, 5), ([1,3], [(5,9)]))
+    def test_singletons_plus_sequence(self):
+        from .views import organize_by_ranges
+        ids = [1,3,5,6,7,8,9]
+        self.assertEquals(organize_by_ranges(ids, 6), (ids, []))
