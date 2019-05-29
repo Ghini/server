@@ -11,8 +11,6 @@ def import_defaults(apps, schema_editor):
     # this migration expects. We use the historical version.
     Taxon = apps.get_model('taxonomy', 'Taxon')
     Taxon.objects.all().delete()
-    import os
-    print(os.getcwd())
 
     import csv
     with open('taxonomy/migrations/0004_auto_20190420_2227.taxon.csv', newline='') as csvfile:
