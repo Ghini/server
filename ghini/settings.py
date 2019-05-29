@@ -41,7 +41,6 @@ INSTALLED_APPS = [
 
     'thumbnails',
     'django_select2',
-    'computed_property',
 
     'taxonomy.apps.TaxonomyConfig',
     'collection.apps.CollectionConfig',

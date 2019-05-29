@@ -111,25 +111,3 @@ class OrganizeByRangesTestCase(TestCase):
         from .views import organize_by_ranges
         ids = [1,3,5,6,7,8,9]
         self.assertEquals(organize_by_ranges(ids, 6), (ids, []))
-
-
-class PhoneticTestCase(TestCase):
-    def setUp(self):
-        self.r_reg, _ = Rank.objects.get_or_create(name="regnum", show_as=".epithet sp.")
-        self.r_ord, _ = Rank.objects.get_or_create(name="ordo", show_as=".epithet sp.")
-        self.r_fam, _ = Rank.objects.get_or_create(name="familia", show_as=".epithet sp.")
-        self.r_gen, _ = Rank.objects.get_or_create(name="genus", show_as=".epithet sp.")
-        self.r_sec, _ = Rank.objects.get_or_create(name="sectio", show_as=".genus sec. .epithet sp.")
-        self.r_spe, _ = Rank.objects.get_or_create(name="species", show_as=".genus .epithet")
-        self.r_var, _ = Rank.objects.get_or_create(name="varietas", show_as=".binomial var. .epithet")
-        self.r_for, _ = Rank.objects.get_or_create(name="forma", show_as=".binomial f. .epithet")
-        self.r_cul, _ = Rank.objects.get_or_create(name="cultivar", show_as=".scientific '.epithet'")
-
-        self.plantae, _ = Taxon.objects.get_or_create(rank=self.r_reg, epithet='Plantae')
-
-    def test_name(self):
-        cucurbitales, _ = Taxon.objects.get_or_create(rank=self.r_ord, parent=self.plantae, epithet='Cucurbitales')
-        cucurbitaceae, _ = Taxon.objects.get_or_create(rank=self.r_fam, parent=cucurbitales, epithet='Cucurbitaceae')
-
-        self.assertEquals(cucurbitales.phonetic, 'kukurbitalis')
-        self.assertEquals(cucurbitaceae.phonetic, 'kukurbitasi')

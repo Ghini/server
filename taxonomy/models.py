@@ -1,8 +1,6 @@
 from django.urls import reverse
 from django.db import models
 
-import computed_property as computed_models
-
 # Create your models here.
 
 class Rank(models.Model):
@@ -37,45 +35,6 @@ class Taxon(models.Model):
     parent = models.ForeignKey('self', blank=True, null=True, related_name='subtaxa', on_delete=models.CASCADE)
     accepted = models.ForeignKey('self', blank=True, null=True, related_name='synonyms', on_delete=models.SET_NULL)
 
-    phonetic = computed_models.ComputedCharField(max_length=40, compute_from='compute_phonetic_epithet', default='')
-
-    # I'm in doubt about the following properties, if they should be
-    # computed attributes, held in the database.
-
-    @property
-    def family(self):
-        step = self
-        while step and step.rank.name != 'familia':
-            step = step.parent
-        return step and step.epithet or ''
-
-    @property
-    def genus(self):
-        step = self
-        while step and step.rank.name != 'genus':
-            step = step.parent
-        return step and step.epithet
-
-    # properly methods and properties
-
-    def compute_phonetic_epithet(self):
-        import re
-        x = self.epithet.lower()
-        x = re.sub(r'c([ie])', r'z\1', x)  # palatal c sounds like z
-        x = re.sub(r'g([ie])', r'j\1', x)  # palatal g sounds like j
-        x = x.replace('ph', 'f')  # ph sounds like f
-        x = x.replace('v', 'f')  # v sounds like f // fricative (voiced or not)
-
-        x = x.replace('h', '')  # h sounds like nothing
-        x = re.sub(r'[gcq]', r'k', x)  # g, c, q sound like k // guttural
-        x = re.sub(r'[xz]', r's', x)  # x, z sound like s
-        x = x.replace('ae', 'e')  # ae sounds like e
-        x = re.sub('[ye]', 'i', x)  # y, e sound like i
-        x = re.sub('[ou]', 'u', x)  # o, u sound like u // so we only have a, i, u
-        x = re.sub(r'(.)\1', r'\1', x)  # doubled letters sound like single
-        x = x.replace('-', '')
-        return x
-
     def show(self, authorship=False):
         result = self.identify().replace(' sp.', '')
         if authorship and self.authorship:
@@ -101,6 +60,20 @@ class Taxon(models.Model):
                 break
             result.append(step.epithet)
         return result
+
+    @property
+    def family(self):
+        step = self
+        while step and step.rank.name != 'familia':
+            step = step.parent
+        return step and step.epithet or ''
+
+    @property
+    def genus(self):
+        step = self
+        while step and step.rank.name != 'genus':
+            step = step.parent
+        return step and step.epithet
 
     @property
     def scientific(self):
