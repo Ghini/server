@@ -13,8 +13,6 @@ def import_defaults(apps, schema_editor):
     # this migration expects. We use the historical version.
     Rank = apps.get_model('taxonomy', 'Rank')
     Rank.objects.all().delete()
-    import os
-    print(os.getcwd())
 
     import csv
     with open('taxonomy/migrations/0006_auto_20190421_2103.rank.csv', newline='') as csvfile:

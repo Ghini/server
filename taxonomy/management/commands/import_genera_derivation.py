@@ -23,6 +23,8 @@ class Command(BaseCommand):
         rank = {name: Rank.objects.get(name=name)
                 for name in ['genus', 'subtribus', 'tribus', 'subfamilia', 'familia']}
         with open('taxonomy/management/data/genus-to-family.txt') as f:
+            bulk = []
+            counting = 1
             while True:
                 orig_epithet = next(f).strip()
                 if not orig_epithet:
@@ -41,7 +43,7 @@ class Command(BaseCommand):
                 if acc_epithet != orig_epithet:
                     accepted, _ = Taxon.objects.get_or_create(epithet=acc_epithet, rank=rank[acc_rank])
                     orig.accepted = accepted
-                    orig.save()
+                    bulk.append(orig)
                     orig = accepted
                     for_sake_of_logging.append("-->{}".format(orig.epithet))
                 while lines:
@@ -49,10 +51,15 @@ class Command(BaseCommand):
                     parent, is_new_parent = Taxon.objects.get_or_create(epithet=parent_epithet, rank=rank[parent_rank])
                     if orig.parent != parent:
                         orig.parent = parent
-                        orig.save()
+                        bulk.append(orig)
                     orig = parent
                     for_sake_of_logging.append(orig.epithet)
                     if not is_new_parent:
                         break
-                self.stdout.write("\r{}".format(", ".join(for_sake_of_logging)), ending=" ")
+                counting += 1
+                if len(bulk) > 250:
+                    self.stdout.write("\r{:>5} {}".format(counting, '... updating ...'), ending=" ")
+                    Taxon.objects.bulk_update(bulk, ['parent', 'accepted'])
+                    bulk.clear()
+                self.stdout.write("\r{:>5} {}".format(counting, ", ".join(for_sake_of_logging)), ending=" ")
         self.stdout.write("\rdone")
