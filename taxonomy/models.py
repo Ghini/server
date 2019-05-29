@@ -81,14 +81,14 @@ class Taxon(models.Model):
             step = self.parent
         else:
             step = self
-        return step.show()
+        return step.identify()
 
     @property
     def binomial(self):
         step = self
         while step.rank.id > Rank.species_id:
             step = step.parent
-        return step.show()
+        return step.identify()
 
     def __str__(self):
         return self.show(True)
