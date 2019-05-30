@@ -8486,7 +8486,6 @@ subfamilia:Faboideae
 tribus:Desmodieae
 subtribus:Desmodiinae
 genus:Arthroclianthus
-genus:A
 
 Arthrocnemum
 familia:Amaranthaceae
@@ -56152,6 +56151,7 @@ familia:Lauraceae
 genus:Lindera
 
 Lindernia
+family:Linderniaceae
 genus:Lindernia
 
 Lindheimera
@@ -86582,7 +86582,6 @@ genus:Sampera
 
 Samuela
 familia:Asparagaceae
-genus:Samuela
 genus:Yucca
 
 Samuelssonia
