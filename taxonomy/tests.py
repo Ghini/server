@@ -18,6 +18,7 @@ class TaxonTestCase(TestCase):
         self.r_cul, _ = Rank.objects.get_or_create(name="cultivar", show_as=".scientific '.epithet'")
 
         self.plantae, _ = Taxon.objects.get_or_create(rank=self.r_reg, epithet='Plantae')
+        [i.save() for i in Rank.objects.all()]
 
     def test3_shows_as_subspecies(self):
         cucurbitales, _ = Taxon.objects.get_or_create(rank=self.r_ord, parent=self.plantae, epithet='Cucurbitales')

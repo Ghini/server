@@ -3,9 +3,8 @@ from django.db import models
 
 # Create your models here.
 
-_id_of_rank_name = {}
-
 class Rank(models.Model):
+    _id_of = {}
     #id,name,short,show_as
     #0,"regnum","",".epithet sp.",False
     name = models.CharField(max_length=16)
@@ -14,8 +13,7 @@ class Rank(models.Model):
 
     def save(self, *args, **kwargs):
         result = super().save(*args, **kwargs)
-        _id_of_rank_name[self.name] = self.id
-        print(self.name, Rank.id_of(self.name))
+        Rank._id_of[self.name] = self.id
         return result
 
     def __str__(self):
@@ -31,8 +29,7 @@ class Rank(models.Model):
 
     @classmethod
     def id_of(cls, name, default=99999):
-        print(name, _id_of_rank_name.get(name, default))
-        return _id_of_rank_name.get(name, default)
+        return cls._id_of.get(name, default)
 
 
 class Taxon(models.Model):
