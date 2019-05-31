@@ -35,6 +35,15 @@ class Taxon(models.Model):
     parent = models.ForeignKey('self', blank=True, null=True, related_name='subtaxa', on_delete=models.CASCADE)
     accepted = models.ForeignKey('self', blank=True, null=True, related_name='synonyms', on_delete=models.SET_NULL)
 
+    # these are automatically computed on save
+    genus = models.CharField(max_length=40, blank=True, null=True)
+    family = models.CharField(max_length=40, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if not self.genus: self.genus = self.get_genus()
+        if not self.family: self.family = self.get_family()
+        return super().save(*args, **kwargs)
+
     def show(self, authorship=False):
         result = self.identify().replace(' sp.', '')
         if authorship and self.authorship:
@@ -61,15 +70,13 @@ class Taxon(models.Model):
             result.append(step.epithet)
         return result
 
-    @property
-    def family(self):
+    def get_family(self):
         step = self
         while step and step.rank.name != 'familia':
             step = step.parent
-        return step and step.epithet or ''
+        return step and step.epithet
 
-    @property
-    def genus(self):
+    def get_genus(self):
         step = self
         while step and step.rank.name != 'genus':
             step = step.parent

@@ -1092,7 +1092,6 @@ familia,Ethmiidae,genus,Ethmia
 familia,Eucommiaceae,genus,Eucommia
 familia,Euglenaceae,genus,Bommeria
 familia,Euglyphidae,genus,Euglypha
-familia,Eulophia,genus,Lissochilus
 familia,Euphorbiaceae,genus,Crotonogynopsis
 familia,Euphorbiaceae,genus,Necepsia
 familia,Euphorbiaceae,subfamilia,Acalyphoideae
@@ -1858,7 +1857,6 @@ familia,Nartheciaceae,genus,Metanarthecium
 familia,Nartheciaceae,genus,Narthecium
 familia,Nartheciaceae,genus,Nietneria
 familia,Naticidae,genus,Polinices
-familia,Naviculales,genus,Sichuania
 familia,Nectriaceae,genus,Fusarium
 familia,Nectriaceae,genus,Sarcopodium
 familia,Nelumbonaceae,genus,Nelumbo
@@ -8088,7 +8086,6 @@ tribus,Loteae,genus,Podolotus
 tribus,Loteae,genus,Pseudolotus
 tribus,Loteae,genus,Syrmatium
 tribus,Loteae,genus,Tripodion
-tribus,Luciliini,genus,Lucilia
 tribus,Luxemburgieae,genus,Luxemburgia
 tribus,Luxemburgieae,genus,Philacra
 tribus,Luzuriageae,genus,Luzuriaga
