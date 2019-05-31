@@ -4,7 +4,7 @@ from django.db import models
 # Create your models here.
 
 class Rank(models.Model):
-    id_of = {}
+    _id_of = {}
     #id,name,short,show_as
     #0,"regnum","",".epithet sp.",False
     name = models.CharField(max_length=16)
@@ -12,7 +12,7 @@ class Rank(models.Model):
     show_as = models.CharField(max_length=48, default='<i>.epithet</i> sp.')
 
     def save(self, *args, **kwargs):
-        Rank.id_of[self.name] = self.id
+        Rank._id_of[self.name] = self.id
         return super().save(*args, **kwargs)
 
     def __str__(self):
@@ -25,6 +25,10 @@ class Rank(models.Model):
     @property
     def infobox_url(self):
         return reverse('rank-infobox', args=[self.pk])
+
+    @classmethod
+    def id_of(cls, name):
+        return cls._id_of.get(name, 99999)
 
 
 class Taxon(models.Model):
@@ -66,7 +70,7 @@ class Taxon(models.Model):
     def derivation_up_to_order(self):
         result = []
         step = self
-        while step.rank.id >= Rank.id_of.get('familia', 99999):
+        while step.rank.id >= Rank.id_of('familia'):
             step = step.parent
             if step is None:
                 break
@@ -74,18 +78,18 @@ class Taxon(models.Model):
         return result
 
     def get_family(self):
-        if self.rank.id < Rank.id_of.get('familia', 99999):
+        if self.rank.id < Rank.id_of('familia'):
             return  # 99999: there's no 'familia' in the database
         step = self
-        while step and step.rank.id > Rank.id_of.get('familia', 0):
+        while step and step.rank.id > Rank.id_of('familia'):
             step = step.parent
         return step and step.epithet
 
     def get_genus(self):
-        if self.rank.id < Rank.id_of.get('genus', 99999):
+        if self.rank.id < Rank.id_of('genus'):
             return  # 99999: there's no 'genus' in the database
         step = self
-        while step and step.rank.id > Rank.id_of.get('genus', 0):
+        while step and step.rank.id > Rank.id_of('genus'):
             step = step.parent
         return step and step.epithet
 
@@ -100,9 +104,9 @@ class Taxon(models.Model):
     @property
     def binomial(self):
         step = self
-        while step and step.rank.id > Rank.id_of.get('species', 0):
+        while step and step.rank.id > Rank.id_of('species'):
             step = step.parent
-        return step.identify()
+        return step and step.identify() or ''
 
     def __str__(self):
         return self.show(True)
