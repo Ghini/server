@@ -4,13 +4,16 @@ from django.db import models
 # Create your models here.
 
 class Rank(models.Model):
-    species_id = 17
-    family_id = 9
+    id_of = {}
     #id,name,short,show_as
     #0,"regnum","",".epithet sp.",False
     name = models.CharField(max_length=16)
     short = models.CharField(max_length=8, blank=True)
     show_as = models.CharField(max_length=48, default='<i>.epithet</i> sp.')
+
+    def save(self, *args, **kwargs):
+        Rank.id_of[self.name] = self.id
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -63,7 +66,7 @@ class Taxon(models.Model):
     def derivation_up_to_order(self):
         result = []
         step = self
-        while step.rank.id >= Rank.family_id:
+        while step.rank.id >= Rank.id_of['familia']:
             step = step.parent
             if step is None:
                 break
@@ -71,14 +74,18 @@ class Taxon(models.Model):
         return result
 
     def get_family(self):
+        if self.rank.id < Rank.id_of['familia']:
+            return
         step = self
-        while step and step.rank.name != 'familia':
+        while step and step.rank.id > Rank.id_of['familia']:
             step = step.parent
         return step and step.epithet
 
     def get_genus(self):
+        if self.rank.id < Rank.id_of['genus']:
+            return
         step = self
-        while step and step.rank.name != 'genus':
+        while step and step.rank.id > Rank.id_of['genus']:
             step = step.parent
         return step and step.epithet
 
@@ -93,7 +100,7 @@ class Taxon(models.Model):
     @property
     def binomial(self):
         step = self
-        while step.rank.id > Rank.species_id:
+        while step.rank.id > Rank.id_of['species']:
             step = step.parent
         return step.identify()
 

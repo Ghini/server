@@ -104,13 +104,13 @@ class TaxonInfobox(TaxonDetail):
                 except:
                     pass
             if obj.parent:
-                if obj.parent.rank.id < Rank.family_id:
+                if obj.parent.rank.id < Rank.id_of['familia']:
                     result['parent'] = ('link', "%s" % obj.parent,
                                         "taxon where epithet={0.epithet} and rank.name={0.rank.name}".format(obj.parent))
                 else:
                     del result['parent']
                     parent = obj.parent
-                    while parent and parent.rank.id >= Rank.family_id:
+                    while parent and parent.rank.id >= Rank.id_of['familia']:
                         result[parent.rank.name] = ('link', "%s" % parent,
                                                     "taxon where epithet={0.epithet} and rank.name={0.rank.name}".format(parent))
                         parent = parent.parent
