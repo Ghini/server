@@ -66,7 +66,7 @@ class Taxon(models.Model):
     def derivation_up_to_order(self):
         result = []
         step = self
-        while step.rank.id >= Rank.id_of['familia']:
+        while step.rank.id >= Rank.id_of.get('familia', 0):
             step = step.parent
             if step is None:
                 break
@@ -74,18 +74,18 @@ class Taxon(models.Model):
         return result
 
     def get_family(self):
-        if self.rank.id < Rank.id_of['familia']:
+        if self.rank.id < Rank.id_of.get('familia', 0):
             return
         step = self
-        while step and step.rank.id > Rank.id_of['familia']:
+        while step and step.rank.id > Rank.id_of.get('familia', 0):
             step = step.parent
         return step and step.epithet
 
     def get_genus(self):
-        if self.rank.id < Rank.id_of['genus']:
+        if self.rank.id < Rank.id_of.get('genus', 0):
             return
         step = self
-        while step and step.rank.id > Rank.id_of['genus']:
+        while step and step.rank.id > Rank.id_of.get('genus', 0):
             step = step.parent
         return step and step.epithet
 
@@ -100,7 +100,7 @@ class Taxon(models.Model):
     @property
     def binomial(self):
         step = self
-        while step.rank.id > Rank.id_of['species']:
+        while step.rank.id > Rank.id_of('species', 0):
             step = step.parent
         return step.identify()
 
