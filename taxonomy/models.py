@@ -28,8 +28,9 @@ class Rank(models.Model):
         return reverse('rank-infobox', args=[self.pk])
 
     @classmethod
-    def id_of(cls, name):
-        return cls._id_of.get(name, 99999)
+    def id_of(cls, name, default=99999):
+        print(name, cls._id_of.get(name, default))
+        return cls._id_of.get(name, default)
 
 
 class Taxon(models.Model):
