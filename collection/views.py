@@ -64,10 +64,10 @@ class AccessionInfobox(AccessionDetail):
             result['__detail_url__'] = reverse('accession-detail', args=[obj.code])
             result['__shows_as__'] = "%s" % obj
             result['code'] = obj.code
-            result['taxa'] = ('link', [("{} ({})".format(i.identify(), i.family),
-                                        "taxon where epithet='{0.epithet}' and rank.name='{0.rank.name}'".format(i),
-                                        '\n'.join(i.derivation_up_to_order))
-                                       for i in obj.taxa.all()])
+            result['taxa'] = ('link', [("{} ({})".format(v.taxon.identify(), v.taxon.family),
+                                        "taxon where epithet='{0.epithet}' and rank.name='{0.rank.name}'".format(v.taxon),
+                                        '\n'.join(["{0.contact.name} {0.level}".format(v)] + v.taxon.derivation_up_to_order))
+                                       for v in obj.verifications.all()])
             result['received_quantity'] = obj.received_quantity
             if obj.source is not None:
                 result['source'] = ('link',
