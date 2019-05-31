@@ -12,8 +12,9 @@ class Rank(models.Model):
     show_as = models.CharField(max_length=48, default='<i>.epithet</i> sp.')
 
     def save(self, *args, **kwargs):
+        result = super().save(*args, **kwargs)
         Rank._id_of[self.name] = self.id
-        return super().save(*args, **kwargs)
+        return result
 
     def __str__(self):
         return self.name
@@ -79,7 +80,7 @@ class Taxon(models.Model):
 
     def get_family(self):
         if self.rank.id < Rank.id_of('familia'):
-            return  # 99999: there's no 'familia' in the database
+            return
         step = self
         while step and step.rank.id > Rank.id_of('familia'):
             step = step.parent
@@ -87,7 +88,7 @@ class Taxon(models.Model):
 
     def get_genus(self):
         if self.rank.id < Rank.id_of('genus'):
-            return  # 99999: there's no 'genus' in the database
+            return
         step = self
         while step and step.rank.id > Rank.id_of('genus'):
             step = step.parent
