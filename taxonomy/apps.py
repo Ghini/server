@@ -6,5 +6,8 @@ class TaxonomyConfig(AppConfig):
 
     def ready(self):
         from .models import Rank
-        for r in Rank.objects.all():
-            r.save()
+        try:
+            for r in Rank.objects.all():
+                r.save()
+        except:
+            pass
