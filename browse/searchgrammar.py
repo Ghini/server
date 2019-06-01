@@ -132,6 +132,14 @@ def p_bfactor_expression(p):
     'bfactor : LPAREN expression RPAREN'
     p[0] = p[2]
 
+def p_bfactor_false(p):
+    'bfactor : FALSE'
+    p[0] = p.parser.search_domain.objects.none()
+
+def p_bfactor_true(p):
+    'bfactor : TRUE'
+    p[0] = p.parser.search_domain.objects.all()
+
 def p_bfactor_comparison(p):
     'bfactor : field operator value'
     result, field, operator, value = p

@@ -11,6 +11,8 @@ reserved = {
     'where' : 'WHERE',
     'contains': 'CONTAINS',
     'depending': 'DEPEND',
+    'true': 'TRUE',
+    'false': 'FALSE',
     'in': 'IN',
     'and': 'AND',
     'or': 'OR',
