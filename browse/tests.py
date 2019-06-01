@@ -66,4 +66,16 @@ class TestParsingQueries(TestCase):
         self.assertTrue(location3 not in result['Location'])
         self.assertTrue(location2 in result['Location'])
         self.assertTrue(location1 in result['Location'])
+
+    def test1_search_by_term_national_only_quoted(self):
+        from garden.models import Location
+        location1, _ = Location.objects.get_or_create(name='costo')
+        location2, _ = Location.objects.get_or_create(name='costì')
+        location3, _ = Location.objects.get_or_create(name='costa')
+        result = parse('"costì"')
+        self.assertTrue('Location' in result)
+        self.assertEquals(len(result['Location']), 1)
+        self.assertTrue(location3 not in result['Location'])
+        self.assertTrue(location2 in result['Location'])
+        self.assertTrue(location1 not in result['Location'])
         
