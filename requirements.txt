@@ -8,3 +8,4 @@ Pillow==6.0.0
 ply==3.11
 pyparsing==2.4.0
 python-thumbnails==0.5.1
+wheel==0.33.4
