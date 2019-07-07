@@ -8,34 +8,36 @@
 
  .sidenav {
      height: 100%;
+     margin-left: 0px;
      width: 32px;
      position: fixed;
      z-index: 1;
      top: 0;
      left: 0;
-     background-color: #111;
+     background-color: #25387d;
      overflow-x: hidden;
      padding-top: 20px;
      writing-mode: vertical-rl;
      transform: rotate(-180deg);
  }
 
- .sidenav span {
+ .sidenav a {
      float: left;
-     padding: 6px 2px 24px 24px;
+     padding: 12px 2px 18px 24px;
      text-decoration: none;
      font-size: 18px;
-     color: #818181;
+     font-weight: bold;
+     color: #40d66d;
      display: block;
      cursor: pointer;
  }
 
- .sidenav span:hover {
+ .sidenav a:hover {
      color: #f1f1f1;
  }
 
- .sidenav span.active {
-     color: #ff5131;
+ .sidenav a.active {
+     color: #f0ce48;
  }
 
  .not-sidebar {
@@ -289,8 +291,6 @@
      tokens = {};
      $.getJSON("{% url 'drop-token' '__all__' %}", function(data) {});
      $('.search-filter').attr("disabled", "disabled");
-     $('div.pager-page').hide()
-     $('div#results-page').show()
      $('.page-switcher').removeClass('active');
      $('#tab-name-results').addClass('active');
      reset_results_height()
@@ -452,21 +452,19 @@
      var page_name = $(e.delegateTarget).data('page-name')
      $('.page-switcher').removeClass('active');
      $(e.delegateTarget).addClass('active');
-     $('div.pager-page').hide()
-     $('div#{}-page'.format(page_name)).show()
      $('div#home-spare img').hide()
      $('div#home-spare img#{}-logo'.format(app_name)).show()
  }
 
  function link_statistics_to_searches() {
-     $('#home-page table td').css('width', 'unset');
-     $('#home-page table td.list-group-item-action').map(function (i, x) {
+     $('#home-pane table td').css('width', 'unset');
+     $('#home-pane table td.list-group-item-action').map(function (i, x) {
          $(x).click(partial(replace_search_filter, $(x).data('query')));
      });
  }
 
  function update_statistics() {
-     $('#home-page table td').map(function (i, x) {
+     $('#home-pane table td').map(function (i, x) {
          $.getJSON("{% url 'count' %}?q=" + $(x).data('query'),
                    function(data){
                        $(x).text(data['__total__'])
@@ -526,8 +524,6 @@
      $('#clean-history').click(clean_history);
 
      $('i.pager-go-home').click(switch_page)
-     $('div.pager-page').hide()
-     $('div#home-page').show()
 
      $("body").bind('contextmenu', function (e) {
          e.preventDefault(); // prevents default menu
@@ -545,17 +541,19 @@
      // keep track of height
      window.addEventListener("resize", reset_results_height)
      reset_results_height()
+     $('#results-tabber').on('shown.bs.tab', reset_results_height);
      $('.page-switcher').click(switch_page);
+     $('#home-tabber').trigger('click');
  });
 </script>
   </head>
   <body class="container-fluid">
     
-    <div class="sidenav">
-      <span class="nav-item active page-switcher" data-page-name="home" id="tab-name-home" data-app-name="ghini">Ghini</span>
-      <span class="nav-link page-switcher" data-page-name="results" id="tab-name-results">Results</span>
-      <span class="nav-link page-switcher" data-page-name="pics" id="tab-name-pictures">Pictures</span>
-    </div>
+    <ul class="sidenav nav nav-tabs">
+      <li><a data-toggle="tab" href="#home-pane" id="home-tabber">Ghini</a></li>
+      <li><a data-toggle="tab" href="#results-pane" id="results-tabber">Results</a></li>
+      <li><a data-toggle="tab" href="#pictures-pane">Pictures</a></li>
+    </ul>
 
     <nav class="not-sidebar navbar navbar-expand-sm bg-light navbar-light stealing-height-from-results">
       <!-- Brand -->
@@ -620,8 +618,8 @@
 
     </nav>
 
-    <div class="not-sidebar pager-container">
-      <div class="pager-page" id="results-page">
+    <div class="tab-content not-sidebar">
+      <div class="tab-pane fade" id="results-pane">
         <div style="position:fixed;z-index:999;height:0.5rem;width:100%" class="row progress">
           <div class="progress-bar Taxon" style="width:0%"></div>
           <div class="progress-bar bg-info Accession" style="width:0%"></div>
@@ -682,10 +680,10 @@
         </div>
       </div>
 
-      <div class="container pager-page" id="pics-page">
+      <div class="container tab-pane fade" id="pictures-pane">
       </div>
 
-      <div class="container pager-page" id="home-page">
+      <div class="container tab-pane fade" id="home-pane">
         <div class="row justify-content-center">
           <div class="col-7 align-self-center" id="home-spare">
             <img class="rounded img-fluid align-middle" id="ghini-logo" src="{% static 'ghini-logo.png' %}">
