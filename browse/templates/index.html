@@ -4,7 +4,105 @@
 {% block content %}
 <style TYPE="text/css">
  <!--
+ * {
+     box-sizing: border-box;
+ }
 
+ /* Position the image container (needed to position the left and right arrows) */
+ .container {
+     position: relative;
+ }
+
+ /* Hide the images by default */
+ .mySlides {
+     display: none;
+ }
+
+ /* Add a pointer when hovering over the thumbnail images */
+ .cursor {
+     cursor: pointer;
+ }
+
+ /* Next & previous buttons */
+ .prev,
+ .next {
+     cursor: pointer;
+     position: absolute;
+     top: 0;
+     width: auto;
+     height: 100%;
+     padding: 32px 16px;
+     color: black;
+     font-weight: bold;
+     font-size: 20px;
+     border-radius: 0 3px 3px 0;
+     user-select: none;
+     -webkit-user-select: none;
+ }
+
+ /* Position the "next button" to the right */
+ .next {
+     right: 16px;
+     border-radius: 0 3px 0 3px;
+ }
+
+ /* On hover, add a background color with enough see-through */
+ .prev:hover,
+ .next:hover {
+     background-color: rgba(200, 250, 0, 0.4);
+ }
+
+ /* Container for image text */
+ .caption-container {
+     position: fixed;
+     height: 32px;
+     width: 100%;
+     top: 0;
+     font-weight: bold;
+     font-size: 18px;
+     text-align: center;
+     background-color: #222;
+     padding: 2px 16px;
+     color: white;
+     z-index: 1;
+ }
+
+ .scrollable {
+     width: 100%;
+     margin-top: 36px; /* matching caption-container height */
+     z-index: -1;
+ }
+
+ .thumbs-row {
+     margin-right: 0;
+ }
+
+ .thumbs-row:after {
+     content: "";
+     display: table;
+     clear: both;
+ }
+
+ /* Six columns side by side */
+ .thumbs-column {
+     float: left;
+     margin-left: 6px;
+     margin-bottom: 6px;
+ }
+
+ /* Add a transparency effect for thumnbail images */
+ .thumbs-element {
+     margin-left: 6px;
+     border-width: thin !important;
+     border-style: solid !important;
+     border: white;
+     opacity: 0.6;
+ }
+
+ .active,
+ .thumbs-element:hover {
+     opacity: 1;
+ }
 
  .sidenav {
      height: 100%;
@@ -150,7 +248,7 @@
          return;
      }
      current_url = url;
-     window.open(url.replace('infobox/', 'carousel/'), 'pictures');
+     // window.open(url.replace('infobox/', 'carousel/'), 'pictures');
      $('tr').removeClass('table-success');
      if (typeof e !== 'undefined') {
          $('#infobox-object-text').empty();
@@ -291,9 +389,7 @@
      tokens = {};
      $.getJSON("{% url 'drop-token' '__all__' %}", function(data) {});
      $('.search-filter').attr("disabled", "disabled");
-     $('.page-switcher').removeClass('active');
-     $('#tab-name-results').addClass('active');
-     reset_results_height()
+     $('#results-tabber').trigger('click');
      if(term === undefined) {
          term = $('#search-filter').val();
          if(search_history.last() !== term && forward_history.last() !== term)
@@ -449,9 +545,6 @@
 
  function switch_page(e) {
      var app_name = $(e.delegateTarget).data('app-name')
-     var page_name = $(e.delegateTarget).data('page-name')
-     $('.page-switcher').removeClass('active');
-     $(e.delegateTarget).addClass('active');
      $('div#home-spare img').hide()
      $('div#home-spare img#{}-logo'.format(app_name)).show()
  }
@@ -481,32 +574,90 @@
  function checkKey(e) {
      e = e || window.event;
      console.log(e.keyCode);
-     if (e.ctrlKey)
+     if (e.ctrlKey) {
          switch (e.keyCode) {
              case 76:  // L
                  $('input#search-filter').focus();
-             case 75:  // K
-                 return false;
              case 65:  // A
                  return (!$(document.activeElement).hasClass('container-fluid'));
              default:
-                 return true;
+                 return false;
          }
+     } else {
+         switch (e.keyCode) {
+             case 34:  // PgDn
+                 if($('#pictures-tabber').hasClass('active')) {
+                     $('#home-tabber').trigger('click');
+                 } else
+                 if($('#results-tabber').hasClass('active')) {
+                     $('#pictures-tabber').trigger('click');
+                 } else
+                 {
+                     $('#results-tabber').trigger('click');
+                 }
+                 return false;
+             case 33:  // PgUp
+                 if($('#pictures-tabber').hasClass('active')) {
+                     $('#results-tabber').trigger('click');
+                 } else
+                 if($('#results-tabber').hasClass('active')) {
+                     $('#home-tabber').trigger('click');
+                 } else
+                 {
+                     $('#pictures-tabber').trigger('click');
+                 }
+                 return false;
+         }
+     }
      if(!$(document.activeElement).hasClass('container-fluid'))
          return;
      var move_to;
-     if(e.keyCode === 37) {
-         move_to = $('tr.table-success').prev()
-     } else if (e.keyCode === 39) {
-         move_to = $('tr.table-success').next()
-     };
-     if(move_to && move_to.length !== 0) {
-         $(move_to).trigger('click');
-         if(!isScrolledIntoView(move_to))
-             $(move_to)[0].scrollIntoView(e.keyCode === 37);
+     if ($('#pictures-tabber').hasClass('active')) {
+         if(e.keyCode === 37) {
+             plusSlides(-1)
+         } else if (e.keyCode === 39) {
+             plusSlides(1)
+         };
+     }
+     if ($('#results-tabber').hasClass('active')) {
+         if(e.keyCode === 37) {
+             move_to = $('tr.table-success').prev()
+         } else if (e.keyCode === 39) {
+             move_to = $('tr.table-success').next()
+         };
+         if(move_to && move_to.length !== 0) {
+             $(move_to).trigger('click');
+             if(!isScrolledIntoView(move_to))
+                 $(move_to)[0].scrollIntoView(e.keyCode === 37);
+         }
      }
  }
 
+ var slideIndex = 1;
+ showSlides(slideIndex);
+
+ // Next/previous controls
+ function plusSlides(n) {
+     showSlides(slideIndex += n);
+ }
+
+ // Thumbnail image controls
+ function currentSlide(n) {
+     showSlides(slideIndex = n);
+ }
+
+ function showSlides(n) {
+     var slides = $(".mySlides");
+     if (slides.length === 0) { return };
+     var dots = $(".thumbs-element.cursor");
+     if (n > slides.length) { slideIndex = 1 }
+     else if (n < 1) { slideIndex = slides.length };
+     $(slides).css('display', 'none');
+     $(dots).removeClass('active');
+     $(slides[slideIndex-1]).css('display', "block");
+     $(dots[slideIndex-1]).addClass("active");
+     $("#caption").text($(dots[slideIndex-1]).attr('alt'));
+ }
  $(function() {  // run at document ready
      $('#search-filter').on('keypress', function (e) {
          if(e.which === 13) {
@@ -514,8 +665,7 @@
          }
      });
      csrf_token = getCookie('csrftoken');
-     window.open(undefined, 'pictures');
-     document.onkeydown = checkKey;
+     $(window).on('keydown', checkKey);
      $('#search-filter-button').click(lookup);
      search_history = [];
      forward_history = [];
@@ -540,10 +690,10 @@
 
      // keep track of height
      window.addEventListener("resize", reset_results_height)
-     reset_results_height()
      $('#results-tabber').on('shown.bs.tab', reset_results_height);
-     $('.page-switcher').click(switch_page);
      $('#home-tabber').trigger('click');
+
+     showSlides(1);
  });
 </script>
   </head>
@@ -552,7 +702,7 @@
     <ul class="sidenav nav nav-tabs">
       <li><a data-toggle="tab" href="#home-pane" id="home-tabber">Ghini</a></li>
       <li><a data-toggle="tab" href="#results-pane" id="results-tabber">Results</a></li>
-      <li><a data-toggle="tab" href="#pictures-pane">Pictures</a></li>
+      <li><a data-toggle="tab" href="#pictures-pane" id="pictures-tabber">Pictures</a></li>
     </ul>
 
     <nav class="not-sidebar navbar navbar-expand-sm bg-light navbar-light stealing-height-from-results">
