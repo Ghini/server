@@ -4,6 +4,48 @@
 {% block content %}
 <style TYPE="text/css">
  <!--
+
+
+ .sidenav {
+     height: 100%;
+     width: 32px;
+     position: fixed;
+     z-index: 1;
+     top: 0;
+     left: 0;
+     background-color: #111;
+     overflow-x: hidden;
+     padding-top: 20px;
+     writing-mode: vertical-rl;
+     transform: rotate(-180deg);
+ }
+
+ .sidenav span {
+     float: left;
+     padding: 6px 2px 24px 24px;
+     text-decoration: none;
+     font-size: 18px;
+     color: #818181;
+     display: block;
+     cursor: pointer;
+ }
+
+ .sidenav span:hover {
+     color: #f1f1f1;
+ }
+
+ .sidenav span.active {
+     color: #ff5131;
+ }
+
+ .not-sidebar {
+     margin-left: 32px; /* Same as the width of the sidenav */
+ }
+
+ @media screen and (max-height: 450px) {
+     .sidenav {padding-top: 15px;}
+     .sidenav a {font-size: 18px;}
+ }
  span.side, span.sub {
      font-size: small;
  }
@@ -24,7 +66,6 @@
  var current_url;
  var tokens = {};
  var twolinestemplate='<td><div class="row"><span class="content">{0.item}</span><span class="side">{0.side}</span></div><div class="row"><span class="sub">{0.sub}</span></div></td>';
- var pictures_window;
 
  var collection_icon = {
      'Taxon': 'terminal',
@@ -250,6 +291,8 @@
      $('.search-filter').attr("disabled", "disabled");
      $('div.pager-page').hide()
      $('div#results-page').show()
+     $('.page-switcher').removeClass('active');
+     $('#tab-name-results').addClass('active');
      reset_results_height()
      if(term === undefined) {
          term = $('#search-filter').val();
@@ -405,13 +448,14 @@
  }
 
  function switch_page(e) {
-     tokens = {};
-     $.getJSON("{% url 'drop-token' '__all__' %}", function(data) {});
-     var appname = $(e.delegateTarget).data('app-name')
+     var app_name = $(e.delegateTarget).data('app-name')
+     var page_name = $(e.delegateTarget).data('page-name')
+     $('.page-switcher').removeClass('active');
+     $(e.delegateTarget).addClass('active');
      $('div.pager-page').hide()
-     $('div#home-page').show()
+     $('div#{}-page'.format(page_name)).show()
      $('div#home-spare img').hide()
-     $('div#home-spare img#{}-logo'.format(appname)).show()
+     $('div#home-spare img#{}-logo'.format(app_name)).show()
  }
 
  function link_statistics_to_searches() {
@@ -472,7 +516,7 @@
          }
      });
      csrf_token = getCookie('csrftoken');
-     pictures_window = window.open(undefined, 'pictures');
+     window.open(undefined, 'pictures');
      document.onkeydown = checkKey;
      $('#search-filter-button').click(lookup);
      search_history = [];
@@ -501,14 +545,22 @@
      // keep track of height
      window.addEventListener("resize", reset_results_height)
      reset_results_height()
+     $('.page-switcher').click(switch_page);
  });
 </script>
   </head>
   <body class="container-fluid">
-    <nav class="navbar navbar-expand-sm bg-light navbar-light stealing-height-from-results">
+    
+    <div class="sidenav">
+      <span class="nav-item active page-switcher" data-page-name="home" id="tab-name-home" data-app-name="ghini">Ghini</span>
+      <span class="nav-link page-switcher" data-page-name="results" id="tab-name-results">Results</span>
+      <span class="nav-link page-switcher" data-page-name="pics" id="tab-name-pictures">Pictures</span>
+    </div>
+
+    <nav class="not-sidebar navbar navbar-expand-sm bg-light navbar-light stealing-height-from-results">
       <!-- Brand -->
-      <i class="navbar-brand pager-go-home" data-app-name="taxasoft" href="#"><img src="{% static 'taxasoft-32.png' %}"/></i>
-      <i class="navbar-brand pager-go-home" data-app-name="ghini" href="#"><img src="{% static 'ghini-32.png' %}"/></i>
+      <i class="navbar-brand pager-go-home" data-page-name="home" data-app-name="taxasoft" href="#"><img src="{% static 'taxasoft-32.png' %}"/></i>
+      <i class="navbar-brand pager-go-home" data-page-name="home" data-app-name="ghini" href="#"><img src="{% static 'ghini-32.png' %}"/></i>
 
       <!-- Links -->
       <ul class="navbar-nav mr-auto">
@@ -568,7 +620,7 @@
 
     </nav>
 
-    <div class="pager-container">
+    <div class="not-sidebar pager-container">
       <div class="pager-page" id="results-page">
         <div style="position:fixed;z-index:999;height:0.5rem;width:100%" class="row progress">
           <div class="progress-bar Taxon" style="width:0%"></div>
@@ -628,6 +680,9 @@
             http://ghini.github.io/
           </div>
         </div>
+      </div>
+
+      <div class="container pager-page" id="pics-page">
       </div>
 
       <div class="container pager-page" id="home-page">
