@@ -55,21 +55,20 @@
  /* Container for image text */
  .caption-container {
      position: fixed;
-     height: 32px;
+     height: 58px;  /* should match top-nav-bar */
      width: 100%;
      top: 0;
      font-weight: bold;
      font-size: 18px;
      text-align: center;
-     background-color: #222;
+     background-color: #25387d;
      padding: 2px 16px;
      color: white;
-     z-index: 1;
+     z-index: 4;
  }
 
  .scrollable {
      width: 100%;
-     margin-top: 36px; /* matching caption-container height */
      z-index: -1;
  }
 
@@ -248,7 +247,12 @@
          return;
      }
      current_url = url;
-     // window.open(url.replace('infobox/', 'carousel/'), 'pictures');
+     $('#pictures-pane').empty();
+     $.get(url.replace('infobox/', 'carousel/'), function(data, status) {
+         console.log(status);
+         $('#pictures-pane').append($(data));
+         showSlides(1);
+     });
      $('tr').removeClass('table-success');
      if (typeof e !== 'undefined') {
          $('#infobox-object-text').empty();
@@ -580,34 +584,33 @@
                  $('input#search-filter').focus();
              case 65:  // A
                  return (!$(document.activeElement).hasClass('container-fluid'));
-             default:
+             case 75:
                  return false;
          }
-     } else {
-         switch (e.keyCode) {
-             case 34:  // PgDn
-                 if($('#pictures-tabber').hasClass('active')) {
-                     $('#home-tabber').trigger('click');
-                 } else
-                 if($('#results-tabber').hasClass('active')) {
-                     $('#pictures-tabber').trigger('click');
-                 } else
-                 {
-                     $('#results-tabber').trigger('click');
-                 }
-                 return false;
-             case 33:  // PgUp
-                 if($('#pictures-tabber').hasClass('active')) {
-                     $('#results-tabber').trigger('click');
-                 } else
-                 if($('#results-tabber').hasClass('active')) {
-                     $('#home-tabber').trigger('click');
-                 } else
-                 {
-                     $('#pictures-tabber').trigger('click');
-                 }
-                 return false;
-         }
+     } 
+     switch (e.keyCode) {
+         case 34:  // PgDn
+             if($('#pictures-tabber').hasClass('active')) {
+                 $('#home-tabber').trigger('click');
+             } else
+             if($('#results-tabber').hasClass('active')) {
+                 $('#pictures-tabber').trigger('click');
+             } else
+             {
+                 $('#results-tabber').trigger('click');
+             }
+             return false;
+         case 33:  // PgUp
+             if($('#pictures-tabber').hasClass('active')) {
+                 $('#results-tabber').trigger('click');
+             } else
+             if($('#results-tabber').hasClass('active')) {
+                 $('#home-tabber').trigger('click');
+             } else
+             {
+                 $('#pictures-tabber').trigger('click');
+             }
+             return false;
      }
      if(!$(document.activeElement).hasClass('container-fluid'))
          return;
@@ -705,7 +708,7 @@
       <li><a data-toggle="tab" href="#pictures-pane" id="pictures-tabber">Pictures</a></li>
     </ul>
 
-    <nav class="not-sidebar navbar navbar-expand-sm bg-light navbar-light stealing-height-from-results">
+    <nav class="not-sidebar navbar navbar-expand-sm bg-light navbar-light stealing-height-from-results" id="top-nav-bar">
       <!-- Brand -->
       <i class="navbar-brand pager-go-home" data-page-name="home" data-app-name="taxasoft" href="#"><img src="{% static 'taxasoft-32.png' %}"/></i>
       <i class="navbar-brand pager-go-home" data-page-name="home" data-app-name="ghini" href="#"><img src="{% static 'ghini-32.png' %}"/></i>
@@ -830,7 +833,7 @@
         </div>
       </div>
 
-      <div class="container tab-pane fade" id="pictures-pane">
+      <div class="container tab-pane fade" id="pictures-pane" style="margin-left: -30px;">
       </div>
 
       <div class="container tab-pane fade" id="home-pane">

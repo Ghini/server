@@ -64,7 +64,7 @@ class ImagesCarousel:
         except:
             d = {'object_name': 'not defining',
                  'images': []}
-        return render(request, 'pictures.html', d)
+        return render(request, 'carousel.html', d)
 
 
 @login_required

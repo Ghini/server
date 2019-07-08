@@ -1,0 +1,31 @@
+{% load static %}
+{% load thumbnails %}
+<!-- Image text -->
+<div class="caption-container">
+  <p id="caption">&nbsp;</p>
+</div>
+
+<div class="scrollable">
+  <!-- Thumbnail images -->
+  <div class="thumbs-row">
+    {% for image in images.all %}
+    {% get_thumbnail image.image.path "300x200" as thumbnail %}
+    <div class="thumbs-column">
+      <img class="thumbs-element cursor" src="{{ thumbnail.url }}" onclick="currentSlide({{ forloop.counter }})" alt="{{ object_name }} - {{ image.image.name }}">
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="container">
+    {% for image in images.all %}
+    <div class="mySlides">
+      <img src="{{ image.image.url }}" style="width:100%">
+    </div>
+    {% endfor %}
+
+    <!-- Next and previous buttons -->
+    <i class="prev fa fa-arrow-left" onclick="plusSlides(-1)"></i>
+    <i class="next fa fa-arrow-right" onclick="plusSlides(1)"></i>
+
+  </div>
+</div>
