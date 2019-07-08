@@ -1,24 +1,33 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
+<div class="row">
+  <div class="col-8">
+    <img class="rounded img-fluid align-middle" id="ghini-logo" src="{% static 'ghini-logo.png' %}">
+  </div>
+  <div class="col-4">
+    {% if form.errors %}
+    <p>Your username and password didn't match. Please try again.</p>
+    {% endif %}
 
-<form method="post" action="{% url 'login' %}">
-  {% csrf_token %}
-  <table>
-    <tr>
-      <td>{{ form.username.label_tag }}</td>
-      <td>{{ form.username }}</td>
-    </tr>
-    <tr>
-      <td>{{ form.password.label_tag }}</td>
-      <td>{{ form.password }}</td>
-    </tr>
-  </table>
+    <form method="post" action="{% url 'login' %}">
+      {% csrf_token %}
+      <table>
+        <tr>
+          <td>{{ form.username.label_tag }}</td>
+          <td>{{ form.username }}</td>
+        </tr>
+        <tr>
+          <td>{{ form.password.label_tag }}</td>
+          <td>{{ form.password }}</td>
+        </tr>
+      </table>
 
-  <input type="submit" value="login" />
-  <input type="hidden" name="next" value="{{ next }}" />
-</form>
+      <input type="submit" value="login" id="id_submit" />
+      <input type="hidden" name="next" value="{{ next }}" />
+      <input type="button" onclick="$('#id_username').val('guest');$('#id_password').val('guest');$('#id_submit').trigger('click');" value="guest access" style="margin-left:10px"/>
+    </form>
+  </div>
+</div>
 {% endblock %}

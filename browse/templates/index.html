@@ -118,7 +118,7 @@
      transform: rotate(-180deg);
  }
 
- .sidenav a {
+ .sidenav a, .sidenav i {
      float: left;
      padding: 12px 2px 18px 24px;
      text-decoration: none;
@@ -708,6 +708,7 @@
       <li><a data-toggle="tab" href="#home-pane" id="home-tabber">Ghini</a></li>
       <li><a data-toggle="tab" href="#results-pane" id="results-tabber">Results</a></li>
       <li><a data-toggle="tab" href="#pictures-pane" id="pictures-tabber">Pictures</a></li>
+      <li><a href="{% url 'logout' %}" id="sign-out" class="fa fa-sign-out" ></a></li>
     </ul>
 
     <nav class="not-sidebar navbar navbar-expand-sm bg-light navbar-light stealing-height-from-results" id="top-nav-bar">
