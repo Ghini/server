@@ -248,8 +248,10 @@
      }
      current_url = url;
      $('#pictures-pane').empty();
+     $('#pictures-pane').append($('<i class="fa fa-spinner fa-spin" style="font-size:32px;color:red;margin:32px;"></i>'));
      $.get(url.replace('infobox/', 'carousel/'), function(data, status) {
          console.log(status);
+         $('#pictures-pane').empty();
          $('#pictures-pane').append($(data));
          showSlides(1);
      });
