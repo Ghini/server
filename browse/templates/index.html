@@ -327,6 +327,7 @@
              tbody.append(itr);  // add it as last child
          })
          $('div#results-page .progress-bar.{}'.format(class_name)).attr('data-read-so-far', read_so_far);
+         {% if user.username != 'guest' %}
          $('div#results-box tr.{}-row'.format(class_name)).contextmenu(
              partial(function(class_name, e) {
                  $(e.delegateTarget).trigger('click');
@@ -337,6 +338,7 @@
                  });
                  return false;
              }, class_name));
+         {% endif %}
          if (processed !== 0 && data.done !== true) {
              // set Timeout for async iteration
              setTimeout(partial(pay_token, tbody, class_name, token, false), 1);
@@ -718,6 +720,7 @@
 
       <!-- Links -->
       <ul class="navbar-nav mr-auto">
+        {% if user.username != 'guest' %}
         <li class="nav-item dropdown" id="drop-insert" >
           <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Insert</a>
           <div class="dropdown-menu" id="insert-menu">
@@ -727,6 +730,7 @@
             <a class="dropdown-item" id="new-edit-location-POST" href="#" data-form-url="{% url 'location-post-form' %}">Location</a>
           </div>
         </li>
+        {% endif %}
         <li class="nav-item dropdown" id="drop-tools" >
           <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Tools</a>
           <div class="dropdown-menu" id="tools-menu">
@@ -913,6 +917,7 @@
            $('.context-menu.dropdown-menu').find('.dropdown-item').map((i, e) => [e.id.split('-')])
            $('#drop-insert').find('.dropdown-item').map((i, e) => [e.id.split('-')])
       -->
+      {% if user.username != 'guest' %}
       <div id="ContextMenu-Taxon" class="context-menu dropdown-menu">
         <a class="dropdown-item" id="taxon-edit-taxon-PUT" href="#">Edit</a>
         <a class="dropdown-item" id="taxon-edit-taxon-POST-taxon" href="#">Add sub taxon</a>
@@ -943,6 +948,7 @@
         <a class="dropdown-item" id="location-edit-location-PUT" href="#">Edit</a>
         <a class="dropdown-item" id="location-delete-location-DELETE" href="#">Delete</a>
       </div>
+      {% endif %}
 
       <!-- we only have two modal forms: delete and edit. -->
       <div class="modal" id="modal-form-delete">
