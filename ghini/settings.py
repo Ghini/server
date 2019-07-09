@@ -26,9 +26,10 @@ SECRET_KEY = 'z71k^&3+9a62-30mi96tf-@lgf1urps1zeosx%l^z4i4rn&esv'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-        '139.162.179.69',
-        'cuaderno.ghini.me'
-        ]
+    'localhost',
+    '139.162.179.69',
+    'cuaderno.ghini.me'
+]
 
 
 # Application definition

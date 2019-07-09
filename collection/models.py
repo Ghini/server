@@ -140,7 +140,7 @@ class Accession(models.Model):
         if self.taxon:
             best_identification = self.taxon.identify()
         else:
-            best_identification = 'not identified'
+            best_identification = '---'
         return {'item': self.code,
                 'side': '{0} plant groups in {1}'.format(self.plants.count(), str_locations),
                 'sub': best_identification}
