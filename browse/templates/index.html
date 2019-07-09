@@ -166,6 +166,8 @@
  var tokens = {};
  var twolinestemplate='<td><div class="row"><span class="content">{0.item}</span><span class="side">{0.side}</span></div><div class="row"><span class="sub">{0.sub}</span></div></td>';
 
+ var map;
+ 
  var collection_icon = {
      'Taxon': 'terminal',
      'Accession': 'vcard-o',
@@ -544,11 +546,82 @@
      return cookieValue;
  }
 
+ // set by zoomstart, examined by zoomend.
+ var previous_zoom = 0;
+
+ function onZoomStart() {
+     // remember the previous zoom, so you know whether you're zooming
+     // in, or out.
+     previous_zoom = map.getZoom();
+ }
+
+ function onMoveEnd() {
+     updateLocationHash();
+ }
+
+ function onZoomEnd() {
+     updateLocationHash();
+     var l = {};
+     for(var g in objects_layer) {
+         if (previous_zoom > map.getZoom()) {
+             // we are either zooming out ...
+             l = objects_layer[g][previous_zoom];
+             if (typeof l !== 'undefined')
+                 map.removeLayer(l);
+         } else {
+             // or zooming in !!!
+             l = objects_layer[g][map.getZoom()];
+             if (typeof l !== 'undefined' && objects_layer[g].visible)
+                 map.addLayer(l);
+         }
+     }
+ }
+
+ function mapSetView(lat, lon, zoom) {
+     map.setView([lat, lon], zoom);
+     updateLocationHash();
+     for (var g in objects_layer) {
+         for(var z in objects_layer[g]) {
+             if(z <= zoom) {
+                 map.addLayer(objects_layer[g][z]);
+             } else {
+                 map.removeLayer(objects_layer[g][z]);
+             }
+         }
+     }
+ }
+
+ function reset_map_height() {
+     if (map === undefined) {
+         map = L.map('map-pane', {zoomControl: false});
+         $('#map-pane').css('height', '{}px'.format(window.innerHeight - stolen_height()));
+     } else {
+         $('#map-pane').css('height', '{}px'.format(window.innerHeight - stolen_height()));
+         return;
+     }
+     // add the scale control
+     L.control.scale({ position: 'bottomleft' }).addTo(map);
+     // add the zoom control
+     L.control.zoom({ position: 'topright' }).addTo(map);
+     // create an OpenStreetMap tile layer
+     L.tileLayer(
+         'http://{s}.tile.osm.org/{z}/{x}/{y}.png', // osm server (most frequently updated)
+         { attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+           minZoom: 1,
+           maxZoom: 19
+         }).addTo(map);
+     map.setView([-0.18614,-78.48550],18);
+     console.log(map);
+ }
+
  function reset_results_height() {
      // collect the elements, get their height, sum the values, assign the rest to the results box
-     var stealing = $('.stealing-height-from-results').map(function (i, x) { return parseInt($(x).css('height'))})
-     var stolen = Object.values(stealing).slice(0, stealing.length).reduce((t, i) => t + i + 2)
-     $('#locked-height-container > div').css('height', '{}px'.format(window.innerHeight - stolen))
+     $('#locked-height-container > div').css('height', '{}px'.format(window.innerHeight - stolen_height()))
+ }
+
+ function stolen_height() {
+     var stealing = $('.stealing-height-from-results').map(function (i, x) { return parseInt($(x).css('height'))});
+     return Object.values(stealing).slice(0, stealing.length).reduce((t, i) => t + i + 2);
  }
 
  function switch_page(e) {
@@ -592,28 +665,23 @@
                  return false;
          }
      } 
+     var here, there;
      switch (e.keyCode) {
          case 34:  // PgDn
-             if($('#pictures-tabber').hasClass('active')) {
-                 $('#home-tabber').trigger('click');
-             } else
-             if($('#results-tabber').hasClass('active')) {
-                 $('#pictures-tabber').trigger('click');
-             } else
-             {
-                 $('#results-tabber').trigger('click');
+             here = $('ul.sidenav a.active');
+             there = here.parent().next().children()
+             if(there.data('toggle') != 'tab') {
+                 there = $('#home-tabber');
              }
+             there.trigger('click');
              return false;
          case 33:  // PgUp
-             if($('#pictures-tabber').hasClass('active')) {
-                 $('#results-tabber').trigger('click');
-             } else
-             if($('#results-tabber').hasClass('active')) {
-                 $('#home-tabber').trigger('click');
-             } else
-             {
-                 $('#pictures-tabber').trigger('click');
+             here = $('ul.sidenav a.active');
+             there = here.parent().prev().children();
+             if(there.length === 0) {
+                 there = $('#map-tabber');
              }
+             there.trigger('click');
              return false;
      }
      if(!$(document.activeElement).hasClass('container-fluid'))
@@ -665,7 +733,7 @@
      $(dots[slideIndex-1]).addClass("active");
      $("#caption").text($(dots[slideIndex-1]).attr('alt'));
  }
- $(function() {  // run at document ready
+ $(function() {  // function to run at document ready
      $('#search-filter').on('keypress', function (e) {
          if(e.which === 13) {
              lookup(e);
@@ -696,8 +764,10 @@
      $('div#results-page .row.progress').hide()
 
      // keep track of height
-     window.addEventListener("resize", reset_results_height)
+     window.addEventListener("resize", reset_results_height);
+     window.addEventListener("resize", reset_map_height);
      $('#results-tabber').on('shown.bs.tab', reset_results_height);
+     $('#map-tabber').on('shown.bs.tab', reset_map_height);
      $('#home-tabber').trigger('click');
 
      showSlides(1);
@@ -710,6 +780,7 @@
       <li><a data-toggle="tab" href="#home-pane" id="home-tabber">Ghini</a></li>
       <li><a data-toggle="tab" href="#results-pane" id="results-tabber">Results</a></li>
       <li><a data-toggle="tab" href="#pictures-pane" id="pictures-tabber">Pictures</a></li>
+      <li><a data-toggle="tab" href="#map-pane" id="map-tabber">Map</a></li>
       <li><a href="{% url 'logout' %}" id="sign-out" class="fa fa-sign-out" ></a></li>
     </ul>
 
@@ -841,6 +912,9 @@
       </div>
 
       <div class="container tab-pane fade" id="pictures-pane" style="margin-left: -30px;">
+      </div>
+
+      <div class="tab-pane fade" id="map-pane">
       </div>
 
       <div class="container tab-pane fade" id="home-pane">
