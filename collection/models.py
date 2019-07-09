@@ -137,9 +137,13 @@ class Accession(models.Model):
         str_locations = "{0} locations".format(len({p.location for p in self.plants.all()}))
         if str_locations == "{0} locations".format(1):  # this is thinking of translations
             str_locations = self.plants.first().location.inline
+        if self.taxon:
+            best_identification = self.taxon.identify()
+        else:
+            best_identification = 'not identified'
         return {'item': self.code,
                 'side': '{0} plant groups in {1}'.format(self.plants.count(), str_locations),
-                'sub': format(self.taxon.identify())}
+                'sub': best_identification}
 
     @property
     def infobox_url(self):
