@@ -194,6 +194,11 @@
      }
      tbody.empty();
      var tr, td, is_collapsible, btn, target_id, additional, div0;
+     if('plant pictures' in data && data['plant pictures'] !== 0) {
+         $('#pictures-tabber').text('Pictures ({})'.format(data['plant pictures']));
+     } else {
+         $('#pictures-tabber').text('(Pictures)');
+     }
      jQuery.each(data, function(key, value) {
          if (!key.startsWith('__') && value !== null && value !== '') {
              tr = $("<tr></tr>");
@@ -783,7 +788,7 @@
     <ul class="sidenav nav nav-tabs">
       <li><a data-toggle="tab" href="#home-pane" id="home-tabber">Ghini</a></li>
       <li><a data-toggle="tab" href="#results-pane" id="results-tabber">Results</a></li>
-      <li><a data-toggle="tab" href="#pictures-pane" id="pictures-tabber">Pictures</a></li>
+      <li><a data-toggle="tab" href="#pictures-pane" id="pictures-tabber">(Pictures)</a></li>
       <li><a data-toggle="tab" href="#map-pane" id="map-tabber">Map</a></li>
       <li><a href="{% url 'logout' %}" id="sign-out" class="fa fa-sign-out" ></a></li>
     </ul>
