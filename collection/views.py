@@ -67,7 +67,7 @@ class AccessionInfobox(AccessionDetail):
             result['verifications'] = (
                 'link', [("{} ({})".format(v.taxon.identify(), v.taxon.family),
                           "taxon where epithet='{0.epithet}' and rank.name='{0.rank.name}'".format(v.taxon),
-                          '\n'.join(["{0.contact.name} {0.level}".format(v)] + v.taxon.derivation_up_to_order))
+                          '\n'.join(["{0.contact.fullname} {0.level}".format(v)] + v.taxon.derivation_up_to_order))
                          for v in obj.verifications.all()])
             result['taxa'] = None
             result['received_quantity'] = obj.received_quantity
@@ -95,13 +95,13 @@ class ContactList(RequestLoginOnNonSafeMixin, generics.ListCreateAPIView):
     serializer_class = ContactSerializer
 
     def run_query(self, q, order=True):
-        result = self.get_queryset().filter(name__icontains=q)
+        result = self.get_queryset().filter(fullname__icontains=q)
         if order:
             result = self.order_query(result)
         return result
 
     def order_query(self, result):
-        result = result.order_by('name')
+        result = result.order_by('fullname')
         return result
 
 
