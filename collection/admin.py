@@ -10,6 +10,8 @@ class AccessionAdmin(admin.ModelAdmin):
 
 class ContactAdmin(admin.ModelAdmin):
     ordering = ['fullname']
+    list_display = ('id', 'fullname', 'user', )
+    list_editable = ('fullname', 'user', )
     search_fields = ['fullname']
 
 class VerificationAdmin(admin.ModelAdmin):
