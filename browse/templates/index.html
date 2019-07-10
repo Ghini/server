@@ -723,10 +723,15 @@
 
  function showSlides(n) {
      var slides = $(".mySlides");
-     if (slides.length === 0) { return };
+     if (slides.length === 0) {
+         return
+     };
      var dots = $(".thumbs-element.cursor");
-     if (n > slides.length) { slideIndex = 1 }
-     else if (n < 1) { slideIndex = slides.length };
+     if (n > slides.length) {
+         slideIndex = 1
+     } else if (n < 1) {
+         slideIndex = slides.length
+     };
      $(slides).css('display', 'none');
      $(dots).removeClass('active');
      $(slides[slideIndex-1]).css('display', "block");
