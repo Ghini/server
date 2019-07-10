@@ -255,7 +255,7 @@
          console.log(status);
          $('#pictures-pane').empty();
          $('#pictures-pane').append($(data));
-         showSlides(1);
+         currentSlide(1);
      });
      $('tr').removeClass('table-success');
      if (typeof e !== 'undefined') {
@@ -774,7 +774,7 @@
      $('#map-tabber').on('shown.bs.tab', reset_map_height);
      $('#home-tabber').trigger('click');
 
-     showSlides(1);
+     currentSlide(1);
  });
 </script>
   </head>
