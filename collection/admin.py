@@ -9,8 +9,8 @@ class AccessionAdmin(admin.ModelAdmin):
     autocomplete_fields = ['source']
 
 class ContactAdmin(admin.ModelAdmin):
-    ordering = ['name']
-    search_fields = ['name']
+    ordering = ['fullname']
+    search_fields = ['fullname']
 
 class VerificationAdmin(admin.ModelAdmin):
     autocomplete_fields = ['accession', 'taxon', 'contact']

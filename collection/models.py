@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-
+from django.contrib.auth.models import User
 
 _ = lambda x: x
 
@@ -50,10 +50,11 @@ recvd_type_values = (
 
 
 class Contact(models.Model):
-    name = models.CharField(max_length=64, default='')
+    user = models.OneToOneField(User, blank=True, null=True, on_delete=models.CASCADE)
+    fullname = models.CharField(max_length=64, default='')
 
     def __str__(self):
-        return self.name
+        return self.fullname
 
     @property
     def inline(self):
@@ -172,7 +173,7 @@ class Verification(models.Model):
     date = models.DateField(blank=False, null=False)
 
     def __str__(self):
-        return "{0.contact.name} says {0.accession.code} is a {1} - level {0.level}".format(self, self.taxon.identify())
+        return "{0.contact.fullname} says {0.accession.code} is a {1} - level {0.level}".format(self, self.taxon.identify())
 
     class Meta:
         unique_together = (('accession', 'seq'),
