@@ -4,6 +4,18 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
+def update_sequences(apps, schema_editor):
+    Taxon = apps.get_model('taxonomy', 'Taxon')
+    Rank = apps.get_model('taxonomy', 'Rank')
+    template = "SELECT setval('{0}_id_seq', (SELECT max(id) FROM {0}), true)"
+    from django.db import connection
+    with connection.cursor() as cursor:
+        cursor.execute(template.format(Taxon._meta.db_table))
+        cursor.execute(template.format(Rank._meta.db_table))
+
+def noop(apps, schema_editor):
+    pass
+
 def depopulate(apps, schema_editor):
     Rank = apps.get_model('taxonomy', 'Rank')
     Rank.objects.all().delete()
@@ -49,4 +61,5 @@ class Migration(migrations.Migration):
             name='rank',
             field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='taxonomy.Rank'),
         ),
+        migrations.RunPython(update_sequences, noop),
     ]
