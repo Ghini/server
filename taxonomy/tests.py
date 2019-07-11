@@ -2,11 +2,23 @@ from django.test import TestCase
 
 # Create your tests here.
 from taxonomy.models import Taxon, Rank
+from django.db import transaction
+
 
 from unittest import SkipTest
 
+
+@transaction.atomic
+def update_sequences():
+    from django.db import connection
+    with connection.cursor() as cursor:
+        template = "SELECT setval('{0}_id_seq', (SELECT max(id) FROM {0}), true)"
+        cursor.execute(template.format(Taxon._meta.db_table))
+        cursor.execute(template.format(Rank._meta.db_table))
+
 class TaxonTestCase(TestCase):
     def setUp(self):
+        update_sequences()
         self.r_reg, _ = Rank.objects.get_or_create(name="regnum", show_as=".epithet sp.")
         self.r_ord, _ = Rank.objects.get_or_create(name="ordo", show_as=".epithet sp.")
         self.r_fam, _ = Rank.objects.get_or_create(name="familia", show_as=".epithet sp.")

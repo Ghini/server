@@ -7,9 +7,6 @@ python:
   - "3.6"
   - "3.7"
 
-services:
-  - postgresql
-
 env:
   - DJANGO_VERSION=2.1
   - DJANGO_VERSION=2.2
