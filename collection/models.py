@@ -1,4 +1,4 @@
-from django.db import models
+from django.contrib.gis.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
 
@@ -72,11 +72,41 @@ class Contact(models.Model):
         return {'Accession': self.verifications.accession}
 
 
+class Institution(models.Model):
+    name = models.CharField(max_length=64, default='')
+    code = models.CharField(max_length=12, blank=True, default='')
+    abbreviation = models.CharField(max_length=12, blank=True, default='')
+    description = models.TextField(blank=True, default='')
+    contact_person = models.ForeignKey(Contact, blank=True, null=True, on_delete=models.SET_NULL, related_name='contact_for')
+    technical_person = models.ForeignKey(Contact, blank=True, null=True, on_delete=models.SET_NULL, related_name='technical_for')
+    institution_address = models.CharField(blank=True, max_length=64, default='')
+    location = models.PointField(null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def inline(self):
+        return "%s" % self
+
+    @property
+    def twolines(self):
+        return {'item': self.code, 'side': self.name, 'sub': self.description}
+
+    @property
+    def infobox_url(self):
+        return reverse('contact-infobox', args=[self.pk])
+
+    def depending_objects(self):
+        return {}
+
+
 class Accession(models.Model):
     taxa = models.ManyToManyField(Taxon, through='Verification', related_name='accessions')
 
     code = models.CharField(max_length=12, unique=True)
 
+    institution = models.ForeignKey(Institution, blank=True, null=True, on_delete=models.SET_NULL, related_name='accessions')
     accessioned_date = models.DateField(blank=True, null=True)
     received_date = models.DateField(blank=True, null=True)
     received_quantity = models.IntegerField(blank=False, default=1)

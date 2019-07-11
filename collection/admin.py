@@ -1,7 +1,7 @@
-from django.contrib import admin
+from django.contrib import admin, gis
 
 # Register your models here.
-from .models import Accession, Contact, Verification
+from .models import Accession, Contact, Verification, Institution
 
 class AccessionAdmin(admin.ModelAdmin):
     ordering = ['code']
@@ -17,6 +17,12 @@ class ContactAdmin(admin.ModelAdmin):
 class VerificationAdmin(admin.ModelAdmin):
     autocomplete_fields = ['accession', 'taxon', 'contact']
 
+class InstitutionAdmin(gis.admin.OSMGeoAdmin):
+    default_lon = -8406734
+    default_lat = 1166305
+    default_zoom = 13
+
 admin.site.register(Accession, AccessionAdmin)
 admin.site.register(Contact, ContactAdmin)
 admin.site.register(Verification, VerificationAdmin)
+admin.site.register(Institution, InstitutionAdmin)

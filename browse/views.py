@@ -11,6 +11,7 @@ import uuid
 
 from taxonomy.forms import TaxonForm
 from collection.forms import VerificationForm, AccessionForm, ContactForm
+from collection.models import Institution
 from garden.forms import PlantForm, LocationForm
 
 import threading
@@ -76,8 +77,10 @@ def index(request):
     plant_form = PlantForm()
     accession_form = AccessionForm()
     location_form = LocationForm()
+    institution = Institution.objects.first()
 
-    return render(request, 'index.html', {'taxon_form': taxon_form,
+    return render(request, 'index.html', {'institution': institution,
+                                          'taxon_form': taxon_form,
                                           'contact_form': contact_form,
                                           'plant_form': plant_form,
                                           'accession_form': accession_form,
