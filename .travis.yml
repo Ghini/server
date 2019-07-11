@@ -21,8 +21,9 @@ addons:
     - postgresql-9.6-postgis-2.4
 
 before_script:
-  - psql -c 'create database travis_ci_test;' -U postgres
-  - psql -U postgres -c "create extension postgis"
+  - createuser -U postgres -d mario --superuser
+  - createdb -U mario ghini
+  - psql ghini mario -c "create extension postgis"
 
 # command to install dependencies
 install:
