@@ -53,9 +53,13 @@ class Plant(models.Model):
 
     @property
     def twolines(self):
+        if self.taxon:
+            best_identification = self.accession.taxon.identify()
+        else:
+            best_identification = '---'
         return {'item': '{}.{}'.format(self.accession.code, self.code),
                 'side': '{0.quantity} alive in {0.location.inline}'.format(self),
-                'sub': format(self.accession.taxon.identify())}
+                'sub': best_identification}
 
     @property
     def infobox_url(self):
