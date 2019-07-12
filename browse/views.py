@@ -131,6 +131,18 @@ def get_filter_tokens(request):
     return JsonResponse(result)
 
 
+def serialize(p):
+    try:
+        return eval(p.json)
+    except:
+        pass
+    try:
+        return [eval(i.json) for i in p]
+    except:
+        pass
+    return p
+
+
 def cash_token(request, token):
     content = []
     result = {'done': False,
@@ -140,7 +152,7 @@ def cash_token(request, token):
         iqs, result['expect'] = queued_queries[token]
         for i in range(20):
             item = next(iqs)
-            content.append({key: getattr(item, key, None)
+            content.append({key: serialize(getattr(item, key, None))
                             for key in ['inline', 'twolines', 'infobox_url', 'geometry']})
     except StopIteration:
         del queued_queries[token]
