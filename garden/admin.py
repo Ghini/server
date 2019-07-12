@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.gis import admin as geoadmin
 
 
 # Register your models here.
@@ -8,7 +9,10 @@ class LocationAdmin(admin.ModelAdmin):
     ordering = ['code']
     search_fields = ['name', 'code']
 
-class PlantAdmin(admin.ModelAdmin):
+class PlantAdmin(geoadmin.OSMGeoAdmin):
+    default_lon = -8406734
+    default_lat = 1166305
+    default_zoom = 13
     search_fields = ['code']
     autocomplete_fields = ['accession', 'location']
 

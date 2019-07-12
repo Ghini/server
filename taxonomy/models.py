@@ -47,6 +47,14 @@ class Taxon(models.Model):
     genus = models.CharField(max_length=40, blank=True, null=True)
     family = models.CharField(max_length=40, blank=True, null=True)
 
+    @property
+    def geometry(self):
+        try:
+            result = [p.geometry for p in a.all() for a in self.accessions.all()]
+        except:
+            result = []
+        return result
+
     def save(self, *args, **kwargs):
         if not self.genus: self.genus = self.get_genus()
         if not self.family: self.family = self.get_family()
