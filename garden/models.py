@@ -53,7 +53,7 @@ class Plant(models.Model):
 
     @property
     def twolines(self):
-        if self.taxon:
+        if self.accession.taxon:
             best_identification = self.accession.taxon.identify()
         else:
             best_identification = '---'
