@@ -615,7 +615,7 @@
            minZoom: 1,
            maxZoom: 19
          }).addTo(map);
-     map.setView([{{ institution.location.y }}, {{ institution.location.x }}], 17);
+     map.setView([{{ institution.geometry.y }}, {{ institution.geometry.x }}], 17);
      console.log(map);
  }
 

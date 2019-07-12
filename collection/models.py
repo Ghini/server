@@ -80,7 +80,7 @@ class Institution(models.Model):
     contact_person = models.ForeignKey(Contact, blank=True, null=True, on_delete=models.SET_NULL, related_name='contact_for')
     technical_person = models.ForeignKey(Contact, blank=True, null=True, on_delete=models.SET_NULL, related_name='technical_for')
     institution_address = models.CharField(blank=True, max_length=64, default='')
-    location = models.PointField(null=True, blank=True)
+    geometry = models.PointField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -125,6 +125,18 @@ class Accession(models.Model):
             while True:
                 qs = next(plants_generator).images
                 result |= qs
+        except:
+            pass
+        return result
+
+    @property
+    def geometry(self):
+        result = []
+        try:
+            plants_generator = (p for p in self.plants.all())
+            while True:
+                item = next(plants_generator).geometry
+                result.append(item)
         except:
             pass
         return result

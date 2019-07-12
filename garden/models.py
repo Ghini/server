@@ -1,4 +1,4 @@
-from django.db import models
+from django.contrib.gis.db import models
 from django.urls import reverse
 
 from taxonomy.models import Taxon
@@ -39,6 +39,7 @@ class Plant(models.Model):
     code = models.CharField(max_length=8, default='1')
     location = models.ForeignKey(Location, related_name="plants", blank=False, on_delete=models.PROTECT)
     quantity = models.IntegerField(blank=False, default=1)
+    geometry = models.PointField(null=True, blank=True)
 
     class Meta:
         unique_together = (('accession', 'code'),

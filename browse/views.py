@@ -141,7 +141,7 @@ def cash_token(request, token):
         for i in range(20):
             item = next(iqs)
             content.append({key: getattr(item, key, None)
-                            for key in ['inline', 'twolines', 'infobox_url']})
+                            for key in ['inline', 'twolines', 'infobox_url', 'geometry']})
     except StopIteration:
         del queued_queries[token]
         result['done'] = True
