@@ -196,6 +196,8 @@
      var tr, td, is_collapsible, btn, target_id, additional, div0;
      if('plant pictures' in data && data['plant pictures'] !== 0) {
          $('#pictures-tabber').text('Pictures ({})'.format(data['plant pictures']));
+     } else if('pictures' in data && data['pictures'] !== 0) {
+         $('#pictures-tabber').text('Pictures ({})'.format(data['pictures']));
      } else {
          $('#pictures-tabber').text('(Pictures)');
      }
@@ -659,7 +661,6 @@
 
  function checkKey(e) {
      e = e || window.event;
-     console.log(e.keyCode);
      if (e.ctrlKey) {
          switch (e.keyCode) {
              case 76:  // L
