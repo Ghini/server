@@ -1,5 +1,6 @@
 from django import forms
 from django.http import JsonResponse
+from django.contrib.gis import forms as geoforms
 
 from django_select2 import forms as s2forms
 
@@ -22,7 +23,8 @@ class LocationForm(forms.ModelForm):
         return view
 
 
-class PlantForm(forms.ModelForm):
+class PlantForm(geoforms.ModelForm):
+
     class Meta:
         model = Plant
         fields = '__all__'
@@ -31,6 +33,7 @@ class PlantForm(forms.ModelForm):
                                                    search_fields=['name__icontains', 'code__icontains']),
             'accession': s2forms.ModelSelect2Widget(model=Accession,
                                                     search_fields=['code__icontains']),
+            'geometry': geoforms.OSMWidget(attrs={'map_width': 500, 'map_height': 240}),
         }
 
     @classmethod
