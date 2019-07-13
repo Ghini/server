@@ -133,11 +133,11 @@ def get_filter_tokens(request):
 
 def serialize(p):
     try:
-        return eval(p.json)
+        return p.coords
     except:
         pass
     try:
-        return [eval(i.json) for i in p]
+        return [i.coords for i in p]
     except:
         pass
     return p

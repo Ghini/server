@@ -88,6 +88,8 @@
                          //      succeeds the result is a singleton array containing the
                          //      value at the lookup path; otherwise the result is [].
                          //  4.  Unwrap the result by reducing with '' as the default value.
+                         var specify;
+                         [key, specify] = key.split(':');
                          var path = key.split ('.');
                          var value = (/^\d+$/.test (path[0]) ? path : ['0'].concat (path))
                              .reduce (function(maybe, key) {
@@ -98,14 +100,21 @@
                                  }, []);
                              }, [args])
                              .reduce (function(_, x) { return x; }, '');
-
-                         if (xf == null) {
-                             return value;
-                         } else if (Object.prototype.hasOwnProperty.call (transformers, xf)) {
-                             return transformers[xf] (value);
-                         } else {
-                             throw ValueError ('no transformer named "' + xf + '"');
+                         if (xf != null) {
+                             if (Object.prototype.hasOwnProperty.call (transformers, xf)) {
+                                 value = transformers[xf] (value);
+                             } else {
+                                 throw ValueError ('no transformer named "' + xf + '"');
+                             }
                          }
+                         if (specify !== undefined && typeof value === 'number') {
+                             var len, digits;
+                             [len, digits] = specify.slice(0, -1).split('.');
+                             len = Number(len);
+                             digits = Number(digits);
+                             value = value.toFixed(digits);
+                         }
+                         return value;
                      }
                  );
              };
