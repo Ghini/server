@@ -166,7 +166,7 @@
  var tokens = {};
  var twolinestemplate='<td><div class="row"><span class="content">{0.item}</span><span class="side">{0.side}</span></div><div class="row"><span class="sub">{0.sub}</span></div></td>';
 
- var map;
+ var map, objects_layer;
  
  var collection_icon = {
      'Taxon': 'terminal',
@@ -603,6 +603,10 @@
  function reset_map_height() {
      if (map === undefined) {
          map = L.map('map-pane', {zoomControl: false});
+         map.on('moveend', onMoveEnd);
+         map.on('zoomend', onZoomEnd);
+         map.on('zoomstart', onZoomStart);
+         objects_layer = {};
          $('#map-pane').css('height', '{}px'.format(window.innerHeight - stolen_height()));
      } else {
          $('#map-pane').css('height', '{}px'.format(window.innerHeight - stolen_height()));
@@ -625,7 +629,8 @@
 
  function reset_results_height() {
      // collect the elements, get their height, sum the values, assign the rest to the results box
-     $('#locked-height-container > div').css('height', '{}px'.format(window.innerHeight - stolen_height()))
+     $('#locked-height-container > div').css('height', '{}px'.format(window.innerHeight - stolen_height()));
+     updateLocationHash();
  }
 
  function stolen_height() {
@@ -634,9 +639,9 @@
  }
 
  function switch_page(e) {
-     var app_name = $(e.delegateTarget).data('app-name')
-     $('div#home-spare img').hide()
-     $('div#home-spare img#{}-logo'.format(app_name)).show()
+     var app_name = $(e.delegateTarget).data('app-name');
+     $('div#home-spare img').hide();
+     $('div#home-spare img#{}-logo'.format(app_name)).show();
  }
 
  function link_statistics_to_searches() {
@@ -745,6 +750,18 @@
      $(dots[slideIndex-1]).addClass("active");
      $("#caption").text($(dots[slideIndex-1]).attr('alt'));
  }
+ function updateLocationHash() {
+     var tail = '';
+     if(map != null) {
+         var centre = map.getCenter();
+         centre.zoom = map.getZoom();
+         tail += ';map={zoom}/{lat}/{lng}'.format(centre);
+     }
+     if ($('#search-filter').val() != '') {
+         tail += ';q={}'.format($('#search-filter').val())
+     }
+     window.location.hash = '#page={}'.format($('ul.sidenav a.active').data('slug')) + tail;
+ }
  $(function() {  // function to run at document ready
      $('#search-filter').on('keypress', function (e) {
          if(e.which === 13) {
@@ -779,6 +796,7 @@
      window.addEventListener("resize", reset_results_height);
      window.addEventListener("resize", reset_map_height);
      $('#results-tabber').on('shown.bs.tab', reset_results_height);
+     $('#tabbers a').on('shown.bs.tab', updateLocationHash);
      $('#map-tabber').on('shown.bs.tab', reset_map_height);
      $('#home-tabber').trigger('click');
 
@@ -788,11 +806,11 @@
   </head>
   <body class="container-fluid">
     
-    <ul class="sidenav nav nav-tabs">
-      <li><a data-toggle="tab" href="#home-pane" id="home-tabber">Ghini</a></li>
-      <li><a data-toggle="tab" href="#results-pane" id="results-tabber">Results</a></li>
-      <li><a data-toggle="tab" href="#pictures-pane" id="pictures-tabber">(Pictures)</a></li>
-      <li><a data-toggle="tab" href="#map-pane" id="map-tabber">Map</a></li>
+    <ul id="tabbers" class="sidenav nav nav-tabs">
+      <li><a data-toggle="tab" href="#home-pane" data-slug="home" id="home-tabber">Ghini</a></li>
+      <li><a data-toggle="tab" href="#results-pane" data-slug="results" id="results-tabber">Results</a></li>
+      <li><a data-toggle="tab" href="#pictures-pane" data-slug="pictures" id="pictures-tabber">(Pictures)</a></li>
+      <li><a data-toggle="tab" href="#map-pane" data-slug="map" id="map-tabber">Map</a></li>
       <li><a href="{% url 'logout' %}" id="sign-out" class="fa fa-sign-out" ></a></li>
     </ul>
 
