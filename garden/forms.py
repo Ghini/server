@@ -33,7 +33,7 @@ class PlantForm(geoforms.ModelForm):
                                                    search_fields=['name__icontains', 'code__icontains']),
             'accession': s2forms.ModelSelect2Widget(model=Accession,
                                                     search_fields=['code__icontains']),
-            'geometry': geoforms.OSMWidget(attrs={'map_width': 500, 'map_height': 240}),
+            'geometry': geoforms.OSMWidget(attrs={'map_height': 240, 'default_zoom': 8}),
         }
 
     @classmethod
@@ -44,5 +44,7 @@ class PlantForm(geoforms.ModelForm):
             else:
                 acc = Accession.objects.get(code=accession_code)
                 obj = Plant(accession=acc)
-            return JsonResponse({'form': "%s" % PlantForm(instance=obj)})
+            form = PlantForm(instance=obj)
+            return JsonResponse({'form': form.as_table(),
+                                 'media': form.media.render()})
         return view
