@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_gis',
-    'django.contrib.gis',
+    'leaflet',
 
     'thumbnails',
     'django_select2',
@@ -153,4 +153,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+}
+
+LEAFLET_CONFIG = {
+    'MAX_ZOOM': 18,
+    'DEFAULT_ZOOM': 16,
+    'NO_GLOBALS': False,
 }

@@ -1,8 +1,7 @@
 from django import forms
 from django.http import JsonResponse
-from django.contrib.gis import forms as geoforms
-
 from django_select2 import forms as s2forms
+from leaflet.forms.widgets import LeafletWidget
 
 from collection.models import Accession
 from .models import Location, Plant
@@ -23,7 +22,7 @@ class LocationForm(forms.ModelForm):
         return view
 
 
-class PlantForm(geoforms.ModelForm):
+class PlantForm(forms.ModelForm):
 
     class Meta:
         model = Plant
@@ -33,7 +32,7 @@ class PlantForm(geoforms.ModelForm):
                                                    search_fields=['name__icontains', 'code__icontains']),
             'accession': s2forms.ModelSelect2Widget(model=Accession,
                                                     search_fields=['code__icontains']),
-            'geometry': geoforms.OSMWidget(attrs={'map_height': 240, 'default_zoom': 8}),
+            'geometry': LeafletWidget(attrs={'loadevent': ''}),
         }
 
     @classmethod
@@ -45,6 +44,5 @@ class PlantForm(geoforms.ModelForm):
                 acc = Accession.objects.get(code=accession_code)
                 obj = Plant(accession=acc)
             form = PlantForm(instance=obj)
-            return JsonResponse({'form': form.as_table(),
-                                 'media': form.media.render()})
+            return JsonResponse({'form': form.as_table()})
         return view

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.contrib.gis import admin as geoadmin
+from leaflet.admin import LeafletGeoAdmin
 
 
 # Register your models here.
@@ -9,7 +9,7 @@ class LocationAdmin(admin.ModelAdmin):
     ordering = ['code']
     search_fields = ['name', 'code']
 
-class PlantAdmin(geoadmin.OSMGeoAdmin):
+class PlantAdmin(LeafletGeoAdmin):
     default_lon = -8406734
     default_lat = 1166305
     default_zoom = 13

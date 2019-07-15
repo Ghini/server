@@ -503,8 +503,10 @@
          // show the form
          $(modal_form).modal();
          // stretch width of elements to new size of modal
-         $('.modal td select').css({width: '100%'})
-         $('.modal td span').css({width: '100%'})
+         $('.modal td select').css({width: '100%'});
+         $('.modal td span').css({width: '100%'});
+         $('#id_geometry-map').css('width', '400px');
+         window["leafletmapid_geometry-map"].invalidateSize();
      });
      // set the 'proceed' callback
      $(modal_form).find('button.action-confirm').unbind('click');
@@ -610,6 +612,7 @@
          $('#map-pane').css('height', '{}px'.format(window.innerHeight - stolen_height()));
      } else {
          $('#map-pane').css('height', '{}px'.format(window.innerHeight - stolen_height()));
+         $('#map-pane').trigger('resize');
          return;
      }
      // add the scale control
