@@ -166,7 +166,15 @@
  var tokens = {};
  var twolinestemplate='<td><div class="row"><span class="content">{0.item}</span><span class="side">{0.side}</span></div><div class="row"><span class="sub">{0.sub}</span></div></td>';
 
- var map, objects_layer;
+ var map,
+     objects_layer = {},
+     objects_container = {},
+     models = {},
+     markers = {};    // all markers!!!
+
+ // highlighted markers!
+ markers.highlighted = [];
+
  
  var collection_icon = {
      'Taxon': 'terminal',
@@ -180,6 +188,15 @@
      return function(...args) {
          return func.call(this, ...argsBound, ...args);
      }
+ }
+
+ function set_alternative(selector, lead, trail) {
+     $(selector).removeClass(function (index, css) {
+         return (css.split(' ').filter(function(x) {
+             return x.toString().match("^" + lead);
+         }).join(' '));
+     });
+     $(selector).addClass(lead + '-' + trail);
  }
 
  function replace_search_filter(value, e) {
@@ -326,6 +343,10 @@
              if (first_td) {
                  $(itd).trigger('click');
                  first_td = false;
+             }
+             item.layer_name = class_name.toLowerCase();
+             if(item.geometry != null) {
+                 append_point_to_layer(item);
              }
              processed++;
              if(tokens[token] !== true) {
@@ -608,11 +629,10 @@
          map.on('moveend', onMoveEnd);
          map.on('zoomend', onZoomEnd);
          map.on('zoomstart', onZoomStart);
-         objects_layer = {};
          $('#map-pane').css('height', '{}px'.format(window.innerHeight - stolen_height()));
      } else {
          $('#map-pane').css('height', '{}px'.format(window.innerHeight - stolen_height()));
-         $('#map-pane').trigger('resize');
+         map.invalidateSize();
          return;
      }
      // add the scale control
@@ -627,6 +647,7 @@
            maxZoom: 19
          }).addTo(map);
      map.setView([{{ institution.geometry.y }}, {{ institution.geometry.x }}], 17);
+     map.invalidateSize();
      console.log(map);
  }
 
@@ -736,6 +757,17 @@
      showSlides(slideIndex = n);
  }
 
+ function generate_guid(mongo_id) {
+     if(mongo_id === undefined) {
+         var S4 = function() {
+             return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+         };
+         return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+     } else {
+         return mongo_id;
+     }
+ }
+
  function showSlides(n) {
      var slides = $(".mySlides");
      if (slides.length === 0) {
@@ -753,6 +785,7 @@
      $(dots[slideIndex-1]).addClass("active");
      $("#caption").text($(dots[slideIndex-1]).attr('alt'));
  }
+
  function updateLocationHash() {
      var tail = '';
      if(map != null) {
@@ -765,12 +798,115 @@
      }
      window.location.hash = '#page={}'.format($('ul.sidenav a.active').data('slug')) + tail;
  }
+
+ function append_point_to_layer(item) {
+     console.log(item);
+     item._id = item.inline;
+     item.color = 'blue';
+     item.icon = 'tree';
+     item.layer_zoom = 1;
+     [item.lon, item.lat] = item.geometry;
+     var g = item.layer_name;
+     if(typeof objects_container[g] === 'undefined')
+         objects_container[g] = {};
+     if(g.startsWith('__')) {
+         objects_container[g][item._id] = item;
+         return;
+     } else {
+         if(typeof objects_container[g][item._id] !== 'undefined') {
+             return;
+         }
+         objects_container[g][item._id] = item;
+     }
+
+     if ('icon' in item && 'color' in item) {
+         var icon = L.AwesomeMarkers.icon({ color: item.color,
+                                            icon: item.icon });
+         item.icon = icon;
+     }
+
+     var z = item.layer_zoom;
+     var l;
+
+     var list_item, anchor, icon_element;
+
+     models[g].update_menu(item);
+     if (typeof objects_layer[g] === 'undefined' || Object.keys(objects_layer[g]).length === 0) {
+         console.log('not found layers', g, "... creating now");
+         objects_layer[g] = {};
+         objects_layer[g].visible = true;
+
+         list_item = $('<li/>', { id: 'toggle-menu-item-' + g });
+         $('#toggle-menu-list').append(list_item);
+         anchor = $('<a/>',
+                    { href: '#',
+                      onclick: 'toggleLayerCheck(this, "' + g + '"); return false;'
+                    });
+         list_item.append(anchor);
+         icon_element = $('<i/>', { class: 'icon-ok icon-black' });
+         anchor.append(icon_element);
+         anchor.append(" " + g);
+     }
+     if (!objects_layer[g][z]) {
+         objects_layer[g][z] = L.layerGroup();
+         l = objects_layer[g][z];
+         if(z <= map.getZoom()) {
+             map.addLayer(l);
+         }
+     }
+     l = objects_layer[g][z];
+
+     var marker = L.marker([item.lat, item.lon],
+                           item);
+     marker.addTo(l).bindPopup(models[g].text.format(item),
+                               {marker: marker});
+     var marker_id = generate_guid(item._id);
+
+     markers[item._id] = marker;
+     marker.on('mouseover',
+               function() {
+                   if($('i.ghini-magnet.icon-pushpin').length !== 0)
+                       return;
+                   marker._icon.id = marker_id;
+                   set_alternative('#' + marker_id, 'awesome-marker-icon', 'orange');
+               });
+     marker.on('mouseout',
+               function() {
+                   if($('i.ghini-magnet.icon-pushpin').length !== 0)
+                       return;
+                   set_alternative('#' + marker_id, 'awesome-marker-icon', item.color);
+               });
+
+     if(item.lon > 100) {
+         item.lon -= 360;
+         marker = L.marker([item.lat, item.lon],
+                           item);
+         item.lon += 360;
+         marker.addTo(l).bindPopup(models[g].text.format(item),
+                                   {marker: marker});
+     }
+     if(item.lon < -100) {
+         item.lon += 360;
+         marker = L.marker([item.lat, item.lon],
+                           item);
+         item.lon -= 360;
+         marker.addTo(l).bindPopup(models[g].text.format(item),
+                                   {marker: marker});
+     }
+ }
+
  $(function() {  // function to run at document ready
      $('#search-filter').on('keypress', function (e) {
          if(e.which === 13) {
              lookup(e);
          }
      });
+     objects_layer['plant'] = {};
+     objects_layer['plant'].visible = true;
+     models['plant'] = {
+         'text': '<b>{code}</b><br/>{vernacular}<br/>{species} ({family})<br/>' +
+                 '<div onclick="$(\'div.tab-content > div.active > input\')[0].value = \'{species}\'; $(\'div.tab-content > div.active > input\').keyup(); return false;">search species</div>',
+         'update_menu': function (item) {}};
      csrf_token = getCookie('csrftoken');
      $(window).on('keydown', checkKey);
      $('#search-filter-button').click(lookup);

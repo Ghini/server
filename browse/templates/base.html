@@ -16,10 +16,11 @@
 
     <!-- CSS libraries-->
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.min.css' %}" crossorigin="anonymous" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.min.css' %}" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/leaflet.css' %}" crossorigin="anonymous">
-    <link href="{% static 'css/select2.min.css' %}" type="text/css" media="screen" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/select2.min.css' %}" type="text/css" media="screen">
+    <link rel="stylesheet" href="{% static 'css/leaflet.awesome-markers.css' %}">
     {% leaflet_css %}
     {% leaflet_css plugins="forms" %}
     <!-- ./ CSS libraries-->
@@ -33,6 +34,7 @@
     <script type="text/javascript" src="/static/django_select2/django_select2.js"></script>
     {% leaflet_js %}
     {% leaflet_js plugins="forms" %}
+    <script src="{% static 'js/leaflet.awesome-markers.js' %}"></script>
     <!-- ./ JS libraries -->
 
     <script>
