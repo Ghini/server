@@ -191,12 +191,12 @@
  }
 
  function set_alternative(selector, lead, trail) {
-     $(selector).removeClass(function (index, css) {
+     selector.not('.awesome-marker-shadow').removeClass(function (index, css) {
          return (css.split(' ').filter(function(x) {
              return x.toString().match("^" + lead);
          }).join(' '));
      });
-     $(selector).addClass(lead + '-' + trail);
+     selector.not('.awesome-marker-shadow').addClass(lead + '-' + trail);
  }
 
  function replace_search_filter(value, e) {
