@@ -166,6 +166,7 @@
  var tokens = {};
  var twolinestemplate='<td><div class="row"><span class="content">{0.item}</span><span class="side">{0.side}</span></div><div class="row"><span class="sub">{0.sub}</span></div></td>';
 
+ var markerBounds;
  var map,
      objects_layer = {},
      objects_container = {},
@@ -288,6 +289,8 @@
          $('#infobox-object-text').empty();
          $('#infobox-object-text').append($(e.delegateTarget).find('span.content').clone());
          $(e.delegateTarget).addClass('table-success');
+         set_alternative($('.plant-marker'), 'awesome-marker-icon', 'blue');
+         set_alternative($('.plant-marker.{}'.format(e.delegateTarget.id)), 'awesome-marker-icon', 'orange');
      }
      $('#infobox-table tbody').empty();
      if(url.match('taxonomy/taxon/')) {
@@ -324,10 +327,11 @@
          var total_expected = sumDataEntries('div#results-page .progress-bar', 'expect');
          var processed = 0;
          jQuery.each(data['chunk'], function(index, item) {
+             item.uuid = generate_guid();
              read_so_far += 1;
              $('div#results-page .progress-bar.{}'.format(class_name))
                  .css('width', "{}%".format(100 * read_so_far / total_expected));
-             itr = $('<tr class="{}-row"></tr>'.format(class_name));
+             itr = $('<tr id="{0.uuid}" class="{1}-row"></tr>'.format(item, class_name));
              $(itr).attr('data-infobox-url', item.infobox_url);
              $(itr).attr('data-form-url', item.infobox_url.replace('infobox/', 'form/'));
              itr.click(partial(update_infobox, item.infobox_url));
@@ -346,9 +350,12 @@
              }
              if(item.geometries != null && item.geometries.length != 0) {
                  jQuery.each(item.geometries, function(i, geometry) {
-                     geometry.layer_name = class_name.toLowerCase();
-                     geometry.inline = item.inline;
-                     append_point(geometry);
+                     if (geometry != null) {
+                         geometry.layer_name = class_name.toLowerCase();
+                         geometry.row_id = item.uuid;
+                         geometry.inline = item.inline;
+                         append_point(geometry);
+                     }
                  })
              }
              processed++;
@@ -385,6 +392,9 @@
                      $('div#results-page .row.progress').hide();
                  }
              }, 1250);
+         }
+         if (markerBounds.isValid() && map.initialized) {
+             map.fitBounds(markerBounds);
          }
      })
  }
@@ -431,6 +441,7 @@
  function lookup(e, term) {
      tokens = {};
      objects_layer = {};
+     markerBounds = L.latLngBounds();
      $.getJSON("{% url 'drop-token' '__all__' %}", function(data) {});
      $('.search-filter').attr("disabled", "disabled");
      $('#results-tabber').trigger('click');
@@ -650,15 +661,30 @@
            minZoom: 1,
            maxZoom: 19
          }).addTo(map);
-     map.setView([{{ institution.geometry.y }}, {{ institution.geometry.x }}], 17);
+     if (markerBounds.isValid()) {
+         map.fitBounds(markerBounds);
+     } else {
+         map.setView([{{ institution.geometry.y }}, {{ institution.geometry.x }}], 17);
+     }
      map.invalidateSize();
      console.log(map);
+ }
+
+ function centre_map_on_marker(marker) {
+     var latLngs = [ marker.getLatLng() ];
+     var markerBounds = L.latLngBounds(latLngs);
+     map.fitBounds(markerBounds);
  }
 
  function reset_results_height() {
      // collect the elements, get their height, sum the values, assign the rest to the results box
      $('#locked-height-container > div').css('height', '{}px'.format(window.innerHeight - stolen_height()));
      updateLocationHash();
+ }
+
+ function show_current_row() {
+     var row = $('#results-box .table-success');
+     row[0].scrollIntoView();
  }
 
  function stolen_height() {
@@ -761,7 +787,7 @@
      showSlides(slideIndex = n);
  }
 
- function generate_guid(mongo_id) {
+ function generate_guid(mongo_id) {  // generate unique identifier
      if(mongo_id === undefined) {
          var S4 = function() {
              return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
@@ -805,7 +831,7 @@
 
  function append_point(item) {  // cfr.: item.layer_name
      console.log('append_point', item);
-     item._id = item.inline;
+     var marker_id = item._id = generate_guid(item._id);
      item.color = 'blue';
      item.icon = 'tree';
      item.layer_zoom = 1;
@@ -825,7 +851,8 @@
 
      if ('icon' in item && 'color' in item) {
          var icon = L.AwesomeMarkers.icon({ color: item.color,
-                                            icon: item.icon });
+                                            icon: item.icon,
+                                            className: 'awesome-marker plant-marker ' + item.row_id});
          item.icon = icon;
      }
 
@@ -865,21 +892,23 @@
                            item);
      marker.addTo(l).bindPopup(models[g].text.format(item),
                                {marker: marker});
-     var marker_id = generate_guid(item._id);
+     markerBounds.extend(marker.getLatLng());
 
      markers[item._id] = marker;
+     marker.on('click',
+               function(){
+                   $('#'+item.row_id).trigger('click');
+               });
      marker.on('mouseover',
                function() {
-                   if($('i.ghini-magnet.icon-pushpin').length !== 0)
-                       return;
                    marker._icon.id = marker_id;
-                   set_alternative('#' + marker_id, 'awesome-marker-icon', 'orange');
+                   set_alternative($('#' + marker_id), 'awesome-marker-icon', 'purple');
                });
      marker.on('mouseout',
                function() {
-                   if($('i.ghini-magnet.icon-pushpin').length !== 0)
-                       return;
-                   set_alternative('#' + marker_id, 'awesome-marker-icon', item.color);
+                   var is_matching_selected = $('#{}.table-success'.format(item.row_id));
+                   var colour = (is_matching_selected.length != 0) ? 'orange' : item.color;
+                   set_alternative($('#' + marker_id), 'awesome-marker-icon', colour);
                });
 
      // adding extra marker to provide some overlap in Pacific area.
@@ -911,17 +940,17 @@
      objects_layer['plant'] = {};
      objects_layer['plant'].visible = true;
      models['plant'] = {
-     'text': '<b>{code}</b><br/>{vernacular}<br/>{species} ({family})<br/>' +
-     '<div onclick="$(\'div.tab-content > div.active > input\')[0].value = \'{species}\'; $(\'div.tab-content > div.active > input\').keyup(); return false;">search species</div>',
-     'update_menu': function (item) {}};
+         'text': '<b>{code}</b><br/>{vernacular}<br/>{species} ({family})<br/>' +
+                 '<div onclick="$(\'div.tab-content > div.active > input\')[0].value = \'{species}\'; $(\'div.tab-content > div.active > input\').keyup(); return false;">search species</div>',
+         'update_menu': function (item) {}};
      models['accession'] = {
-     'text': '<b>{code}</b><br/>{vernacular}<br/>{species} ({family})<br/>' +
-     '<div onclick="$(\'div.tab-content > div.active > input\')[0].value = \'{species}\'; $(\'div.tab-content > div.active > input\').keyup(); return false;">search species</div>',
-     'update_menu': function (item) {}};
+         'text': '<b>{code}</b><br/>{vernacular}<br/>{species} ({family})<br/>' +
+                 '<div onclick="$(\'div.tab-content > div.active > input\')[0].value = \'{species}\'; $(\'div.tab-content > div.active > input\').keyup(); return false;">search species</div>',
+         'update_menu': function (item) {}};
      models['taxon'] = {
-     'text': '<b>{code}</b><br/>{vernacular}<br/>{species} ({family})<br/>' +
-     '<div onclick="$(\'div.tab-content > div.active > input\')[0].value = \'{species}\'; $(\'div.tab-content > div.active > input\').keyup(); return false;">search species</div>',
-     'update_menu': function (item) {}};
+         'text': '<b>{code}</b><br/>{vernacular}<br/>{species} ({family})<br/>' +
+                 '<div onclick="$(\'div.tab-content > div.active > input\')[0].value = \'{species}\'; $(\'div.tab-content > div.active > input\').keyup(); return false;">search species</div>',
+         'update_menu': function (item) {}};
      csrf_token = getCookie('csrftoken');
      $(window).on('keydown', checkKey);
      $('#search-filter-button').click(lookup);
@@ -950,6 +979,7 @@
      window.addEventListener("resize", reset_results_height);
      window.addEventListener("resize", reset_map_height);
      $('#results-tabber').on('shown.bs.tab', reset_results_height);
+     $('#results-tabber').on('shown.bs.tab', show_current_row);
      $('#tabbers a').on('shown.bs.tab', updateLocationHash);
      $('#map-tabber').on('shown.bs.tab', reset_map_height);
      $('#home-tabber').trigger('click');
