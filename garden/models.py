@@ -49,6 +49,13 @@ class Plant(models.Model):
         return '{}.{}'.format(self.accession.code, self.code)
 
     @property
+    def geometries(self):
+        result = []
+        if self.geometry:
+            result.append(self.geometry)
+        return result
+
+    @property
     def inline(self):
         return "%s" % self
 

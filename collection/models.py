@@ -130,7 +130,7 @@ class Accession(models.Model):
         return result
 
     @property
-    def geometry(self):
+    def geometries(self):
         result = []
         try:
             plants_generator = (p for p in self.plants.all())

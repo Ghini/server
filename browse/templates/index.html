@@ -344,9 +344,12 @@
                  $(itd).trigger('click');
                  first_td = false;
              }
-             item.layer_name = class_name.toLowerCase();
-             if(item.geometry != null) {
-                 append_point_to_layer(item);
+             if(item.geometries != null && item.geometries.length != 0) {
+                 jQuery.each(item.geometries, function(i, geometry) {
+                     geometry.layer_name = class_name.toLowerCase();
+                     geometry.inline = item.inline;
+                     append_point(geometry);
+                 })
              }
              processed++;
              if(tokens[token] !== true) {
@@ -427,6 +430,7 @@
 
  function lookup(e, term) {
      tokens = {};
+     objects_layer = {};
      $.getJSON("{% url 'drop-token' '__all__' %}", function(data) {});
      $('.search-filter').attr("disabled", "disabled");
      $('#results-tabber').trigger('click');
@@ -624,8 +628,8 @@
  }
 
  function reset_map_height() {
-     if (map === undefined) {
-         map = L.map('map-pane', {zoomControl: false});
+     if (map.initialized == null) {
+         map.initialized = true;
          map.on('moveend', onMoveEnd);
          map.on('zoomend', onZoomEnd);
          map.on('zoomstart', onZoomStart);
@@ -788,7 +792,7 @@
 
  function updateLocationHash() {
      var tail = '';
-     if(map != null) {
+     if(map.initialized != null) {
          var centre = map.getCenter();
          centre.zoom = map.getZoom();
          tail += ';map={zoom}/{lat}/{lng}'.format(centre);
@@ -799,21 +803,21 @@
      window.location.hash = '#page={}'.format($('ul.sidenav a.active').data('slug')) + tail;
  }
 
- function append_point_to_layer(item) {
-     console.log(item);
+ function append_point(item) {  // cfr.: item.layer_name
+     console.log('append_point', item);
      item._id = item.inline;
      item.color = 'blue';
      item.icon = 'tree';
      item.layer_zoom = 1;
-     [item.lon, item.lat] = item.geometry;
+     [item.lon, item.lat] = item;
      var g = item.layer_name;
-     if(typeof objects_container[g] === 'undefined')
+     if(objects_container[g] == null)
          objects_container[g] = {};
      if(g.startsWith('__')) {
          objects_container[g][item._id] = item;
          return;
      } else {
-         if(typeof objects_container[g][item._id] !== 'undefined') {
+         if(objects_container[g][item._id] != null) {
              return;
          }
          objects_container[g][item._id] = item;
@@ -831,8 +835,8 @@
      var list_item, anchor, icon_element;
 
      models[g].update_menu(item);
-     if (typeof objects_layer[g] === 'undefined' || Object.keys(objects_layer[g]).length === 0) {
-         console.log('not found layers', g, "... creating now");
+     if (objects_layer[g] == null || Object.keys(objects_layer[g]).length === 0) {
+         console.log('not found layer', g, "... creating now");
          objects_layer[g] = {};
          objects_layer[g].visible = true;
 
@@ -850,12 +854,13 @@
      if (!objects_layer[g][z]) {
          objects_layer[g][z] = L.layerGroup();
          l = objects_layer[g][z];
-         if(z <= map.getZoom()) {
+         if(z <= (map.getZoom() || 20)) {
              map.addLayer(l);
          }
      }
      l = objects_layer[g][z];
 
+     console.log('layer, item', l, item);
      var marker = L.marker([item.lat, item.lon],
                            item);
      marker.addTo(l).bindPopup(models[g].text.format(item),
@@ -877,6 +882,7 @@
                    set_alternative('#' + marker_id, 'awesome-marker-icon', item.color);
                });
 
+     // adding extra marker to provide some overlap in Pacific area.
      if(item.lon > 100) {
          item.lon -= 360;
          marker = L.marker([item.lat, item.lon],
@@ -901,12 +907,21 @@
              lookup(e);
          }
      });
+     map = L.map('map-pane', {zoomControl: false});
      objects_layer['plant'] = {};
      objects_layer['plant'].visible = true;
      models['plant'] = {
-         'text': '<b>{code}</b><br/>{vernacular}<br/>{species} ({family})<br/>' +
-                 '<div onclick="$(\'div.tab-content > div.active > input\')[0].value = \'{species}\'; $(\'div.tab-content > div.active > input\').keyup(); return false;">search species</div>',
-         'update_menu': function (item) {}};
+     'text': '<b>{code}</b><br/>{vernacular}<br/>{species} ({family})<br/>' +
+     '<div onclick="$(\'div.tab-content > div.active > input\')[0].value = \'{species}\'; $(\'div.tab-content > div.active > input\').keyup(); return false;">search species</div>',
+     'update_menu': function (item) {}};
+     models['accession'] = {
+     'text': '<b>{code}</b><br/>{vernacular}<br/>{species} ({family})<br/>' +
+     '<div onclick="$(\'div.tab-content > div.active > input\')[0].value = \'{species}\'; $(\'div.tab-content > div.active > input\').keyup(); return false;">search species</div>',
+     'update_menu': function (item) {}};
+     models['taxon'] = {
+     'text': '<b>{code}</b><br/>{vernacular}<br/>{species} ({family})<br/>' +
+     '<div onclick="$(\'div.tab-content > div.active > input\')[0].value = \'{species}\'; $(\'div.tab-content > div.active > input\').keyup(); return false;">search species</div>',
+     'update_menu': function (item) {}};
      csrf_token = getCookie('csrftoken');
      $(window).on('keydown', checkKey);
      $('#search-filter-button').click(lookup);

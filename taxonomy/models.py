@@ -48,7 +48,7 @@ class Taxon(models.Model):
     family = models.CharField(max_length=40, blank=True, null=True)
 
     @property
-    def geometry(self):
+    def geometries(self):
         try:
             result = [p.geometry for p in a.all() for a in self.accessions.all()]
         except:
