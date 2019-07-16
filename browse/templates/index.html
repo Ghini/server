@@ -269,7 +269,7 @@
  }
 
  function update_infobox(url, e) {
-     if (typeof e !== 'undefined')
+     if (e != null)
          $(e.delegateTarget).attr("disabled", "disabled");
      if (url === current_url) {
          return;
@@ -284,7 +284,7 @@
          currentSlide(1);
      });
      $('tr').removeClass('table-success');
-     if (typeof e !== 'undefined') {
+     if (e != null) {
          $('#infobox-object-text').empty();
          $('#infobox-object-text').append($(e.delegateTarget).find('span.content').clone());
          $(e.delegateTarget).addClass('table-success');
