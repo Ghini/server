@@ -673,7 +673,7 @@
          if (previous_zoom > map.getZoom()) {
              // we are either zooming out ...
              l = objects_layer[g][previous_zoom];
-             if (typeof l !== 'undefined')
+             if (l != null)
                  map.removeLayer(l);
          } else {
              // or zooming in !!!
