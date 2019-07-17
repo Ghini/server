@@ -140,6 +140,16 @@ def p_bfactor_true(p):
     'bfactor : TRUE'
     p[0] = p.parser.search_domain.objects.all()
 
+def p_bfactor_is_not_null(p):
+    'bfactor : field NE NULL'
+    result, field, operator, value = p
+    p[0] = p.parser.search_domain.objects.filter(**{'{}__isnull'.format(field): False})
+
+def p_bfactor_is_null(p):
+    'bfactor : field EQ NULL'
+    result, field, operator, value = p
+    p[0] = p.parser.search_domain.objects.filter(**{'{}__isnull'.format(field): True})
+
 def p_bfactor_comparison(p):
     'bfactor : field operator value'
     result, field, operator, value = p

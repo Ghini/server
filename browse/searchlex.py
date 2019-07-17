@@ -13,6 +13,7 @@ reserved = {
     'depending': 'DEPEND',
     'true': 'TRUE',
     'false': 'FALSE',
+    'null': 'NULL',
     'in': 'IN',
     'and': 'AND',
     'or': 'OR',
