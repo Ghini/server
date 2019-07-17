@@ -715,8 +715,10 @@
          }).addTo(map);
      if (markerBounds.isValid()) {
          map.fitBounds(markerBounds);
-     } else {
+     } else if ([{{ institution.geometry.y }}].length > 0) {
          map.setView([{{ institution.geometry.y }}, {{ institution.geometry.x }}], 17);
+     } else {
+         map.setView([8.4, -80], 8);
      }
      map.invalidateSize();
      console.log(map);
