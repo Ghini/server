@@ -724,12 +724,6 @@
      console.log(map);
  }
 
- function centre_map_on_marker(marker) {
-     var latLngs = [ marker.getLatLng() ];
-     var markerBounds = L.latLngBounds(latLngs);
-     map.fitBounds(markerBounds);
- }
-
  function reset_results_height() {
      // collect the elements, get their height, sum the values, assign the rest to the results box
      $('#locked-height-container > div').css('height', '{}px'.format(window.innerHeight - stolen_height()));
