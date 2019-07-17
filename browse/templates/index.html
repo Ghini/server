@@ -356,7 +356,7 @@
                      if (geometry != null) {
                          geometry.layer_name = class_name.toLowerCase();
                          geometry.row_id = item.uuid;
-                         geometry.inline = item.inline;
+                         geometry.item = item;
                          append_point(geometry);
                      }
                  })
@@ -946,8 +946,8 @@
 
      console.log('layer, item', l, item);
      var marker = L.marker([item.lat, item.lon],
-                           item).bindTooltip(item.inline);
-     marker.addTo(l).bindPopup(models[g].text.format(item),
+                           item).bindTooltip(item.item.inline);
+     marker.addTo(l).bindPopup(models[g].text.format(item.item),
                                {marker: marker});
      markerBounds.extend(marker.getLatLng());
 
@@ -972,17 +972,17 @@
      if(item.lon > 100) {
          item.lon -= 360;
          marker = L.marker([item.lat, item.lon],
-                           item).bindTooltip(item.inline);
+                           item).bindTooltip(item.item.inline);
          item.lon += 360;
-         marker.addTo(l).bindPopup(models[g].text.format(item),
+         marker.addTo(l).bindPopup(models[g].text.format(item.item),
                                    {marker: marker});
      }
      if(item.lon < -100) {
          item.lon += 360;
          marker = L.marker([item.lat, item.lon],
-                           item).bindTooltip(item.inline);
+                           item).bindTooltip(item.item.inline);
          item.lon -= 360;
-         marker.addTo(l).bindPopup(models[g].text.format(item),
+         marker.addTo(l).bindPopup(models[g].text.format(item.item),
                                    {marker: marker});
      }
  }
@@ -998,15 +998,15 @@
      objects_layer['plant'] = {};
      objects_layer['plant'].visible = true;
      models['plant'] = {
-         'text': '<b>{inline}</b><br/>{vernacular}<br/>{species} ({family})<br/>' +
+         'text': '<b>{inline}</b><br/>{twolines.sub}<br/>' +
                  '<div onclick="$(\'div.tab-content > div.active > input\')[0].value = \'{species}\'; $(\'div.tab-content > div.active > input\').keyup(); return false;">search species</div>',
          'update_menu': function (item) {}};
      models['accession'] = {
-         'text': '<b>{inline}</b><br/>{vernacular}<br/>{species} ({family})<br/>' +
+         'text': '<b>{inline}</b><br/>{twolines.sub}<br/>' +
                  '<div onclick="$(\'div.tab-content > div.active > input\')[0].value = \'{species}\'; $(\'div.tab-content > div.active > input\').keyup(); return false;">search species</div>',
          'update_menu': function (item) {}};
      models['taxon'] = {
-         'text': '<b>{inline}</b><br/>{vernacular}<br/>{species} ({family})<br/>' +
+         'text': '<b>{inline}</b><br/>{twolines.sub}<br/>' +
                  '<div onclick="$(\'div.tab-content > div.active > input\')[0].value = \'{species}\'; $(\'div.tab-content > div.active > input\').keyup(); return false;">search species</div>',
          'update_menu': function (item) {}};
      if(window.location.hash) {
