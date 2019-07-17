@@ -1043,10 +1043,10 @@
      $('#results-tabber').on('shown.bs.tab', show_current_row);
      $('#tabbers a').on('shown.bs.tab', updateLocationHash);
      $('#map-tabber').on('shown.bs.tab', reset_map_height);
-     $('#{0.page}-tabber'.format(hash_parts)).trigger('click');
      if (hash_parts.q != null) {
          replace_search_filter(hash_parts.q);
      }
+     $('#{0.page}-tabber'.format(hash_parts)).trigger('click');
 
      currentSlide(1);
  });
