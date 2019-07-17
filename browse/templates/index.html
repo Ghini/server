@@ -738,6 +738,12 @@
      updateLocationHash();
  }
 
+ function close_map_popup() {
+     try {
+         map.closePopup()
+     } catch(e) {console.log(e)}
+ }
+
  function show_current_row() {
      var row = $('#results-box .table-success');
      if(row.length) {
@@ -1049,6 +1055,7 @@
      window.addEventListener("resize", reset_map_height);
      $('#results-tabber').on('shown.bs.tab', reset_results_height);
      $('#results-tabber').on('shown.bs.tab', show_current_row);
+     $('#tabbers a').on('shown.bs.tab', close_map_popup);
      $('#tabbers a').on('shown.bs.tab', updateLocationHash);
      $('#map-tabber').on('shown.bs.tab', reset_map_height);
      if (hash_parts.q != null) {
