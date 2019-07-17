@@ -950,15 +950,15 @@
      objects_layer['plant'] = {};
      objects_layer['plant'].visible = true;
      models['plant'] = {
-         'text': '<b>{code}</b><br/>{vernacular}<br/>{species} ({family})<br/>' +
+         'text': '<b>{inline}</b><br/>{vernacular}<br/>{species} ({family})<br/>' +
                  '<div onclick="$(\'div.tab-content > div.active > input\')[0].value = \'{species}\'; $(\'div.tab-content > div.active > input\').keyup(); return false;">search species</div>',
          'update_menu': function (item) {}};
      models['accession'] = {
-         'text': '<b>{code}</b><br/>{vernacular}<br/>{species} ({family})<br/>' +
+         'text': '<b>{inline}</b><br/>{vernacular}<br/>{species} ({family})<br/>' +
                  '<div onclick="$(\'div.tab-content > div.active > input\')[0].value = \'{species}\'; $(\'div.tab-content > div.active > input\').keyup(); return false;">search species</div>',
          'update_menu': function (item) {}};
      models['taxon'] = {
-         'text': '<b>{code}</b><br/>{vernacular}<br/>{species} ({family})<br/>' +
+         'text': '<b>{inline}</b><br/>{vernacular}<br/>{species} ({family})<br/>' +
                  '<div onclick="$(\'div.tab-content > div.active > input\')[0].value = \'{species}\'; $(\'div.tab-content > div.active > input\').keyup(); return false;">search species</div>',
          'update_menu': function (item) {}};
      csrf_token = getCookie('csrftoken');
