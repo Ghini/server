@@ -494,7 +494,6 @@
                  l.clearLayers();
          })});
      objects_layer = {};
-     markerBounds = L.latLngBounds();
      $.getJSON("{% url 'drop-token' '__all__' %}", function(data) {});
      $('.search-filter').attr("disabled", "disabled");
      $('#results-tabber').trigger('click');
@@ -995,6 +994,7 @@
          }
      });
      map = L.map('map-pane', {zoomControl: false});
+     markerBounds = L.latLngBounds();
      objects_layer['plant'] = {};
      objects_layer['plant'].visible = true;
      models['plant'] = {
