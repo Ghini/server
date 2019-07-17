@@ -83,6 +83,8 @@ class AccessionInfobox(AccessionDetail):
             for key, value in serializer.data.items():
                 if key == 'id':
                     continue
+                if key == 'institution':
+                    continue
                 result.setdefault(key, value)
 
             return Response(result, status=status.HTTP_200_OK)
