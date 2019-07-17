@@ -1009,11 +1009,9 @@
          'text': '<b>{inline}</b><br/>{twolines.sub}<br/>' +
                  '<div onclick="$(\'div.tab-content > div.active > input\')[0].value = \'{species}\'; $(\'div.tab-content > div.active > input\').keyup(); return false;">search species</div>',
          'update_menu': function (item) {}};
-     if(window.location.hash) {
-         console.log('window.location.hash=', window.location.hash);
-         hash_parts = parse_hash(window.location.hash);
-         console.log('hash_parts=', hash_parts);
-     }
+     console.log('window.location.hash=', window.location.hash);
+     hash_parts = parse_hash(window.location.hash);
+     console.log('hash_parts=', hash_parts);
      csrf_token = getCookie('csrftoken');
      $(window).on('keydown', checkKey);
      $('#search-filter-button').click(lookup);
