@@ -220,7 +220,7 @@
          $('#pictures-tabber').text('(Pictures)');
      }
      jQuery.each(data, function(key, value) {
-         if (!key.startsWith('__') && value !== null && value !== '') {
+         if (!key.startsWith('__') && value != null && value !== '') {
              tr = $("<tr></tr>");
              tbody.append(tr);  // add it as last child
              if (key.endsWith('+')) {
