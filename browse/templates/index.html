@@ -279,21 +279,29 @@
          return;
      }
      current_url = url;
-     $('#pictures-pane').empty();
-     $('#pictures-pane').append($('<i class="fa fa-spinner fa-spin" style="font-size:32px;color:red;margin:32px;"></i>'));
-     $.get(url.replace('infobox/', 'carousel/'), function(data, status) {
-         console.log(status);
+     { // pictures pane
          $('#pictures-pane').empty();
-         $('#pictures-pane').append($(data));
-         currentSlide(1);
-     });
+         $('#pictures-pane').append($('<i class="fa fa-spinner fa-spin" style="font-size:32px;color:red;margin:32px;"></i>'));
+         $.get(url.replace('infobox/', 'carousel/'), function(data, status) {
+             console.log(status);
+             $('#pictures-pane').empty();
+             $('#pictures-pane').append($(data));
+             currentSlide(1);
+         });
+     }
      $('tr').removeClass('table-success');
      if (e != null) {
          $('#infobox-object-text').empty();
          $('#infobox-object-text').append($(e.delegateTarget).find('span.content').clone());
          $(e.delegateTarget).addClass('table-success');
-         set_alternative($('.plant-marker'), 'awesome-marker-icon', 'blue');
-         set_alternative($('.plant-marker.{}'.format(e.delegateTarget.id)), 'awesome-marker-icon', 'orange');
+         { // map pane
+             var this_marker = $('.plant-marker.{}'.format(e.delegateTarget.id)).not('.awesome-marker-shadow');
+             set_alternative($('.plant-marker'), 'awesome-marker-icon', 'blue');
+             set_alternative(this_marker, 'awesome-marker-icon', 'orange');
+             try {
+                 map.panTo(markers[this_marker[0].id].getLatLng());
+             } catch (e) { console.log(e); }
+         }
      }
      $('#infobox-table tbody').empty();
      if(url.match('taxonomy/taxon/')) {
