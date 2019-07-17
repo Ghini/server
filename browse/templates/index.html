@@ -875,10 +875,14 @@
 
  function updateLocationHash() {
      var tail = '';
-     if(map.initialized != null) {
+     try {
+         if (map.initialized == null)
+             throw "map is not initialized";
          var centre = map.getCenter();
          centre.zoom = map.getZoom();
          tail += ';map={zoom}/{lat}/{lng}'.format(centre);
+     } catch (e) {
+         console.log(e);
      }
      if ($('#search-filter').val() != '') {
          tail += ';q={}'.format($('#search-filter').val())
