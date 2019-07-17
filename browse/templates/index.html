@@ -894,7 +894,7 @@
 
      console.log('layer, item', l, item);
      var marker = L.marker([item.lat, item.lon],
-                           item);
+                           item).bindTooltip(item.inline);
      marker.addTo(l).bindPopup(models[g].text.format(item),
                                {marker: marker});
      markerBounds.extend(marker.getLatLng());
@@ -920,7 +920,7 @@
      if(item.lon > 100) {
          item.lon -= 360;
          marker = L.marker([item.lat, item.lon],
-                           item);
+                           item).bindTooltip(item.inline);
          item.lon += 360;
          marker.addTo(l).bindPopup(models[g].text.format(item),
                                    {marker: marker});
@@ -928,7 +928,7 @@
      if(item.lon < -100) {
          item.lon += 360;
          marker = L.marker([item.lat, item.lon],
-                           item);
+                           item).bindTooltip(item.inline);
          item.lon -= 360;
          marker.addTo(l).bindPopup(models[g].text.format(item),
                                    {marker: marker});
