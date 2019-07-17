@@ -440,6 +440,11 @@
 
  function lookup(e, term) {
      tokens = {};
+     jQuery.each(objects_layer, function(i, g) {
+         jQuery.each(g, function(ii, l) {
+             if (typeof l.clearLayers === 'function')
+                 l.clearLayers();
+         })});
      objects_layer = {};
      markerBounds = L.latLngBounds();
      $.getJSON("{% url 'drop-token' '__all__' %}", function(data) {});
