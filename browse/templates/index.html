@@ -299,7 +299,9 @@
              set_alternative($('.plant-marker'), 'awesome-marker-icon', 'blue');
              set_alternative(this_marker, 'awesome-marker-icon', 'orange');
              try {
-                 map.panTo(markers[this_marker[0].id].getLatLng());
+                 var point = markers[this_marker[0].id].getLatLng();
+                 if (!map.getBounds().contains(point))
+                     map.panTo(point);
              } catch (e) { console.log(e); }
          }
      }
