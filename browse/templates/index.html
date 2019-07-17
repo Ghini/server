@@ -684,7 +684,11 @@
 
  function show_current_row() {
      var row = $('#results-box .table-success');
-     row[0].scrollIntoView();
+     if(row.length) {
+         var element = row[0];
+         if(!isScrolledIntoView(element))
+             element.scrollIntoView();
+     }
  }
 
  function stolen_height() {
@@ -715,7 +719,7 @@
  }
 
  function isScrolledIntoView(elem) {
-     var rect = $(elem)[0].getBoundingClientRect();
+     var rect = elem.getBoundingClientRect();
      // Only completely visible elements return true:
      return (rect.top >= 122) && (rect.bottom <= window.innerHeight);
  }
@@ -769,8 +773,9 @@
          };
          if(move_to && move_to.length !== 0) {
              $(move_to).trigger('click');
-             if(!isScrolledIntoView(move_to))
-                 $(move_to)[0].scrollIntoView(e.keyCode === 37);
+             var element = $(move_to)[0];
+             if(!isScrolledIntoView(element))
+                 element.scrollIntoView(e.keyCode === 37);
          }
      }
  }
