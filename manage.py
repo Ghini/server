@@ -4,6 +4,25 @@ import os
 import sys
 
 
+def get_port_from_settings(default):
+    try:
+        import re
+        pattern = re.compile(r'^(RUNSERVER_PORT)[ ]*=[ ]*([^#]*)')
+        import sys
+        index = sys.argv.index('--settings')
+        module_name = sys.argv[index + 1]
+        file_name = module_name.replace('.', '/') + '.py'
+        with open(file_name) as f:
+            for line in f.readlines():
+                line = line.strip()
+                match = pattern.match(line)
+                if not match:
+                    continue
+                return int(match.group(2))
+    except Exception as e:
+        return default
+
+
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ghini.settings')
     try:
@@ -19,6 +38,6 @@ def main():
 
 if __name__ == '__main__':
     from django.core.management.commands.runserver import Command as runserver
-    runserver.default_port = 8080
+    runserver.default_port = get_port_from_settings(8080)
     runserver.default_addr = '0.0.0.0'
     main()
