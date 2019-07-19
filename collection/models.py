@@ -81,6 +81,7 @@ class Institution(models.Model):
     technical_person = models.ForeignKey(Contact, blank=True, null=True, on_delete=models.SET_NULL, related_name='technical_for')
     institution_address = models.CharField(blank=True, max_length=64, default='')
     geometry = models.PointField(null=True, blank=True)
+    diameter = models.IntegerField(null=True, blank=True)  # zoom <- int(-math.sqrt(2) * math.log(diam) + 25.4)
 
     def __str__(self):
         return self.name

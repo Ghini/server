@@ -725,8 +725,11 @@
          }).addTo(map);
      if (markerBounds.isValid()) {
          map.fitBounds(markerBounds);
-     } else if ([{{ institution.geometry.y }}].length > 0) {
-         map.setView([{{ institution.geometry.y }}, {{ institution.geometry.x }}], 17);
+     } else if ("{{ institution.geometry.y }}" != "" && "{{ institution.diameter }}" != "None") {
+         map.setView([{{ institution.geometry.y }}, {{ institution.geometry.x }}],
+                     Math.floor(-Math.sqrt(2) * Math.log({{ institution.diameter }}) + 25.4));
+     } else if ("{{ institution.geometry.y }}" != "") {
+         map.setView([{{ institution.geometry.y }}, {{ institution.geometry.x }}], 16);
      } else {
          map.setView([8.4, -80], 8);
      }
