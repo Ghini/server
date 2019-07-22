@@ -6,13 +6,17 @@ This page explains how to contribute data to a running ghini site.
 your account
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You need an account for the site, enabled, and to be part of the staff.  You do not need
-superpowers to contribute data.
+You need an account for the site, it needs to be enabled, and to make you part of the staff.
+You do not need superpowers to contribute data.
 
 .. image:: images/participate-20190722113813.png           
 
 When logged in as staff member, you will see the *Insert* menu next to the Ghini icon,
-before the *Tools* menu, and right-clicking on any results row will show the context menu
+before the *Tools* menu,
+
+.. image:: images/participate-20190722161158.png
+
+moreover, in the Results page, right-clicking on any results row will show the context menu
 associated to the row type.
 
 .. image:: images/participate-20190722114427.png
@@ -40,26 +44,45 @@ bulk inserts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you have a large amount of accessions that you want to document with plant images, you
-may request a bulk insertion.  Please write a friendly email to ``<ghini@anche.no>``,
-stating your needs.  It makes sense if you have more than, say, twenty accessions.
+may request a bulk insertion.  Please write a friendly email to ``Mario Frasca
+<ghini@anche.no>``, stating your needs.  It makes sense if you have more than, say, twenty
+accessions.
 
 adding images
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The basic logic is: first have all your accessions in place, either do this manually, or
-request a bulk insertion, then navigate to `the URL for adding plant images
+The basic logic is: first have all your accessions in place, which you either do manually,
+or with a request for bulk insertion, then navigate to `the URL for adding plant images
 <https://almaghreb.ghini.me/admin/garden/plantimage/add/>`_.
 
-The first picture for a plant group for an accession, you need to add the plant database
-object.  You do so by clicking on the ``+`` button next to the plant chooser widget.
+You will be presented with this form:
 
 .. image:: images/participate-20190722120634.png
 
-This will open a new window, and you can choose your accession there, please keep track of
-the plant code, it should be a sequential number, select or add a plant location (it would
-be the name of the area for your observations), provide an estimate of the amount of
-individual plants in the plant group, and click on the approximate spot in the map.  Zoom in
-or zoom out as necessary.  And Save.
+In this form you basically repeat: choosing a plant from the database, choosing a picture
+from your file system, then click on one of the three *Save* buttons:
+
+.. image:: images/participate-20190722162120.png
+
+If you are adding an image for a plant already represented in the database, simply start
+typing the plant accession number, and the software will present you the plants matching the
+text you are typing.  Each time the image is relative to a new plant, you need to add the
+database object that describes the plant in question.  You do so by clicking on the ``+``
+button next to the plant chooser widget.
+
+This will open a new window,
+
+.. image:: images/participate-20190722162509.png
+
+Here you choose your **accession**, indicate a numerical sequential value for the plant
+**code** within the accession (you need to so manually), select or add a plant **location**
+(it would be the name of the area for your observations), provide an estimate of the
+**quantity** of individual plants in the plant group, and use the **geometry** map to
+indicate an approximate plant position.  You do so by activating the *draw a marker* widget,
+then clicking on the approximate spot in the map.  Zoom in or zoom out, and peruse the other
+widgets as necessary.
+
+Do not forget to *Save* your changes.
 
 Back to your Plant Image insertion window, browse to your image, confirm by ``save`` or
 ``save and add another``.
