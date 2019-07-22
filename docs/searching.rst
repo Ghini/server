@@ -1,8 +1,8 @@
-search strategies
+searching
 ---------------------------
 
 
-The search strategies implemented, or planned, are:
+The search strategies implemented by ghini.server and exposed through ghini.web:
 
 :single field: ``<DOMAIN>`` . ``<field>`` ``<op>`` ``<INTEGER>``
 
@@ -41,3 +41,6 @@ The search strategies implemented, or planned, are:
             query modifier ``| depending``.  This changes the resulting
             query-set, applying the *depending* function to each of the
             elements in the original result.
+
+Logged in users can use the ghini.server API to run these queries, or use teh ghini.web
+interface to enter them and have the results nicely organized in the various ghini.web tabs.

@@ -11,7 +11,8 @@ Welcome to taxasoft-ghini's documentation!
    :caption: Contents:
 
    introduction
-             
+   participate
+   
    searching
    technical
 
