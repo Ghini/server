@@ -1,3 +1,6 @@
+participating
+-------------------
+
 This page explains how to contribute data to a running ghini site.
 
 your account

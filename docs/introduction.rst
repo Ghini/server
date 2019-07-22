@@ -14,19 +14,19 @@ technologies, and are not compatible at the database level.  There might come a
 ghini.desktop version compatible with ghini.server.
 
 serving
------------
+~~~~~~~~~~~
 
 Installation of a ghini.server site amounts to installing a standard django service.  This
 is a rather technical task, so please either look for and refer to the corresponding
 documentation, or ask for advise and support.
 
 fallback
------------
+~~~~~~~~~~~
 
 Please refer to ghini.desktop
 
 showcasing
------------
+~~~~~~~~~~~
 
 Ghini server's initial goal is to showcase itself in the form of geographic botanical
 collections.  If you have a use case and want to participate, please contact the Ghini team.
