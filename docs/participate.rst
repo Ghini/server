@@ -59,8 +59,9 @@ You will be presented with this form:
 
 .. image:: images/participate-20190722120634.png
 
-In this form you basically repeat: choosing a plant from the database, choosing a picture
-from your file system, then click on one of the three *Save* buttons:
+In this form you basically repeat: choose a plant from the database, ignore height and
+width, choose a picture from your file system (this will provide the correct values for
+height and width), then click on one of the three *Save* buttons:
 
 .. image:: images/participate-20190722162120.png
 
@@ -87,3 +88,16 @@ Do not forget to *Save* your changes.
 Back to your Plant Image insertion window, browse to your image, confirm by ``save`` or
 ``save and add another``.
 
+validating
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A different activity is relative to validating accessions with taxonomic information.  You
+can do so from `the admin interface
+<https://almaghreb.ghini.me/admin/collection/verification/add/>`_,
+
+.. image:: images/participate-20190722165116.png
+
+but you can also use the results window, activating the context menu for the accession you
+want to validate.
+
+.. image:: images/participate-20190722164953.png
