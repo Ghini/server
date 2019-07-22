@@ -158,6 +158,7 @@ REST_FRAMEWORK = {
 
 LEAFLET_CONFIG = {
     'MAX_ZOOM': 18,
-    'DEFAULT_ZOOM': 16,
+    'DEFAULT_ZOOM': 7,
     'NO_GLOBALS': False,
+    'DEFAULT_CENTER': (8.4, -80),
 }
