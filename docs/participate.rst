@@ -9,7 +9,7 @@ your account
 You need an account for the site, it needs to be enabled, and to make you part of the staff.
 You do not need superpowers to contribute data.
 
-.. image:: images/participate-20190722113813.png           
+.. image:: images/participate-20190722113813.png
 
 When logged in as staff member, you will see the *Insert* menu next to the Ghini icon,
 before the *Tools* menu,
@@ -22,7 +22,7 @@ associated to the row type.
 .. image:: images/participate-20190722114427.png
 
 If you do not see these, you are being handled by the software as a visitor, and you need to
-logout and log back in with your full permissions.
+logout |logout| and log back in with your full permissions.
 
 organize your pictures
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -101,3 +101,8 @@ but you can also use the results window, activating the context menu for the acc
 want to validate.
 
 .. image:: images/participate-20190722164953.png
+
+
+.. |logout| image:: images/participate-20190722203231.png
+    :width: 20pt
+    :height: 20pt
