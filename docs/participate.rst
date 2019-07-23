@@ -104,5 +104,5 @@ want to validate.
 
 
 .. |logout| image:: images/participate-20190722203231.png
-    :width: 20pt
-    :height: 20pt
+    :width: 27pt
+    :height: 25pt
