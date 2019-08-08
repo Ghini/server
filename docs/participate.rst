@@ -9,7 +9,7 @@ your account
 You need an account for the site, it needs to be enabled, and to make you part of the staff.
 You do not need superpowers to contribute data.
 
-.. image:: images/participate-20190722113813.png           
+.. image:: images/participate-20190722113813.png
 
 When logged in as staff member, you will see the *Insert* menu next to the Ghini icon,
 before the *Tools* menu,
@@ -22,7 +22,7 @@ associated to the row type.
 .. image:: images/participate-20190722114427.png
 
 If you do not see these, you are being handled by the software as a visitor, and you need to
-logout and log back in with your full permissions.
+logout |logout| and log back in with your full permissions.
 
 organize your pictures
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -59,8 +59,9 @@ You will be presented with this form:
 
 .. image:: images/participate-20190722120634.png
 
-In this form you basically repeat: choosing a plant from the database, choosing a picture
-from your file system, then click on one of the three *Save* buttons:
+In this form you basically repeat: choose a plant from the database, ignore height and
+width, choose a picture from your file system (this will provide the correct values for
+height and width), then click on one of the three *Save* buttons:
 
 .. image:: images/participate-20190722162120.png
 
@@ -87,3 +88,21 @@ Do not forget to *Save* your changes.
 Back to your Plant Image insertion window, browse to your image, confirm by ``save`` or
 ``save and add another``.
 
+validating
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A different activity is relative to validating accessions with taxonomic information.  You
+can do so from `the admin interface
+<https://almaghreb.ghini.me/admin/collection/verification/add/>`_,
+
+.. image:: images/participate-20190722165116.png
+
+but you can also use the results window, activating the context menu for the accession you
+want to validate.
+
+.. image:: images/participate-20190722164953.png
+
+
+.. |logout| image:: images/participate-20190722203231.png
+    :width: 27pt
+    :height: 25pt
