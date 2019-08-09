@@ -6,3 +6,4 @@ docs/_*
 /browse/parser.out
 /browse/parsetab.py
 media/
+uwsgi.d/*.ini
