@@ -26,9 +26,11 @@ SECRET_KEY = ''
 DEBUG = False
 
 ALLOWED_HOSTS = [
-        '139.162.179.69',
-        'cuchubo.ghini.me'
-        ]
+    'localhost',
+    '139.162.179.69',
+    'cuchubo.ghini.me',
+    'cuchubo.dev'
+]
 
 
 # Application definition
@@ -135,7 +137,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_ROOT = '/var/www/cuchubo.ghini.me/static/'
+STATIC_ROOT = '/var/www/cuchubo.ghini.me/static'
 STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {

@@ -20,16 +20,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'z71k^&3+9a62-30mi96tf-@lgf1urps1zeosx%l^z4i4rn&esv'
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'localhost',
     '139.162.179.69',
-    'cuaderno.ghini.me',
-    'cuaderno.dev'
+    'almaghreb.ghini.me',
+    'almaghreb.dev'
 ]
 
 
@@ -69,8 +69,8 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'ghini.urls'
 
 MEDIA_URL = '/media/'
-#MEDIA_ROOT = '/var/www/cuaderno.ghini.me/media'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/var/www/almaghreb.ghini.me/media'
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 TEMPLATES = [
     {
@@ -97,7 +97,7 @@ WSGI_APPLICATION = 'ghini.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'ghini',
+        'NAME': 'almaghreb',
         'USER': 'mario',
         'TEST': {
         },
@@ -144,7 +144,7 @@ RUNSERVER_PORT = 8080
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_ROOT = '/var/www/cuaderno.ghini.me/static/'
+STATIC_ROOT = '/var/www/server.ghini.me/static'
 STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
