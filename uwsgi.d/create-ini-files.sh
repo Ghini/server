@@ -1,5 +1,6 @@
 #!/bin/bash
-for SITE in almaghreb caribe cuaderno cuchubo la-macarena paardebloem tanager
+#for SITE in almaghreb caribe cuaderno cuchubo la-macarena paardebloem tanager
+for SITE in almaghreb cuaderno tanager
 do
     PORT=$(grep uwsgi_pass /etc/nginx/sites-available/$SITE.ghini.me |
                while IFS=':' read -ra i
@@ -10,9 +11,9 @@ do
     cat > $SITE.ini << EOF
 [uwsgi]
 socket = 127.0.0.1:${PORT}
-chdir = /home/mario/Local/Ghini/server/
+chdir = /home/mario/Local/github/Ghini/server/
 env = DJANGO_SETTINGS_MODULE=ghini.settings_${SITE}
-module = django.core.handlers.wsgi:WSGIHandler()
+wsgi-file = ghini/wsgi.py
 processes = 4
 threads = 2
 EOF

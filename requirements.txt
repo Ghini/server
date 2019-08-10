@@ -12,3 +12,4 @@ python-thumbnails==0.5.1
 wheel==0.33.4
 django-leaflet
 djangorestframework-gis
+numpy
