@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_gis',
+    'leaflet',
 
     'thumbnails',
     'django_select2',
@@ -94,8 +96,9 @@ WSGI_APPLICATION = 'ghini.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'cuchubo.sqlite3'),
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'cuchubo',
+        'USER': 'mario',
     }
 }
 
@@ -133,11 +136,12 @@ USE_L10N = True
 
 USE_TZ = True
 
+RUNSERVER_PORT = 8081
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_ROOT = '/var/www/cuchubo.ghini.me/static'
+STATIC_ROOT = '/var/www/server.ghini.me/static'
 STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
@@ -148,4 +152,11 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+}
+
+LEAFLET_CONFIG = {
+    'MAX_ZOOM': 18,
+    'DEFAULT_ZOOM': 17,
+    'NO_GLOBALS': False,
+    'DEFAULT_CENTER': (9.2345, -74.4229),
 }

@@ -137,6 +137,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+RUNSERVER_PORT = 8084
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
@@ -152,4 +153,11 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+}
+
+LEAFLET_CONFIG = {
+    'MAX_ZOOM': 18,
+    'DEFAULT_ZOOM': 7,
+    'NO_GLOBALS': False,
+    'DEFAULT_CENTER': (52, 5),
 }
