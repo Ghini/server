@@ -23,11 +23,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
+        'localhost',
         '139.162.179.69',
-        'jbq.ghini.me'
+        'caribe.ghini.me'
         ]
 
 
@@ -41,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_gis',
+    'leaflet',
 
     'thumbnails',
     'django_select2',
@@ -65,7 +68,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'ghini.urls'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/var/www/jbq.ghini.me/media'
+MEDIA_ROOT = '/var/www/caribe.ghini.me/media'
 #MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 TEMPLATES = [
@@ -92,8 +95,9 @@ WSGI_APPLICATION = 'ghini.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'jbq.sqlite3'),
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'caribe',
+        'USER': 'mario',
     }
 }
 
@@ -131,11 +135,12 @@ USE_L10N = True
 
 USE_TZ = True
 
+RUNSERVER_PORT = 8086
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_ROOT = '/var/www/jbq.ghini.me/static/'
+STATIC_ROOT = '/var/www/server.ghini.me/static'
 STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
@@ -146,4 +151,11 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+}
+
+LEAFLET_CONFIG = {
+    'MAX_ZOOM': 18,
+    'DEFAULT_ZOOM': 4,
+    'NO_GLOBALS': False,
+    'DEFAULT_CENTER': (15, -75),
 }
