@@ -170,6 +170,7 @@
 
  var markerBounds;
  var map,
+     rectangle = null,
      objects_layer = {},
      objects_container = {},
      models = {},
@@ -712,10 +713,58 @@
          map.invalidateSize();
          return;
      }
+
+     // initializing map here
+     // ---------------------
+
      // add the scale control
      L.control.scale({ position: 'bottomleft' }).addTo(map);
      // add the zoom control
-     L.control.zoom({ position: 'topright' }).addTo(map);
+     L.control.zoom({ position: 'topleft' }).addTo(map);
+
+     // handling the rectangle
+     var theRectangleGroup = new L.FeatureGroup();
+     map.addLayer(theRectangleGroup);
+
+     var drawControl = new L.Control.Draw({
+         draw: {
+             polyline: false, // disable polylines
+             polygon: false, // disable polygons
+             circle: false, // disable circles
+             marker: false, // disable markers
+             rectangle: true // this is the only enabled option
+         }
+     });
+     map.addControl(drawControl);
+     map.on('draw:created', function(e) {
+         rectangle = e.layer;
+         theRectangleGroup.clearLayers();
+         theRectangleGroup.addLayer(e.layer);
+         console.log(e.layer);
+     });
+
+     // add watermark logo
+     L.Control.Watermark = L.Control.extend({
+         onAdd: function(map) {
+             var img = L.DomUtil.create('img');
+
+             img.src = "{% static 'ghini-32.png' %}";
+             img.style.height = '32px';
+             img.style.width = '32px';
+
+             return img;
+         },
+
+         onRemove: function(map) {
+             // Nothing to do here
+         }
+     });
+
+     L.control.watermark = function(opts) {
+         return new L.Control.Watermark(opts);
+     }
+     L.control.watermark({ position: 'bottomleft' }).addTo(map);
+
      // create an OpenStreetMap tile layer
      L.tileLayer(
          'http://{s}.tile.osm.org/{z}/{x}/{y}.png', // osm server (most frequently updated)
