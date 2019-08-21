@@ -245,8 +245,16 @@
   this.struct = new JSPack();
 
   function Base64() {
-    this.b64encode = function(x) { return btoa(x.map(function(v){return String.fromCharCode(v)}).join(''))};
-    this.b64decode = function(x) { return atob(x).split('').map(function(v) {return v.codePointAt(0)})};
+    this.b64encode = function(x) {
+      return btoa(x.
+                  map(v => String.fromCharCode(v)).
+                  join(''))
+    };
+    this.b64decode = function(x) {
+      return (atob(x).
+              split('').
+              map(v => v.codePointAt(0)))
+    };
   };
 
   this.base64 = new Base64();
