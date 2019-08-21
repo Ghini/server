@@ -90,9 +90,17 @@ def index(request):
 def count_json(request):
     '''this view returns the count of a query'''
     from .searchgrammar import parse
-
     query_string = request.GET.get('q')
-    candidates = parse(query_string) or {}
+    rectangle = request.GET.get('r')
+    try:
+        import struct, base64
+        xi, yi, xf, yf = struct.unpack('<ffff', base64.b64decode(rectangle))
+        from django.contrib.gis.geos import Polygon
+        geometry = Polygon(((xi, yi), (xi, yf), (xf, yf), (xf, yi), (xi, yi)))
+    except Exception as e:
+        print(type(e).__name__, e)
+        geometry = None
+    candidates = parse(query_string, geometry) or {}
     result = {}
     total = 0
     for key, qs in candidates.items():
@@ -107,8 +115,17 @@ def filter_json(request):
     '''this view computes the search query results    '''
     from .searchgrammar import parse
     query_string = request.GET.get('q')
+    rectangle = request.GET.get('r')
+    try:
+        import struct, base64
+        xi, yi, xf, yf = struct.unpack('<ffff', base64.b64decode(rectangle))
+        from django.contrib.gis.geos import Polygon
+        geometry = Polygon(((xi, yi), (xi, yf), (xf, yf), (xf, yi), (xi, yi)))
+    except Exception as e:
+        print(type(e).__name__, e)
+        geometry = None
+    candidates = parse(query_string, geometry) or {}
     result = {}
-    candidates = parse(query_string) or {}
     for key, qs in candidates.items():
         converted = [{key: getattr(item, key, None)
                       for key in ['inline', 'twolines', 'infobox_url']}
@@ -120,8 +137,17 @@ def filter_json(request):
 def get_filter_tokens(request):
     from .searchgrammar import parse
     query_string = request.GET.get('q')
+    rectangle = request.GET.get('r')
+    try:
+        import struct, base64
+        xi, yi, xf, yf = struct.unpack('<ffff', base64.b64decode(rectangle))
+        from django.contrib.gis.geos import Polygon
+        geometry = Polygon(((xi, yi), (xi, yf), (xf, yf), (xf, yi), (xi, yi)))
+    except Exception as e:
+        print(type(e).__name__, e)
+        geometry = None
     result = {}
-    candidates = parse(query_string) or {}
+    candidates = parse(query_string, geometry) or {}
     for key, qs in candidates.items():
         if qs.count():
             token = str(uuid.uuid4())

@@ -524,6 +524,11 @@
      $('div#results-page .progress-bar').attr('data-read-so-far', '0');
      $('div#results-page .progress-bar').attr('data-expect', '0');
      api_url = "{% url 'get-tokens' %}?q=" + $('#search-filter').val();
+     if(rectangle != null) {
+         var Pi = rectangle.getLatLngs()[0][0];
+         var Pf = rectangle.getLatLngs()[0][2];
+         api_url = api_url + "&r=" + base64.b64encode(struct.pack('<ffff', [Pi.lng, Pi.lat, Pf.lng, Pf.lat]));
+     }
      $.getJSON(api_url, function(data) {
          console.log(data);
          var activate_first_td = true;
@@ -827,7 +832,13 @@
 
  function update_statistics() {
      $('#home-pane table td').map(function (i, x) {
-         $.getJSON("{% url 'count' %}?q=" + $(x).data('query'),
+         var api_url = "{% url 'count' %}?q=" + $(x).data('query');
+         if(rectangle != null) {
+             var Pi = rectangle.getLatLngs()[0][0];
+             var Pf = rectangle.getLatLngs()[0][2];
+             api_url = api_url + "&r=" + base64.b64encode(struct.pack('<ffff', [Pi.lng, Pi.lat, Pf.lng, Pf.lat]));
+         }
+         $.getJSON(api_url,
                    function(data){
                        $(x).text(data['__total__'])
                    });
