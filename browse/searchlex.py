@@ -21,6 +21,7 @@ reserved = {
     'between': 'BETWEEN',
     'count': 'COUNT',
     'sum': 'SUM',
+    'area' : 'AREA',
 }
 
 tokens = [

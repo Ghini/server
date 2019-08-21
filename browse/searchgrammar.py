@@ -150,6 +150,14 @@ def p_bfactor_is_null(p):
     result, field, operator, value = p
     p[0] = p.parser.search_domain.objects.filter(**{'{}__isnull'.format(field): True})
 
+def p_bfactor_contained(p):
+    'bfactor : field IN AREA'
+    result, field, _, _ = p
+    if p.parser.area is None:
+        p[0] = p.parser.search_domain.objects.all()
+    else:
+        p[0] = p.parser.search_domain.objects.filter(**{'{}__contained'.format(field): p.parser.area})
+
 def p_bfactor_comparison(p):
     'bfactor : field operator value'
     result, field, operator, value = p
@@ -294,8 +302,9 @@ def p_error(token):
 
 # Build the parser
 
-def parse(string):
+def parse(string, area=None):
     from .searchlex import get_lexer
-    parser = yacc.yacc()
     lexer = get_lexer()
+    parser = yacc.yacc()
+    parser.area = area
     return parser.parse(string, lexer=lexer)
