@@ -206,7 +206,6 @@
  function replace_search_filter(value, e) {
      $('#search-filter').val(value);
      $('#search-filter-button').trigger('click');
-     updateLocationHash();
  }
 
  function replace_tbody_with_dictionary(tbody, url, data) {
@@ -498,6 +497,7 @@
  }
 
  function lookup(e, term) {
+     updateLocationHash();
      tokens = {};
      jQuery.each(objects_layer, function(i, g) {
          jQuery.each(g, function(ii, l) {
