@@ -30,7 +30,7 @@ tokens = [
     'DOT',
     'LPAREN', 'RPAREN',
     'LBRACKET', 'RBRACKET',
-    'LE', 'LT', 'GE', 'GT', 'EQ', 'NE',
+    'LE', 'LT', 'GE', 'GT', 'EQ', 'NE', 'SOUNDSLIKE',
 ] + list(reserved.values())
 
 def t_WORD(t):  # covers WORD and reserved word tokens
@@ -47,6 +47,7 @@ t_LT       = r'<'
 t_LE       = r'<='
 t_GT       = r'>'
 t_GE       = r'>='
+t_SOUNDSLIKE = r'~'
 
 t_DOT      = r'\.'
 t_PIPE     = r'\|'

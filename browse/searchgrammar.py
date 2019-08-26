@@ -158,6 +158,11 @@ def p_bfactor_contained(p):
     else:
         p[0] = p.parser.search_domain.objects.filter(**{'{}__contained'.format(field): p.parser.area})
 
+def p_bfactor_phonetic_comparison(p):
+    'bfactor : field SOUNDSLIKE value'
+    result, field, _, value = p
+    p[0] = p.parser.search_domain.objects.filter(**{'{}_phonetic__icontains'.format(field): value})
+
 def p_bfactor_comparison(p):
     'bfactor : field operator value'
     result, field, operator, value = p
