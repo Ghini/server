@@ -1,5 +1,6 @@
 from django.urls import reverse
 from django.db import models
+from .utils import make_phonetic
 
 # Create your models here.
 
@@ -38,6 +39,7 @@ class Taxon(models.Model):
 
     rank = models.ForeignKey(Rank, on_delete=models.PROTECT)
     epithet = models.CharField(max_length=40)  # published epithet
+    epithet_phonetic = models.CharField(max_length=40)  # phonetic equivalent
     authorship = models.CharField(blank=True, max_length=120)  # publication authorship
     year = models.IntegerField(blank=True, null=True)  # publication year
     parent = models.ForeignKey('self', blank=True, null=True, related_name='subtaxa', on_delete=models.CASCADE)
@@ -58,6 +60,7 @@ class Taxon(models.Model):
     def save(self, *args, **kwargs):
         if not self.genus: self.genus = self.get_genus()
         if not self.family: self.family = self.get_family()
+        self.epithet_phonetic = make_phonetic(self.epithet)
         return super().save(*args, **kwargs)
 
     def show(self, authorship=False):
