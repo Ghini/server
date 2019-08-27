@@ -161,7 +161,9 @@ def p_bfactor_contained(p):
 def p_bfactor_phonetic_comparison(p):
     'bfactor : field SOUNDSLIKE value'
     result, field, _, value = p
-    p[0] = p.parser.search_domain.objects.filter(**{'{}_phonetic__icontains'.format(field): value})
+    from taxonomy.utils import make_phonetic
+    phonetic = make_phonetic(value)
+    p[0] = p.parser.search_domain.objects.filter(**{'{}_phonetic__icontains'.format(field): phonetic})
 
 def p_bfactor_comparison(p):
     'bfactor : field operator value'
