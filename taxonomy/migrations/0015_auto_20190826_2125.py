@@ -13,9 +13,9 @@ def update_phonetic(apps, schema_editor):
             taxon.epithet_phonetic = make_phonetic(taxon.epithet)
             bulk.append(taxon)
             if len(bulk) > threshold:
-                Taxon.bulk_update(bulk, ['epithet_phonetic'])
+                Taxon.objects.bulk_update(bulk, ['epithet_phonetic'])
                 bulk = []
-    Taxon.bulk_update(bulk, ['epithet_phonetic'])
+    Taxon.objects.bulk_update(bulk, ['epithet_phonetic'])
 
         
 class Migration(migrations.Migration):
