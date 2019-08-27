@@ -5,8 +5,16 @@ from django.db import migrations
 
 def update_phonetic(apps, schema_editor):
     Taxon = apps.get_model('taxonomy', 'Taxon')
+    bulk = []
+    threshold = 375
     for taxon in Taxon.objects.all():
-        taxon.save()
+        if taxon.epithet_phonetic != make_phonetic(taxon.epithet):
+            taxon.epithet_phonetic = make_phonetic(taxon.epithet)
+            bulk.append(taxon)
+            if len(bulk) > threshold:
+                Taxon.bulk_update(bulk, ['epithet_phonetic'])
+                bulk = []
+    Taxon.bulk_update(bulk, ['epithet_phonetic'])
 
         
 class Migration(migrations.Migration):
