@@ -98,7 +98,7 @@ class TaxonInfobox(TaxonDetail):
             result['__class_name__'] = 'Taxon'
             result['__detail_url__'] = reverse('taxon-detail', args=[obj.pk])
             result['__shows_as__'] = "%s" % obj
-            for key in ['id', 'epithet', 'authorship']:
+            for key in ['id', 'epithet', 'authorship', 'epithet_phonetic']:
                 try:
                     del result[key]
                 except:
