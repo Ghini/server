@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from taxonomy.utils import make_phonetic
 
 class Command(BaseCommand):
     help='update all `_phonetic` fields'
@@ -12,6 +13,6 @@ class Command(BaseCommand):
                 taxon.epithet_phonetic = phonetic
                 bulk.append(taxon)
                 if len(bulk) > threshold:
-                    Taxon.bulk_update(bulk, ['epithet_phonetic'])
+                    Taxon.objects.bulk_update(bulk, ['epithet_phonetic'])
                     bulk = []
-        Taxon.bulk_update(bulk, ['epithet_phonetic'])
+        Taxon.objects.bulk_update(bulk, ['epithet_phonetic'])
