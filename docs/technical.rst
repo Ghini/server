@@ -27,13 +27,11 @@ against Python 3.5, 3.6 and 3.7.
 The other non-automatic step is installing ``virtualenv`` and ``pip``.  Look for the details
 somewhere else if you think you need more details.  If you're on Debian, ``virtualenv`` is
 contained in the package ``python3-venv``.  Keep in mind that the command to create virtual
-environment is the not-too-mnemonic ``python3 -m venv``.
+environment is the not-too-mnemonic ``python3 -m venv``::
   
-```
-sudo apt-get install python3-venv
-python3 -m venv ~/.virtualenvs/ghini/
-. ~/.virtualenvs/ghini/bin/activate
-```
+  sudo apt-get install python3-venv
+  python3 -m venv ~/.virtualenvs/ghini/
+  . ~/.virtualenvs/ghini/bin/activate
 
 .. note::
 
@@ -43,26 +41,22 @@ python3 -m venv ~/.virtualenvs/ghini/
 Decide whether to download the packaged software from the Python Package Index, ``PyPI``, or
 use the github version.
 
-Installing from ``PyPI`` is as easy as:
+Installing from ``PyPI`` is as easy as::
 
-```
-pip install ghini.server
-```
+  pip install ghini.server
 
 If using github, you will need ``git``, then you must decide whether you use your own fork,
 or the official repository, and choose the branch you want to check out.
 
-In short and in practice:
+In short and in practice::
 
-```
-mkdir -p ~/Local/github/Ghini
-cd ~/Local/github/Ghini
-( git clone git@github.com:Ghini/server.git ||
-  git clone https://github.com/Ghini/server.git )
-cd server
-git checkout ghini-3.2
-pip install -r requirements.txt
-```
+  mkdir -p ~/Local/github/Ghini
+  cd ~/Local/github/Ghini
+  ( git clone git@github.com:Ghini/server.git ||
+    git clone https://github.com/Ghini/server.git )
+  cd server
+  git checkout ghini-3.2
+  pip install -r requirements.txt
 
 In either case, ``pip install`` takes care of all dependencies, and you need take no further
 steps.
