@@ -29,7 +29,7 @@ somewhere else if you think you need more details.  If you're on Debian, ``virtu
 contained in the package ``python3-venv``.  Keep in mind that the command to create virtual
 environment is the not-too-mnemonic ``python3 -m venv``.
   
-```bash
+```
 sudo apt-get install python3-venv
 python3 -m venv ~/.virtualenvs/ghini/
 . ~/.virtualenvs/ghini/bin/activate
@@ -45,7 +45,7 @@ use the github version.
 
 Installing from ``PyPI`` is as easy as:
 
-```bash
+```
 pip install ghini.server
 ```
 
@@ -54,7 +54,7 @@ or the official repository, and choose the branch you want to check out.
 
 In short and in practice:
 
-```bash
+```
 mkdir -p ~/Local/github/Ghini
 cd ~/Local/github/Ghini
 ( git clone git@github.com:Ghini/server.git ||
