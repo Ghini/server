@@ -1,6 +1,110 @@
 technical documentation
 ---------------------------
 
+site installation
+~~~~~~~~~~~~~~~~~~~~
+
+The installation for ghini.server just the standard installation procedure for any python3
+program: first of all make sure you *can* create virtual environments, then create and
+activate the virtual environment where you will install the software, and finally install
+the software, either from the global Python Package Index, or from a custom source.
+
+.. note::
+
+   Please do not even think of asking me how to install and run ghini.server on Windows.
+   Even if it is definitely possible (as said above, ghini.server is a standard Python
+   package), it is just as definitely out of my sphere of interest, helping you with using
+   Windows for serving data over the internet, it's just "*not done*", not only in my
+   opinion.  You can **use** ghini from a Windows client, even using the Microsoft Edge
+   browser, but here I will only explain how to install ghini server on a unix server, and
+   specifically GNU/Linux.
+
+Get yourself a recent Python version.  Now that Debian has released its 10th version with
+Python3.7, there's no excuse for staying on anything older than that.  Anyhow, the software
+works fine with Python3.5 (the one which came with Debian 9) and is continuously tested
+against Python 3.5, 3.6 and 3.7.
+
+The other non-automatic step is installing ``virtualenv`` and ``pip``.  Look for the details
+somewhere else if you think you need more details.  If you're on Debian, ``virtualenv`` is
+contained in the package ``python3-venv``.  Keep in mind that the command to create virtual
+environment is the not-too-mnemonic ``python3 -m venv``.
+  
+```bash
+sudo apt-get install python3-venv
+python3 -m venv ~/.virtualenvs/ghini/
+. ~/.virtualenvs/ghini/bin/activate
+```
+
+.. note::
+
+   At the time of writing, ghini.server isn't yet published as a PyPI package, so even if we
+   describe the PyPI method, it might not work yet.
+   
+Decide whether to download the packaged software from the Python Package Index, ``PyPI``, or
+use the github version.
+
+Installing from ``PyPI`` is as easy as:
+
+```bash
+pip install ghini.server
+```
+
+If using github, you will need ``git``, then you must decide whether you use your own fork,
+or the official repository, and choose the branch you want to check out.
+
+In short and in practice:
+
+```bash
+mkdir -p ~/Local/github/Ghini
+cd ~/Local/github/Ghini
+( git clone git@github.com:Ghini/server.git ||
+  git clone https://github.com/Ghini/server.git )
+cd server
+git checkout ghini-3.2
+pip install -r requirements.txt
+```
+
+In either case, ``pip install`` takes care of all dependencies, and you need take no further
+steps.
+
+run locally
+~~~~~~~~~~~~~~~~~~~~~~~
+
+As it is standard practice with any Django program, after installing the software, you need
+to set up the database, "migrate" it, create the users you need, import your data, then you
+can run the site and navigate to it.
+
+The standard way to run your site in development mode is to just run ``./manage.py``,
+requesting the ``runserver`` command.  Specify on which port to serve your site, then
+navigate locally to it.
+
+
+
+publishing the site
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The above method lets you navigate your data using only the Django server.  This is not how
+you would run a production site, where requests first reach your web server, which takes
+care to redirect each part of the request to the appropiate code producing that part of the
+composite response.
+
+Serving ``ghini.server`` is based on ``nginx`` and ``uwsgi``.  We advise an external
+``nginx`` server, so that all incoming web requests reache that first.
+
+Set up ``nginx`` so that it makes sure the clients are talking the secure https protocol.
+Most requests will cause a further cascade in simpler requests.  The rules in our
+configuration establish whether ``nginx`` will satisfy the request itself by serving static
+data, or if it will redirect the request to a local ``uwgsi`` socket, behind which there is
+our Django ``ghini.server``.
+
+Run ``uwsgi`` in ``emperor`` mode and let it inspect the ``uwsgi.d`` directory in the
+ghini.server main directory.
+
+Produce or update your ``ini`` files by running the provided ``create-ini-files.sh`` script,
+corresponding to the content of the ``/etc/nginx/site-enabled`` directory, for all site
+definitions looking like ghini.server instances.
+
+
 rest-api
 ~~~~~~~~~~
 

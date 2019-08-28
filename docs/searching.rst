@@ -40,10 +40,11 @@ values, or ``<TERMS>``, and ghini will attempt matching them against the data:
 Besides the three above term matching strategies, we have a rather complex and powerful
 SQL-like search strategy.
                 
-:sql-like: ``<DOMAIN>`` where ``<COMPLEX-QUERY>``
+:sql-like: ``<DOMAIN>`` ``where`` ``<COMPLEX-QUERY>``
 
            This is the most generic and powerful search.  You give a search domain, then
-           specify an expression to be matched.
+           specify an expression to be matched.  The literal string ``where`` in second
+           position is what triggers usage of this strategy.
 
            ``COMPLEX-QUERY`` is an expression, composed of boolean tests on fields, either
            of the domain or of a connected domain (think of ``accession.plants.images``),
@@ -55,6 +56,10 @@ SQL-like search strategy.
            ``geometry`` field is the current plant location) you can use the clause
            ``geometry in area``, where you specify the area by selecting it in the **map**
            page.
+
+           Please consider that ghini will fall back to one of the above more generic search
+           strategies if the query is somehow incorrect.  This will most likely return an
+           empty result set.
 
 :depending: ``<query>`` | depending
 
