@@ -1,6 +1,7 @@
 technical documentation
 ---------------------------
 
+
 site installation
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -26,12 +27,14 @@ against Python 3.5, 3.6 and 3.7.
 
 The other non-automatic step is installing ``virtualenv`` and ``pip``.  Look for the details
 somewhere else if you think you need more details.  If you're on Debian, ``virtualenv`` is
-contained in the package ``python3-venv``.  Keep in mind that the command to create virtual
+contained in the package ``python3-venv``, while ``pip`` gets automatically installed when
+you create your virtual environment.  Keep in mind that the command to create virtual
 environment is the not-too-mnemonic ``python3 -m venv``::
   
   sudo apt-get install python3-venv
   python3 -m venv ~/.virtualenvs/ghini/
   . ~/.virtualenvs/ghini/bin/activate
+  pip install --upgrade pip
 
 .. note::
 
@@ -61,17 +64,22 @@ In short and in practice::
 In either case, ``pip install`` takes care of all dependencies, and you need take no further
 steps.
 
+
 run locally
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 As it is standard practice with any Django program, after installing the software, you need
-to set up the database, "migrate" it, create the users you need, import your data, then you
+to set up the database, ``migrate`` it, create the users you need, import your data, then you
 can run the site and navigate to it.
+
+You do this by tweaking the ``ghini/settings.py`` file, or by copying it to a custom named
+settings file, respecting the format ``ghini/settings_<name>.py``.  You would do the first
+if you only need one site, and the second if you plan running multiple instances of
+ghini.server.
 
 The standard way to run your site in development mode is to just run ``./manage.py``,
 requesting the ``runserver`` command.  Specify on which port to serve your site, then
 navigate locally to it.
-
 
 
 publishing the site
@@ -244,6 +252,7 @@ results box.  The ``infobox_url`` provides quick access to the URL where we
 will get the infobox data, but you can just replace the trailing *infobox/*
 part and replace with whatever other valid suffix.  at the moment of writing,
 the URLs implemented are *form/*, *markup/*, *depending/*.
+
 
 importing from ghini.desktop
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
