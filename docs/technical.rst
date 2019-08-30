@@ -69,17 +69,32 @@ run locally
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 As it is standard practice with any Django program, after installing the software, you need
-to set up the database, ``migrate`` it, create the users you need, import your data, then you
-can run the site and navigate to it.
+to set up the database, subsequently to ``migrate`` it, create the users you need, import
+your data, then you can run the site and navigate to it.
 
-You do this by tweaking the ``ghini/settings.py`` file, or by copying it to a custom named
-settings file, respecting the format ``ghini/settings_<name>.py``.  You would do the first
-if you only need one site, and the second if you plan running multiple instances of
-ghini.server.
+The first step, to set up the database, you do this by tweaking the ``ghini/settings.py``
+file, or by copying it to a custom named settings file, respecting the format
+``ghini/settings_<name>.py``.  You would do the first if you only need one site, and the
+second if you plan running multiple instances of ghini.server.
+
+With the virtual environment active, run the command ``./manage.py migrate``.  It will load
+your default settings, or you append the option to the command: ``--settings
+ghini.settings_<name>``.
+
+To create users, the easiest would be to enter the django ``shell``, then to do something
+along the lines::
+
+  from django.contrib.auth.models import User
+  me, _ = User.objects.get_or_create(username='mario')
+  me.set_password('mario')  # or maybe something safer
+  me.save
 
 The standard way to run your site in development mode is to just run ``./manage.py``,
 requesting the ``runserver`` command.  Specify on which port to serve your site, then
 navigate locally to it.
+
+All the above would work in Windows as well, the next steps are about going in production,
+for which we advise the use of ``nginx`` combined with ``uwsgi``, and a unix system.
 
 
 publishing the site
@@ -94,6 +109,7 @@ Serving ``ghini.server`` is based on ``nginx`` and ``uwsgi``.  We advise an exte
 ``nginx`` server, so that all incoming web requests reache that first.
 
 Set up ``nginx`` so that it makes sure the clients are talking the secure https protocol.
+
 Most requests will cause a further cascade in simpler requests.  The rules in our
 configuration establish whether ``nginx`` will satisfy the request itself by serving static
 data, or if it will redirect the request to a local ``uwgsi`` socket, behind which there is
