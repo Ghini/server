@@ -1,11 +1,11 @@
-Django==2.2.4
+Django==2.2.13
 djangorestframework==3.9.2
 pytz==2019.1
 sqlparse==0.3.0
 psycopg2
 django_select2
 django_admin
-Pillow==6.0.0
+Pillow==6.2.2
 ply==3.11
 pyparsing==2.4.0
 python-thumbnails==0.5.1
