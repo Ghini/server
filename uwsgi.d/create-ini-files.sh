@@ -5,7 +5,7 @@ BASEDIR=/home/mario/Local/github/Ghini/server/
 VIRTUALENV=/home/mario/.virtualenvs/server/
 
 grep uwsgi_pass /etc/nginx/sites-available/*.${DOMAIN} 2>/dev/null |
-    sed -n -e "s@.*/sites-available/\([a-z0-9_]*\)\.${DOMAIN}:.*:\([0-9]*\);@\1:\2@p" |
+    sed -n -e "s@.*/sites-available/\([a-z0-9-]*\)\.${DOMAIN}:.*:\([0-9]*\);@\1:\2@p" |
     while IFS=':' read -ra i
     do
         SITE=${i[0]}
