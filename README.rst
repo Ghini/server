@@ -1,14 +1,16 @@
-ghini - reloaded
+ghini.server
 ============================
 
-**ghini - reloaded** is the new Ghini family picture.
+Ghini is a suite of software programs, helping the management and presentation of
+botanical data.  It aims at botanical gardens, plant collectors, nurseries, and
+their visitors.
 
 .. image:: ghini-family.png
 
-the central ``ghini.server`` is there for all other Ghini family members.  it
-serves data from one garden, or for several.
+This is the central ``ghini.server``, serving data to all other Ghini family
+members.  ``ghini.server`` handles data from one garden, or for several.
 
-* in combination with the ``ghini.web`` client, it lets logged in garden
+* in combination with the included ``ghini.web`` client, it lets logged in garden
   conservators plan their work, produce logs, and review their garden history.
 * in combination with the ``ghini.web`` web client, it provides non logged in
   visitors a read-only access to portions of the database.
