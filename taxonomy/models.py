@@ -148,3 +148,9 @@ class Taxon(models.Model):
     def depending_objects(self):
         return {'Accession': self.accessions.order_by('code'),
                 'Taxon': self.subtaxa.order_by('rank_id', 'epithet', 'authorship')}
+
+
+class Vernacular(models.Model):
+    class Meta:
+        verbose_name_plural = "Vernacular"
+
