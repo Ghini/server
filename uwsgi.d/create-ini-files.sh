@@ -17,7 +17,7 @@ chdir = ${BASEDIR}
 env = DJANGO_SETTINGS_MODULE=ghini.settings_${SITE}
 virtualenv = ${VIRTUALENV}
 wsgi-file = ghini/wsgi.py
-processes = 4
-threads = 2
+processes = 1
+threads = 8
 EOF
     done
