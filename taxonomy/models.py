@@ -135,8 +135,7 @@ class Taxon(models.Model):
         family = self.family
         if not family and self.accepted:
             family = self.accepted.family
-        if family:
-            family = family + ' - '
+        family = family and (family + ' - ') or ''
         return {'item': self.show(authorship=True),
                 'side': '',
                 'sub': '{2}{0} verifications; {1} subtaxa'.format(len(self.verifications.all()), len(self.subtaxa.all()), family)}
