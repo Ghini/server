@@ -35,7 +35,11 @@ class NotEqualLookup(Lookup):
 queued_queries = {}
 
 def update_expected(token, qs):
-    queued_queries[token][1] = qs.count()
+    if token in queued_queries:
+        print("updating token {} count to {}".format(token, qs.count()))
+        queued_queries[token][1] = qs.count()
+    else:
+        print("can't update token {}".format(token))
 
 
 # Create your views here.
@@ -48,6 +52,7 @@ class GetDependingObjects:
         for key, qs in o.depending_objects().items():
             if qs.count():
                 token = str(uuid.uuid4())
+                print("adding token {}".format(token))
                 queued_queries[token] = [(item for item in qs.all()), 100000]
                 threading.Thread(target=update_expected, args=(token, qs)).start()
                 result[key] = token
@@ -92,14 +97,15 @@ def count_json(request):
     from .searchgrammar import parse
     query_string = request.GET.get('q')
     rectangle = request.GET.get('r')
-    try:
-        import struct, base64
-        xi, yi, xf, yf = struct.unpack('<ffff', base64.b64decode(rectangle))
-        from django.contrib.gis.geos import Polygon
-        geometry = Polygon(((xi, yi), (xi, yf), (xf, yf), (xf, yi), (xi, yi)))
-    except Exception as e:
-        print(type(e).__name__, e)
-        geometry = None
+    geometry = None
+    if rectangle:
+        try:
+            import struct, base64
+            xi, yi, xf, yf = struct.unpack('<ffff', base64.b64decode(rectangle))
+            from django.contrib.gis.geos import Polygon
+            geometry = Polygon(((xi, yi), (xi, yf), (xf, yf), (xf, yi), (xi, yi)))
+        except Exception as e:
+            print(type(e).__name__, e)
     candidates = parse(query_string, geometry) or {}
     result = {}
     total = 0
@@ -116,14 +122,15 @@ def filter_json(request):
     from .searchgrammar import parse
     query_string = request.GET.get('q')
     rectangle = request.GET.get('r')
-    try:
-        import struct, base64
-        xi, yi, xf, yf = struct.unpack('<ffff', base64.b64decode(rectangle))
-        from django.contrib.gis.geos import Polygon
-        geometry = Polygon(((xi, yi), (xi, yf), (xf, yf), (xf, yi), (xi, yi)))
-    except Exception as e:
-        print(type(e).__name__, e)
-        geometry = None
+    geometry = None
+    if rectangle:
+        try:
+            import struct, base64
+            xi, yi, xf, yf = struct.unpack('<ffff', base64.b64decode(rectangle))
+            from django.contrib.gis.geos import Polygon
+            geometry = Polygon(((xi, yi), (xi, yf), (xf, yf), (xf, yi), (xi, yi)))
+        except Exception as e:
+            print(type(e).__name__, e)
     candidates = parse(query_string, geometry) or {}
     result = {}
     for key, qs in candidates.items():
@@ -138,14 +145,15 @@ def get_filter_tokens(request):
     from .searchgrammar import parse
     query_string = request.GET.get('q')
     rectangle = request.GET.get('r')
-    try:
-        import struct, base64
-        xi, yi, xf, yf = struct.unpack('<ffff', base64.b64decode(rectangle))
-        from django.contrib.gis.geos import Polygon
-        geometry = Polygon(((xi, yi), (xi, yf), (xf, yf), (xf, yi), (xi, yi)))
-    except Exception as e:
-        print(type(e).__name__, e)
-        geometry = None
+    geometry = None
+    if rectangle:
+        try:
+            import struct, base64
+            xi, yi, xf, yf = struct.unpack('<ffff', base64.b64decode(rectangle))
+            from django.contrib.gis.geos import Polygon
+            geometry = Polygon(((xi, yi), (xi, yf), (xf, yf), (xf, yi), (xi, yi)))
+        except Exception as e:
+            print(type(e).__name__, e)
     result = {}
     candidates = parse(query_string, geometry) or {}
     for key, qs in candidates.items():
@@ -170,6 +178,7 @@ def serialize(p):
 
 
 def cash_token(request, token):
+    print("cashing token {}, found in {} queue? {}".format(token, len(queued_queries), token in queued_queries))
     content = []
     result = {'done': False,
               'expect': 0,
@@ -185,13 +194,18 @@ def cash_token(request, token):
         result['done'] = True
     except KeyError:
         pass
+    except RuntimeError as e:
+        print(type(e).__name__, e)
     return JsonResponse(result)
 
 
 def drop_token(request, token):
+    print("dropping token {}, found in {} queue? {}".format(token, len(queued_queries), token in queued_queries))
     try:
         if token == '__all__':
-            queued_queries.clear()
+            print("not dropping anything")
+            # queued_queries.clear()
+            pass
         else:
             del queued_queries[token]
     except KeyError:

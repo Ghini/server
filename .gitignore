@@ -8,3 +8,4 @@ docs/_*
 /browse/parsetab.py
 media/
 uwsgi.d/*.ini
+*~
