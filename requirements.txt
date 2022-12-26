@@ -9,7 +9,7 @@ Pillow==6.2.2
 ply==3.11
 pyparsing==2.4.0
 python-thumbnails==0.5.1
-wheel==0.33.4
+wheel==0.38.1
 django-leaflet
 djangorestframework-gis
 numpy
